@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/localDrive/content.dart';
-import 'package:prototype/newProject/saveTest.dart';
+import 'package:prototype/newProject/mainView.dart';
 
 enum InputType { projectName, client }
 
@@ -24,9 +24,9 @@ class InputField extends StatefulWidget {
 
   void setStateLocation(String text) {
     if (type == InputType.projectName) {
-      SaveTest.cash.newProjectName = text;
+      NewProject.cash.newProjectName = text;
     } else if (type == InputType.client) {
-      SaveTest.cash.client = text;
+      NewProject.cash.client = text;
     }
   }
 

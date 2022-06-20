@@ -1,4 +1,5 @@
 import 'package:prototype/localDrive/status.dart';
+import 'package:camera/camera.dart';
 
 /// erzeugt ein Objekt das als Zwischenspeicher für die zukünftig zu speichernden Informationen
 ///  dient und später den JSON-Leseprozess vereinfachen soll
@@ -6,8 +7,7 @@ class Content {
   String projectName = "Default";
   Enum status = Status.active;
   String client = "Default";
-
-  String get newProjectName => projectName;
+  List<XFile?> pictures = [];
 
   set newProjectName(String text) {
     projectName = text;

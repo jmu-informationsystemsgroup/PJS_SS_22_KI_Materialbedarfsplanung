@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:prototype/newProject/mainView.dart';
+
+import 'mainView.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
@@ -14,11 +17,27 @@ class _CameraPageState extends State<CameraPage> {
   late CameraController controller;
   XFile? pictureFile;
 
+  Widget getLibrary() {
+    Row row = Row(
+      children: [],
+    );
+
+    if (NewProject.cash.pictures.isNotEmpty) {
+      for (var picture in NewProject.cash.pictures) {
+        row.children.add(Image.file(
+          File(picture!.path),
+          width: 50,
+        ));
+      }
+    }
+    return row;
+  }
+
   @override
   void initState() {
     super.initState();
     controller = CameraController(
-      widget.cameras![0],
+      widget.cameras!.first,
       ResolutionPreset.max,
     );
     controller.initialize().then((_) {
@@ -61,20 +80,13 @@ class _CameraPageState extends State<CameraPage> {
           child: ElevatedButton(
             onPressed: () async {
               pictureFile = await controller.takePicture();
+              NewProject.cash.pictures.add(pictureFile);
               setState(() {});
             },
             child: const Icon(Icons.camera),
           ),
         ),
-        Row(
-          children: [
-            if (pictureFile != null)
-              Image.file(
-                File(pictureFile!.path),
-                width: 50,
-              ),
-          ],
-        )
+        getLibrary(),
       ],
     );
   }

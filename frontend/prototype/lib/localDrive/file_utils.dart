@@ -4,11 +4,12 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
+import 'package:camera/camera.dart';
 
 import 'package:prototype/localDrive/content.dart';
+import 'package:prototype/newProject/mainView.dart';
 
-import '../newProject/saveTest.dart';
-
+/// beinhaltet sämtliche Methoden zum Speichern von Daten
 class FileUtils {
   static Future<String?> get getFilePath async {
     var status = await Permission.storage.status;
@@ -64,6 +65,18 @@ class FileUtils {
     await file.writeAsString(jsonEncode(content));
 
     return data;
+  }
+
+  static void saveImages(List<XFile?> pictures) async {
+    final path = await getFilePath;
+    String projectName = NewProject.cash.projectName;
+    int pictureNr = 0;
+    // neuen ordner erstellen
+    File('$path/$projectName/Readme.txt').create(recursive: true);
+    for (var picture in pictures) {
+      picture?.saveTo('$path/$projectName/$pictureNr.png');
+      pictureNr += 1;
+    }
   }
 /*
   readContent() async {

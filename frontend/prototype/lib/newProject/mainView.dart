@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/localDrive/file_utils.dart';
 
-import 'package:prototype/newProject/saveTest.dart';
-
 import '../localDrive/content.dart';
 import 'input_field.dart';
 import 'newAddress.dart';
@@ -42,7 +40,8 @@ class _NewProjectState extends State<NewProject> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     onPressed: () {
-                      FileUtils.writeJsonFile(SaveTest.cash);
+                      FileUtils.writeJsonFile(NewProject.cash);
+                      FileUtils.saveImages(NewProject.cash.pictures);
                     },
                     child: const Text('Projekt speichern'),
                   ),
