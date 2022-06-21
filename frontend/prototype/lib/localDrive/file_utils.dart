@@ -74,7 +74,7 @@ class FileUtils {
     try {
       final file = await getActiveProjects;
       completeContent = await file.readAsString();
-      completeContent = completeContent.replaceAll("[[]]", "");
+      completeContent = completeContent.replaceAll(RegExp(r'[[]|]'), "");
     } catch (e) {
       print("File konnte nicht gefunden werden");
     }
