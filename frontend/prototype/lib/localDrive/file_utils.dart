@@ -70,10 +70,9 @@ class FileUtils {
   static void saveImages(List<XFile?> pictures) async {
     final path = await getFilePath;
     String projectName = NewProject.cash.projectName;
-    int pictureNr = 0;
     // neuen ordner erstellen
-    File('$path/$projectName/Readme.txt').create(recursive: true);
-    // var directory = await Directory('dir/subdir').create(recursive: true);
+    Directory('$path/$projectName').create(recursive: true);
+    int pictureNr = 0;
     for (var picture in pictures) {
       picture?.saveTo('$path/$projectName/$pictureNr.png');
       pictureNr += 1;
