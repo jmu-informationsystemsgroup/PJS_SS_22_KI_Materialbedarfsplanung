@@ -34,7 +34,7 @@ class _NewProjectState extends State<NewProject> {
               children: <Widget>[
                 InputField(InputType.projectName),
                 InputField(InputType.client),
-                NewAddress(),
+                //  NewAddress(),
                 AddPhotoButton(),
                 Align(
                   alignment: Alignment.bottomCenter,

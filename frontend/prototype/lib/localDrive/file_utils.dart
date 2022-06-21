@@ -71,10 +71,11 @@ class FileUtils {
     final path = await getFilePath;
     String projectName = NewProject.cash.projectName;
     // neuen ordner erstellen
-    Directory('$path/$projectName').create(recursive: true);
+    var dir = await Directory('$path/$projectName').create(recursive: true);
+    var fileloc = dir.path;
     int pictureNr = 0;
     for (var picture in pictures) {
-      picture?.saveTo('$path/$projectName/$pictureNr.png');
+      picture?.saveTo('$fileloc/$pictureNr.png');
       pictureNr += 1;
     }
   }

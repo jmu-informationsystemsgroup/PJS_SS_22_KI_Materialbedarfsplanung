@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:prototype/localDrive/content.dart';
 import 'package:prototype/newProject/mainView.dart';
 
 import 'mainView.dart';
@@ -16,14 +17,15 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   late CameraController controller;
   XFile? pictureFile;
+  List<XFile?> images = [];
 
   Widget getLibrary() {
     Row row = Row(
       children: [],
     );
 
-    if (NewProject.cash.pictures.isNotEmpty) {
-      for (var picture in NewProject.cash.pictures) {
+    if (images.isNotEmpty) {
+      for (var picture in images) {
         row.children.add(Image.file(
           File(picture!.path),
           width: 50,
@@ -80,10 +82,22 @@ class _CameraPageState extends State<CameraPage> {
           child: ElevatedButton(
             onPressed: () async {
               pictureFile = await controller.takePicture();
-              NewProject.cash.pictures.add(pictureFile);
+              images.add(pictureFile!);
               setState(() {});
             },
             child: const Icon(Icons.camera),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              setState(() {
+                NewProject.cash.pictures = images;
+              });
+            },
+            child: Text("Kameransicht verlassen"),
           ),
         ),
         getLibrary(),
