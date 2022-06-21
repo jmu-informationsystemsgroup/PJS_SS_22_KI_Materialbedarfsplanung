@@ -62,14 +62,30 @@ class FileUtils {
     } catch (e) {
       print("File konnte nicht gefunden werden");
     }
+    print(json.decode(fileContents).toString());
     return json.decode(fileContents);
   }
 
-  static Future<Content> writeJsonFile(data) async {
+  /// fügt das erzeugte Datenobjekt in ein JSON File ein, dazu müssen die bisherigen Daten herausgelesen werden, mit dem neuen Datenobjekt zu einem
+  /// neuen JSON String kombiniert werden. Dieser JSON String überschreibt dann den bisherigen
+  static Future<Content> addToJsonFile(data) async {
     final Content content = data;
+    String completeContent = "";
+    try {
+      final file = await getActiveProjects;
+      completeContent = await file.readAsString();
+      completeContent = completeContent.replaceAll("[[]]", "");
+    } catch (e) {
+      print("File konnte nicht gefunden werden");
+    }
+    if (completeContent.isEmpty) {
+      completeContent = jsonEncode(content).toString();
+    } else {
+      completeContent = completeContent + "," + jsonEncode(content).toString();
+    }
 
-    File file = await getActiveProjects;
-    await file.writeAsString(jsonEncode(content));
+    File finalFile = await getActiveProjects;
+    await finalFile.writeAsString("[$completeContent]");
 
     return data;
   }

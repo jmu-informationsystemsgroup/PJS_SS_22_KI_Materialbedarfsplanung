@@ -40,10 +40,10 @@ class _NewProjectState extends State<NewProject> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     onPressed: () {
-                      FileUtils.writeJsonFile(NewProject.cash);
+                      FileUtils.addToJsonFile(NewProject.cash);
                       FileUtils.saveImages(NewProject.cash.pictures);
                     },
-                    child: const Text('Projekt speichern'),
+                    child: const Text('Projekt speichern und berechnen'),
                   ),
                 ),
               ],

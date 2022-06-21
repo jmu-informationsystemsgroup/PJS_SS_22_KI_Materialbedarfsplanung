@@ -6,28 +6,19 @@ import 'package:camera/camera.dart';
 class Content {
   late int id;
   String projectName = "Default";
-  Enum status = Status.active;
   String client = "Default";
   List<XFile?> pictures = [];
 
   set fromJson(Map<String, dynamic> json) {
     projectName = json['projectName'];
-    status = json['status'];
     client = json['client'];
   }
 
-  Map<String, dynamic> toJson() => {
-        'projectName': projectName,
-        'status': status.toString(),
-        'client': client
-      };
+  Map<String, dynamic> toJson() =>
+      {'projectName': projectName, 'client': client};
 
   static Map<String, dynamic> createMap() {
-    Map<String, dynamic> content = {
-      'projectName': "",
-      'status': "",
-      'client': ""
-    };
+    Map<String, dynamic> content = {'projectName': "", 'client': ""};
 
     return content;
   }

@@ -30,7 +30,7 @@ class _SaveTestState extends State<SaveTest> {
           alignment: Alignment.bottomCenter,
           child: ElevatedButton(
             onPressed: () {
-              FileUtils.writeJsonFile(SaveTest.cash);
+              FileUtils.addToJsonFile(SaveTest.cash);
             },
             child: const Text('Projekt speichern'),
           ),
