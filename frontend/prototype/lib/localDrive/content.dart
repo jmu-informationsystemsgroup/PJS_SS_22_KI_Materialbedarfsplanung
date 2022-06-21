@@ -2,8 +2,9 @@ import 'package:prototype/localDrive/status.dart';
 import 'package:camera/camera.dart';
 
 /// erzeugt ein Objekt das als Zwischenspeicher für die zukünftig zu speichernden Informationen
-///  dient und später den JSON-Leseprozess vereinfachen soll
+/// dient. Die Content Klasse beinhaltet außerdem Funktionen zum Arbeiten mit JSON-Dateien
 class Content {
+  late int id;
   String projectName = "Default";
   Enum status = Status.active;
   String client = "Default";

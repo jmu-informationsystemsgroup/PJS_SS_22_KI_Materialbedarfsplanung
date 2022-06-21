@@ -9,7 +9,7 @@ import 'package:camera/camera.dart';
 import 'package:prototype/localDrive/content.dart';
 import 'package:prototype/newProject/mainView.dart';
 
-/// beinhaltet sämtliche Methoden zum Speichern von Daten
+/// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
 class FileUtils {
   static Future<String?> get getFilePath async {
     var status = await Permission.storage.status;
@@ -27,9 +27,16 @@ class FileUtils {
     return File('$path/myfile.txt');
   }
 
-  static Future<File> get getJsonFile async {
+  /// gibt ein JSON File mit allen aktiven Projekten zurück
+  static Future<File> get getActiveProjects async {
     final path = await getFilePath;
-    return File('$path/myotherfile.json');
+    return File('$path/activeProjects.json');
+  }
+
+  /// gibt ein JSON File mit allen archivierten Projekten zurück
+  static Future<File> get getArchievedProjects async {
+    final path = await getFilePath;
+    return File('$path/archievedProjects.json');
   }
 
   static Future<File> saveToFile(String data) async {
@@ -50,7 +57,7 @@ class FileUtils {
   static Future<Map<String, dynamic>> readJsonFile() async {
     String fileContents = '';
     try {
-      final file = await getJsonFile;
+      final file = await getActiveProjects;
       fileContents = await file.readAsString();
     } catch (e) {
       print("File konnte nicht gefunden werden");
@@ -61,7 +68,7 @@ class FileUtils {
   static Future<Content> writeJsonFile(data) async {
     final Content content = data;
 
-    File file = await getJsonFile;
+    File file = await getActiveProjects;
     await file.writeAsString(jsonEncode(content));
 
     return data;
@@ -86,9 +93,4 @@ class FileUtils {
     var list = dir.list();
     return list.toList();
   }
-/*
-  readContent() async {
-    content = Content.fromJson(await readJsonFile());
-  }
-  */
 }
