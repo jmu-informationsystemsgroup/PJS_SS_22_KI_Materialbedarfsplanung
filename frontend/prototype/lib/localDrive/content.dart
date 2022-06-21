@@ -9,10 +9,6 @@ class Content {
   String client = "Default";
   List<XFile?> pictures = [];
 
-  set newProjectName(String text) {
-    projectName = text;
-  }
-
   set fromJson(Map<String, dynamic> json) {
     projectName = json['projectName'];
     status = json['status'];

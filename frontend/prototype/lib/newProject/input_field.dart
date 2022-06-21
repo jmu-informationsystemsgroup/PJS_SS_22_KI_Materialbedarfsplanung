@@ -24,7 +24,7 @@ class InputField extends StatefulWidget {
 
   void setStateLocation(String text) {
     if (type == InputType.projectName) {
-      NewProject.cash.newProjectName = text;
+      NewProject.cash.projectName = text;
     } else if (type == InputType.client) {
       NewProject.cash.client = text;
     }
