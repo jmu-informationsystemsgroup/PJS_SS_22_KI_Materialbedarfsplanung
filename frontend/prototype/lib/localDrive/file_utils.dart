@@ -73,10 +73,18 @@ class FileUtils {
     int pictureNr = 0;
     // neuen ordner erstellen
     File('$path/$projectName/Readme.txt').create(recursive: true);
+    // var directory = await Directory('dir/subdir').create(recursive: true);
     for (var picture in pictures) {
       picture?.saveTo('$path/$projectName/$pictureNr.png');
       pictureNr += 1;
     }
+  }
+
+  static Future<List<FileSystemEntity>> getImages(String src) async {
+    var path = await getFilePath;
+    var dir = Directory('$path/$src');
+    var list = dir.list();
+    return list.toList();
   }
 /*
   readContent() async {
