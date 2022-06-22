@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:prototype/archive.dart';
+import 'package:prototype/archived/archive.dart';
 import 'package:prototype/newProject/mainView.dart';
 import 'projectManager.dart';
 
@@ -13,9 +13,9 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  final screens = [ProjectManager(), NewProject(), Archive()];
+  final screens = [ProjectManager(), NewProject(), Archieve()];
 
-  final titles = [ProjectManager().title, NewProject().title, Archive().title];
+  final titles = [ProjectManager().title, NewProject().title, Archieve().title];
 
   void _onItemTapped(int index) {
     setState(() {

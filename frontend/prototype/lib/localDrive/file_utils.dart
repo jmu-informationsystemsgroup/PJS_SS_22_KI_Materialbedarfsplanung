@@ -66,10 +66,28 @@ class FileUtils {
     return json.decode(fileContents);
   }
 
-  /// vergleicht die id's der gelisten aktiven Projekte mit der angeforderten id. Das 'erste' passende Prjekt-objekt wird
+  /// gibt eine Liste der archivierten Projekte zurück
+  static Future<List<dynamic>> readarchievedJsonFile() async {
+    String fileContents = '';
+    try {
+      final file = await getArchievedProjects;
+      fileContents = await file.readAsString();
+    } catch (e) {
+      print("readJsonFile konnte File nicht finden");
+    }
+    return json.decode(fileContents);
+  }
+
+  /// liefert ein angefragtes Projekt zurück.
+  /// vergleicht die id's der gelisten aktiven Projekte mit der angeforderten id. Das 'erste' passende Projekt-objekt wird
   /// dann zurück gegeben
   static Future<Map<String, dynamic>> getSpecificProject(int id) async {
-    List<dynamic> jsonList = await readJsonFile();
+    List<dynamic> jsonList = [];
+    try {
+      jsonList = await readJsonFile();
+    } catch (e) {
+      jsonList = await readarchievedJsonFile();
+    }
     Map<String, dynamic> projectJson = Content.createMap();
     var project = jsonList.where((element) {
       if (element["id"] == id) {
@@ -81,6 +99,77 @@ class FileUtils {
 
     projectJson = project.first;
     return projectJson;
+  }
+
+  /// löscht ein angefragtes Projekt aus dem Json File und entfernt zugehörigen Imagefolder
+  static deleteSpecificProject(int id) async {
+    List<dynamic> jsonList = await readJsonFile();
+    Map<String, dynamic> projectJson = Content.createMap();
+
+    jsonList.removeWhere((element) {
+      if (element["id"] == id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    String newContent = jsonEncode(jsonList).toString();
+
+    File finalFile = await getActiveProjects;
+    await finalFile.writeAsString(newContent);
+
+    // delete image folder
+    final path = await getFilePath;
+    var dir = await Directory('$path/$id');
+    dir.delete();
+  }
+
+  /// löscht ein angefragtes Projekt aus dem activeJson File und fügt es in das archievedJson File ein. Imagefolder bleibt bestehen
+  static archieveSpecificProject(int id) async {
+    // in die Liste der archivierten Projekte einfügen
+    String archievedContent = "";
+    List<dynamic> jsonList = await readJsonFile();
+    var project = jsonList.where((element) {
+      if (element["id"] == id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    try {
+      final file = await getArchievedProjects;
+      archievedContent = await file.readAsString();
+      archievedContent = archievedContent.replaceAll(RegExp(r'[[]|]'), "");
+    } catch (e) {
+      print("addToJsonFile konnte File nicht finden");
+    }
+
+    Map<String, dynamic> archievedPorject = project.first;
+
+    if (archievedContent.isEmpty) {
+      archievedContent = jsonEncode(archievedPorject).toString();
+    } else {
+      archievedContent =
+          archievedContent + "," + jsonEncode(archievedPorject).toString();
+    }
+
+    File archieveFile = await getArchievedProjects;
+    await archieveFile.writeAsString("[$archievedContent]");
+    // aus den aktiven Porjekten rauslöschen
+
+    jsonList.removeWhere((element) {
+      if (element["id"] == id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    String newContent = jsonEncode(jsonList).toString();
+
+    File finalFile = await getActiveProjects;
+    await finalFile.writeAsString(newContent);
   }
 
   /// fügt das erzeugte Datenobjekt in ein JSON File ein, dazu müssen die bisherigen Daten herausgelesen werden, mit dem neuen Datenobjekt zu einem

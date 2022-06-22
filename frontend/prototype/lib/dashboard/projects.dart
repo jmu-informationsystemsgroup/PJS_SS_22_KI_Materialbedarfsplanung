@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/localDrive/file_utils.dart';
 import 'package:prototype/projectView/mainView.dart';
 
 class Projects extends StatelessWidget {
@@ -53,7 +54,10 @@ class Projects extends StatelessWidget {
                               Container(
                                 margin: const EdgeInsets.all(5.0),
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    FileUtils.deleteSpecificProject(
+                                        element["id"]);
+                                  },
                                   child: Icon(Icons.delete),
                                   style: ElevatedButton.styleFrom(
                                       primary: Colors.red),
@@ -62,7 +66,10 @@ class Projects extends StatelessWidget {
                               Container(
                                 margin: const EdgeInsets.all(5.0),
                                 child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      FileUtils.archieveSpecificProject(
+                                          element["id"]);
+                                    },
                                     child: Icon(Icons.archive)),
                               ),
                             ],
