@@ -21,6 +21,7 @@ class NewProject extends StatefulWidget {
 
 class _NewProjectState extends State<NewProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var visability = false;
 
 /*
   Widget preview() {
@@ -51,6 +52,11 @@ class _NewProjectState extends State<NewProject> {
     });
   }
 
+  goBack() async {
+    await Future.delayed(Duration(seconds: 1));
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -76,9 +82,17 @@ class _NewProjectState extends State<NewProject> {
                       FileUtils.addToJsonFile(NewProject.cash);
                       FileUtils.saveImages(NewProject.cash.pictures);
                       //   goToProjectView();
+                      setState(() {
+                        visability = true;
+                      });
+                      goBack();
                     },
                     child: const Text('Projekt speichern und berechnen'),
                   ),
+                ),
+                Visibility(
+                  child: Text("Projekt erfolgreich gespeichert!"),
+                  visible: visability,
                 ),
               ],
             ),
