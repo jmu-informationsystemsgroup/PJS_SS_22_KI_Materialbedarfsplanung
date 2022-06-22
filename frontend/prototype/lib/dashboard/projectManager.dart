@@ -17,7 +17,6 @@ class ProjectManager extends StatefulWidget {
 
 class _ProjectManagerState extends State<ProjectManager> {
   List<String> _projects = [];
-  int i = 0;
   static List<dynamic> allProjects = [];
 
   getAllProjects() async {

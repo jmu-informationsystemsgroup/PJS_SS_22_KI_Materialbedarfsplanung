@@ -21,21 +21,19 @@ class _ProjectViewState extends State<ProjectView> {
 
   Map<String, dynamic> content = Content.createMap();
 
-/*
-  Map<String, dynamic> getJsonValue() {
-    FileUtils.readJsonFile().then((loadedContent) {
+  Map<String, dynamic> getJsonValues() {
+    FileUtils.getSpecificProject(id).then((loadedContent) {
       setState(() {
         content = loadedContent;
-        ProjectView.src = loadedContent["id"];
+        ProjectView.src = loadedContent["id"].toString();
       });
     });
     return content;
   }
-  */
 
   @override
   Widget build(BuildContext context) {
-    //  getJsonValue();
+    getJsonValues();
     return Scaffold(
       appBar: AppBar(
         title: Text(content["projectName"]),

@@ -54,6 +54,7 @@ class FileUtils {
     }
   }
 
+  /// gibt eine Liste der aktiven Projekte zurück
   static Future<List<dynamic>> readJsonFile() async {
     String fileContents = '';
     try {
@@ -63,6 +64,23 @@ class FileUtils {
       print("readJsonFile konnte File nicht finden");
     }
     return json.decode(fileContents);
+  }
+
+  /// vergleicht die id's der gelisten aktiven Projekte mit der angeforderten id. Das 'erste' passende Prjekt-objekt wird
+  /// dann zurück gegeben
+  static Future<Map<String, dynamic>> getSpecificProject(int id) async {
+    List<dynamic> jsonList = await readJsonFile();
+    Map<String, dynamic> projectJson = Content.createMap();
+    var project = jsonList.where((element) {
+      if (element["id"] == id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    projectJson = project.first;
+    return projectJson;
   }
 
   /// fügt das erzeugte Datenobjekt in ein JSON File ein, dazu müssen die bisherigen Daten herausgelesen werden, mit dem neuen Datenobjekt zu einem
@@ -110,6 +128,7 @@ class FileUtils {
   static void saveImages(List<XFile?> pictures) async {
     final path = await getFilePath;
     int id = await createId();
+
     // neuen ordner erstellen
     var dir = await Directory('$path/$id').create(recursive: true);
     var fileloc = dir.path;
