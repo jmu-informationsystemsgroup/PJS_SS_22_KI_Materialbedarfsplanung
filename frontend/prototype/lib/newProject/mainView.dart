@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/localDrive/file_utils.dart';
 
 import '../localDrive/content.dart';
+import '../projectView/mainView.dart';
 import 'input_field.dart';
 import 'newAddress.dart';
 import 'newPhotoButton.dart';
@@ -41,6 +42,15 @@ class _NewProjectState extends State<NewProject> {
   }
   */
 
+  goToProjectView() async {
+    FileUtils.createId().then((id) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProjectView(id)),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -65,6 +75,7 @@ class _NewProjectState extends State<NewProject> {
                     onPressed: () {
                       FileUtils.addToJsonFile(NewProject.cash);
                       FileUtils.saveImages(NewProject.cash.pictures);
+                      //   goToProjectView();
                     },
                     child: const Text('Projekt speichern und berechnen'),
                   ),

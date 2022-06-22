@@ -135,7 +135,7 @@ class FileUtils {
     var fileloc = dir.path;
     int pictureNr = 0;
     for (var picture in pictures) {
-      await picture?.saveTo('$fileloc/$pictureNr.png');
+      await picture?.saveTo('$fileloc/$pictureNr.jpg');
       pictureNr += 1;
     }
   }

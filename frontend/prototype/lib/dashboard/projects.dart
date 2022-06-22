@@ -42,29 +42,32 @@ class Projects extends StatelessWidget {
                           ),
                       width: 150,
                     ),
-                    Column(children: <Widget>[
-                      Text("Name: " + element["projectName"]),
-                      Text("Auftraggeber: " + element["client"]),
-                      //  Text("Fälligkeitsdatum: 15.05.2022"),
-                      Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(5.0),
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: Icon(Icons.delete),
-                              style:
-                                  ElevatedButton.styleFrom(primary: Colors.red),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(5.0),
-                            child: ElevatedButton(
-                                onPressed: () {}, child: Icon(Icons.archive)),
-                          ),
-                        ],
-                      )
-                    ])
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("Name: " + element["projectName"]),
+                          Text("Auftraggeber: " + element["client"]),
+                          //  Text("Fälligkeitsdatum: 15.05.2022"),
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(5.0),
+                                child: ElevatedButton(
+                                  onPressed: () {},
+                                  child: Icon(Icons.delete),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.red),
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.all(5.0),
+                                child: ElevatedButton(
+                                    onPressed: () {},
+                                    child: Icon(Icons.archive)),
+                              ),
+                            ],
+                          )
+                        ])
                   ],
                 ),
               ),
