@@ -54,15 +54,14 @@ class FileUtils {
     }
   }
 
-  static Future<Map<String, dynamic>> readJsonFile() async {
+  static Future<List<dynamic>> readJsonFile() async {
     String fileContents = '';
     try {
       final file = await getActiveProjects;
       fileContents = await file.readAsString();
     } catch (e) {
-      print("File konnte nicht gefunden werden");
+      print("readJsonFile konnte File nicht finden");
     }
-    print(json.decode(fileContents).toString());
     return json.decode(fileContents);
   }
 
@@ -76,11 +75,13 @@ class FileUtils {
       completeContent = await file.readAsString();
       completeContent = completeContent.replaceAll(RegExp(r'[[]|]'), "");
     } catch (e) {
-      print("File konnte nicht gefunden werden");
+      print("addToJsonFile konnte File nicht finden");
     }
+
     if (completeContent.isEmpty) {
       completeContent = jsonEncode(content).toString();
     } else {
+      content.id = await createId();
       completeContent = completeContent + "," + jsonEncode(content).toString();
     }
 
@@ -90,11 +91,27 @@ class FileUtils {
     return data;
   }
 
+  /// id muss automatisch erstellt werden, damit Projekte unterscheidbar sind, und um die richtigen Bilder zu verlinken.
+  /// Dazu muss auch durch die bisherigen Projekte iteriert werden, um zu überprüfen, dass garantiert kein anderes Projekt
+  /// dieselbe Id schon hat.
+  /// Die Nutzung vom key in Map<key, value> ist unzerverlässig, da dieser sich ja für alle nachfolgenden Projekte ändert
+  /// wenn z.B. eins aus der Mitte gelöscht wird.
+  static Future<int> createId() async {
+    try {
+      List<dynamic> jsonList = await readJsonFile();
+      var element = jsonList.last;
+      return element["id"] + 1;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wurde
   static void saveImages(List<XFile?> pictures) async {
     final path = await getFilePath;
-    String projectName = NewProject.cash.projectName;
+    int id = await createId();
     // neuen ordner erstellen
-    var dir = await Directory('$path/$projectName').create(recursive: true);
+    var dir = await Directory('$path/$id').create(recursive: true);
     var fileloc = dir.path;
     int pictureNr = 0;
     for (var picture in pictures) {

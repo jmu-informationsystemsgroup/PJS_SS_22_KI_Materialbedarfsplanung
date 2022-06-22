@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/projectView/mainView.dart';
 
 class Projects extends StatelessWidget {
-  List<String> projects;
-
+  List<dynamic> projects;
   Projects(this.projects);
 
   List<Widget> sampleImages() {
@@ -32,21 +31,21 @@ class Projects extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ProjectView(element)),
+                        builder: (context) => ProjectView(element["id"])),
                   );
                 },
                 child: Row(
                   children: <Widget>[
                     Container(
                       child: Row(
-                        children: sampleImages(),
-                      ),
+                          //    children: sampleImages(),
+                          ),
                       width: 150,
                     ),
                     Column(children: <Widget>[
-                      Text("Name: " + element),
-                      Text("Adresse: " + element + "straße"),
-                      Text("Fälligkeitsdatum: 15.05.2022"),
+                      Text("Name: " + element["projectName"]),
+                      Text("Auftraggeber: " + element["client"]),
+                      //  Text("Fälligkeitsdatum: 15.05.2022"),
                       Row(
                         children: [
                           Container(

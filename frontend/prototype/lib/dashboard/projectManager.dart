@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
+import '../localDrive/file_utils.dart';
 import 'projects.dart';
 
 class ProjectManager extends StatefulWidget {
@@ -17,10 +18,20 @@ class ProjectManager extends StatefulWidget {
 class _ProjectManagerState extends State<ProjectManager> {
   List<String> _projects = [];
   int i = 0;
+  static List<dynamic> allProjects = [];
+
+  getAllProjects() async {
+    FileUtils.readJsonFile().then((loadedContent) {
+      setState(() {
+        allProjects = loadedContent;
+      });
+    });
+    return allProjects;
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    getAllProjects();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Projektübersicht"),
@@ -29,8 +40,9 @@ class _ProjectManagerState extends State<ProjectManager> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            projectMessage(i),
-            Projects(_projects),
+            projectMessage(),
+            Projects(allProjects),
+            /*
             Center(
               child: ElevatedButton(
                   onPressed: () {
@@ -44,6 +56,7 @@ class _ProjectManagerState extends State<ProjectManager> {
                   style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(43, 0, 110, 255))),
             ),
+            */
             AddProjectButton()
           ],
         ),
@@ -53,13 +66,9 @@ class _ProjectManagerState extends State<ProjectManager> {
 }
 
 class projectMessage extends StatelessWidget {
-  int count;
-
-  projectMessage(this.count);
-
   @override
   Widget build(BuildContext context) {
-    if (count == 0) {
+    if (_ProjectManagerState.allProjects.isEmpty) {
       return Center(
         child: Column(
           children: <Widget>[
