@@ -1,10 +1,28 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:prototype/localDrive/file_utils.dart';
 import 'package:prototype/projectView/mainView.dart';
 
+import '../projectView/gallery.dart';
+
 class Projects extends StatelessWidget {
   List<dynamic> projects;
   Projects(this.projects);
+
+  var galleryList = [];
+
+/*
+  /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
+  List<dynamic> getSampleImages(String src) {
+    FileUtils.getImages(src).then((loadedImages) {
+      galleryList = loadedImages;
+      galleryList = galleryList[0];
+    });
+    print(galleryList);
+    return galleryList;
+  }
+  */
 
   List<Widget> sampleImages() {
     List<Widget> containerList = [];
@@ -18,6 +36,20 @@ class Projects extends StatelessWidget {
       ));
     }
     return containerList;
+  }
+
+  Widget renderGallery(String src) {
+    //   getSampleImages(src);
+    Row row = Row(
+      children: [],
+    );
+    galleryList.forEach((element) {
+      row.children.add(Image.file(
+        File(element.path),
+        width: 50,
+      ));
+    });
+    return row;
   }
 
   @override
@@ -38,9 +70,7 @@ class Projects extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Container(
-                      child: Row(
-                          //    children: sampleImages(),
-                          ),
+                      child: Gallery(element["id"].toString(), 2),
                       width: 150,
                     ),
                     Column(

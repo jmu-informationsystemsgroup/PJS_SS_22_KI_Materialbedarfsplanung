@@ -49,7 +49,7 @@ class _ProjectViewState extends State<ProjectView> {
         ),
         Text("Fälligkeitsdatum: 15.05.2022"),
         //  ProjectGalery() -- musste auskommentiert werden wegen endlosschleife, eh nur demozwecke
-        Gallery(),
+        Gallery(id.toString()),
       ]),
     );
   }
