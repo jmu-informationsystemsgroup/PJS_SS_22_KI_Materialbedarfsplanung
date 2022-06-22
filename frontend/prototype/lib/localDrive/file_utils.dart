@@ -124,17 +124,18 @@ class FileUtils {
     }
   }
 
-  /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wurde
+  /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
   static void saveImages(List<XFile?> pictures) async {
     final path = await getFilePath;
     int id = await createId();
 
     // neuen ordner erstellen
     var dir = await Directory('$path/$id').create(recursive: true);
+
     var fileloc = dir.path;
     int pictureNr = 0;
     for (var picture in pictures) {
-      picture?.saveTo('$fileloc/$pictureNr.png');
+      await picture?.saveTo('$fileloc/$pictureNr.png');
       pictureNr += 1;
     }
   }

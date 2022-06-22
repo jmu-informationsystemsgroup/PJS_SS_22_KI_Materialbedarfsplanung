@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:prototype/localDrive/file_utils.dart';
 
@@ -19,6 +21,26 @@ class NewProject extends StatefulWidget {
 class _NewProjectState extends State<NewProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+/*
+  Widget preview() {
+    Row row = Row(
+      children: [],
+    );
+
+    if (NewProject.cash.pictures.isNotEmpty) {
+      for (var picture in NewProject.cash.pictures) {
+        print(picture.toString() +
+            "--------------------------------------------------------------");
+        row.children.add(Image.file(
+          File(picture!.path),
+          width: 50,
+        ));
+      }
+    }
+    return row;
+  }
+  */
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -36,6 +58,7 @@ class _NewProjectState extends State<NewProject> {
                 InputField(InputType.client),
                 //  NewAddress(),
                 AddPhotoButton(),
+                //    preview(),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
