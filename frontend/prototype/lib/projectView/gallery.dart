@@ -10,6 +10,7 @@ class Gallery extends StatefulWidget {
   Gallery(this.src, [this.length = 8000]);
 
   _GalleryState createState() {
+    print(src);
     // TODO: implement createState
     return _GalleryState(src, length);
   }
@@ -24,10 +25,17 @@ class _GalleryState extends State<Gallery> {
   /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
   List<dynamic> getList() {
     FileUtils.getImages(src).then((loadedImages) {
-      galleryList = loadedImages;
+      setState(() {
+        galleryList = loadedImages;
+      });
     });
+    /*
+     if (length > 5) {
+        print(loadedImages.take(length).toList().toString() +
+            "-----------------------------------------------------------------------------------");
+      }
     print(length);
-    print(galleryList.take(length).toList().toString());
+    */
     galleryList = galleryList.take(length).toList();
 
     return galleryList;

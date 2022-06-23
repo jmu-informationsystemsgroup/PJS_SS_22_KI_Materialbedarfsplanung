@@ -6,21 +6,21 @@ import 'package:prototype/projectView/projectGalerydemoVersion.dart';
 import 'package:prototype/projectView/projectMap.dart';
 
 class ProjectView extends StatefulWidget {
-  int id;
-  ProjectView(this.id);
+  Map<String, dynamic> content;
+  ProjectView(this.content);
   static String src = "";
   _ProjectViewState createState() {
+    print(content.toString());
     // TODO: implement createState
-    return _ProjectViewState(id);
+    return _ProjectViewState(content);
   }
 }
 
 class _ProjectViewState extends State<ProjectView> {
-  int id;
-  _ProjectViewState(this.id);
+  Map<String, dynamic> content;
+  _ProjectViewState(this.content);
 
-  Map<String, dynamic> content = Content.createMap();
-
+/*
   Map<String, dynamic> getJsonValues() {
     FileUtils.getSpecificProject(id).then((loadedContent) {
       setState(() {
@@ -30,10 +30,11 @@ class _ProjectViewState extends State<ProjectView> {
     });
     return content;
   }
+  */
 
   @override
   Widget build(BuildContext context) {
-    getJsonValues();
+    // getJsonValues();
     return Scaffold(
       appBar: AppBar(
         title: Text(content["projectName"]),
@@ -48,8 +49,7 @@ class _ProjectViewState extends State<ProjectView> {
           //    child: Text("Adresse: " + element + "straße"),
         ),
         Text("Fälligkeitsdatum: 15.05.2022"),
-        //  ProjectGalery() -- musste auskommentiert werden wegen endlosschleife, eh nur demozwecke
-        Gallery(id.toString()),
+        Gallery(content["id"].toString()),
       ]),
     );
   }

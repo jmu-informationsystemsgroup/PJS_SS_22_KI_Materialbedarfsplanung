@@ -27,9 +27,15 @@ class FileUtils {
     return File('$path/myfile.txt');
   }
 
+  static Future<File> get getIdFile async {
+    final path = await getFilePath;
+    return File('$path/idFile.json');
+  }
+
   /// gibt ein JSON File mit allen aktiven Projekten zurück
   static Future<File> get getActiveProjects async {
     final path = await getFilePath;
+    await Permission.manageExternalStorage.request();
     return File('$path/activeProjects.json');
   }
 
@@ -76,6 +82,29 @@ class FileUtils {
       print("readJsonFile konnte File nicht finden");
     }
     return json.decode(fileContents);
+  }
+
+  /// ruft ein File mit der letzen vergebenen Id auf, Ids werden von 0 nach nahezu undendlich hochgezählt, gibt eine neue id (letzte id + 1)
+  /// zurück, überschreibt die im File gespeicherte id
+  static Future<int> getId() async {
+    Map<String, dynamic> idMap = {"id": 0};
+    int id = 0;
+    String jsonId = "";
+
+    try {
+      File file = await getIdFile;
+      jsonId = await file.readAsString();
+    } catch (e) {}
+
+    if (jsonId != "") {
+      idMap = json.decode(jsonId);
+      id = idMap["id"]! + 1;
+      idMap["id"] = id;
+    }
+    File file = await getIdFile;
+    await file.writeAsString(jsonEncode(idMap).toString());
+
+    return id;
   }
 
   /// liefert ein angefragtes Projekt zurück.
@@ -156,7 +185,7 @@ class FileUtils {
 
     File archieveFile = await getArchievedProjects;
     await archieveFile.writeAsString("[$archievedContent]");
-    // aus den aktiven Porjekten rauslöschen
+    // aus den aktiven Projekten rauslöschen
 
     jsonList.removeWhere((element) {
       if (element["id"] == id) {
@@ -191,6 +220,7 @@ class FileUtils {
       content.id = await createId();
       completeContent = completeContent + "," + jsonEncode(content).toString();
     }
+    print(completeContent.toString());
 
     File finalFile = await getActiveProjects;
     await finalFile.writeAsString("[$completeContent]");
@@ -204,6 +234,8 @@ class FileUtils {
   /// Die Nutzung vom key in Map<key, value> ist unzerverlässig, da dieser sich ja für alle nachfolgenden Projekte ändert
   /// wenn z.B. eins aus der Mitte gelöscht wird.
   static Future<int> createId() async {
+    return await getId();
+    /*
     try {
       List<dynamic> jsonList = await readJsonFile();
       var element = jsonList.last;
@@ -211,6 +243,7 @@ class FileUtils {
     } catch (e) {
       return 0;
     }
+    */
   }
 
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird

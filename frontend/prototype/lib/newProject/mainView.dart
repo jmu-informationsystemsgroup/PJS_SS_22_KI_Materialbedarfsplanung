@@ -41,7 +41,7 @@ class _NewProjectState extends State<NewProject> {
     }
     return row;
   }
-  */
+  
 
   goToProjectView() async {
     FileUtils.createId().then((id) {
@@ -51,6 +51,7 @@ class _NewProjectState extends State<NewProject> {
       );
     });
   }
+  */
 
   goBack() async {
     await Future.delayed(Duration(seconds: 1));

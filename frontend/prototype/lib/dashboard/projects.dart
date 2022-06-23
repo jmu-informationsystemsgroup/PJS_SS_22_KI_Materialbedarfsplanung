@@ -64,7 +64,7 @@ class Projects extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ProjectView(element["id"])),
+                        builder: (context) => ProjectView(element)),
                   );
                 },
                 child: Row(
