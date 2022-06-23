@@ -87,6 +87,7 @@ class Projects extends StatelessWidget {
                                   onPressed: () {
                                     FileUtils.deleteSpecificProject(
                                         element["id"]);
+                                    FileUtils.deleteImageFolder(element["id"]);
                                   },
                                   child: Icon(Icons.delete),
                                   style: ElevatedButton.styleFrom(

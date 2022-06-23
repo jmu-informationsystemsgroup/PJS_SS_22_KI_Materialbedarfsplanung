@@ -147,8 +147,9 @@ class FileUtils {
 
     File finalFile = await getActiveProjects;
     await finalFile.writeAsString(newContent);
+  }
 
-    // delete image folder
+  static deleteImageFolder(int id) async {
     final path = await getFilePath;
     var dir = await Directory('$path/$id');
     dir.delete();
@@ -186,19 +187,7 @@ class FileUtils {
     File archieveFile = await getArchievedProjects;
     await archieveFile.writeAsString("[$archievedContent]");
     // aus den aktiven Projekten rauslöschen
-
-    jsonList.removeWhere((element) {
-      if (element["id"] == id) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    String newContent = jsonEncode(jsonList).toString();
-
-    File finalFile = await getActiveProjects;
-    await finalFile.writeAsString(newContent);
+    deleteSpecificProject(id);
   }
 
   /// fügt das erzeugte Datenobjekt in ein JSON File ein, dazu müssen die bisherigen Daten herausgelesen werden, mit dem neuen Datenobjekt zu einem
