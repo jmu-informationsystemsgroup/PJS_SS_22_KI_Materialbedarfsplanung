@@ -33,8 +33,13 @@ class _ArchieveState extends State<Archieve> {
     getAllProjects();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Projektübersicht"),
+        title: const Text(
+          "Archiv",
+          style: TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
+        ),
         primary: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
       ),
       body: SingleChildScrollView(
         child: Column(

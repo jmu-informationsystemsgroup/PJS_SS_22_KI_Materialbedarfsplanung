@@ -33,8 +33,13 @@ class _ProjectManagerState extends State<ProjectManager> {
     getAllProjects();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Projektübersicht"),
+        title: const Text(
+          "Projektübersicht",
+          style: TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
+        ),
         primary: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/dashboard/projectManager.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'dashboard/navBar.dart';
 
@@ -10,9 +11,9 @@ class RootClass extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: Colors.indigo.shade900,
-        backgroundColor: Colors.indigo.shade200,
-      ),
+          primaryColor: Color.fromARGB(255, 23, 119, 39),
+          backgroundColor: Colors.indigo.shade200,
+          textTheme: GoogleFonts.openSansTextTheme()),
       home: NavBar(0),
     );
   }

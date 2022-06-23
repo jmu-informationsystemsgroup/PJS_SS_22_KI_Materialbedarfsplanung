@@ -34,6 +34,7 @@ class _NewProjectNavBarState extends State<NewProjectNavBar> {
       child: Scaffold(
         body: NewProject(),
         bottomNavigationBar: BottomNavigationBar(
+          elevation: 0.0,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),

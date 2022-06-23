@@ -30,6 +30,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  #styling
+  google_fonts: any
 
   # Saving Files to Local Memory
   path_provider: any

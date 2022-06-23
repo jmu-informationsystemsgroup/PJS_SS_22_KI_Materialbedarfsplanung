@@ -1,4 +1,3 @@
-import 'package:prototype/localDrive/status.dart';
 import 'package:camera/camera.dart';
 
 import 'file_utils.dart';

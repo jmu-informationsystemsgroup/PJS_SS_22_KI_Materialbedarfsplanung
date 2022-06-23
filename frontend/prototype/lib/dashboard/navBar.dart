@@ -29,6 +29,7 @@ class _NavBarState extends State<NavBar> {
       child: Scaffold(
         body: screens[widget.startingPoint],
         bottomNavigationBar: BottomNavigationBar(
+          elevation: 0.0,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -45,6 +46,7 @@ class _NavBarState extends State<NavBar> {
           ],
           currentIndex: widget.startingPoint,
           selectedItemColor: Colors.amber[800],
+          unselectedItemColor: Colors.black,
           onTap: _onItemTapped,
         ),
       ),

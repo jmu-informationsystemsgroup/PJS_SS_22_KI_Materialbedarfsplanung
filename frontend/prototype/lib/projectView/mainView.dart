@@ -37,8 +37,14 @@ class _ProjectViewState extends State<ProjectView> {
     // getJsonValues();
     return Scaffold(
       appBar: AppBar(
-        title: Text(content["projectName"]),
+        title: Text(
+          content["projectName"],
+          style: TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
+        ),
         primary: true,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black,
+        elevation: 0.0,
       ),
       body: Column(children: [
         // test to check if Project view is able to load data, which had been entered before

@@ -64,8 +64,13 @@ class _NewProjectState extends State<NewProject> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Neues Projekt"),
+          title: const Text(
+            "Neues Projekt",
+            style: TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
+          ),
           primary: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
         ),
         body: SingleChildScrollView(
           child: Form(
