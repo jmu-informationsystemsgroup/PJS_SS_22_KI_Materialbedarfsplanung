@@ -40,6 +40,7 @@ class _MVP extends State<MVP> {
               Flexible(
                 child: TextField(
                   keyboardType: TextInputType.number,
+                  style: TextStyle(color: Colors.white),
                   onChanged: (value) {
                     setState(
                       () {
@@ -54,6 +55,7 @@ class _MVP extends State<MVP> {
               Flexible(
                 child: TextField(
                   keyboardType: TextInputType.number,
+                  style: TextStyle(color: Colors.white),
                   onChanged: (value) {
                     setState(
                       () {
