@@ -45,8 +45,6 @@ class _NavBarState extends State<NavBar> {
             ),
           ],
           currentIndex: widget.startingPoint,
-          selectedItemColor: Colors.amber[800],
-          unselectedItemColor: Colors.black,
           onTap: _onItemTapped,
         ),
       ),

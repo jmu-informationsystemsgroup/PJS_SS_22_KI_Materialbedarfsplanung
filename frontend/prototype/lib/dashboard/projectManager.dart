@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
@@ -33,13 +34,8 @@ class _ProjectManagerState extends State<ProjectManager> {
     getAllProjects();
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Projektübersicht",
-          style: TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
-        ),
+        title: const Text("Projektübersicht"),
         primary: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
       ),
       body: SingleChildScrollView(
         child: Column(

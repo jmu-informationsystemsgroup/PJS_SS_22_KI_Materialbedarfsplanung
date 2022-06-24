@@ -60,55 +60,75 @@ class Projects extends StatelessWidget {
           .map(
             (element) => Card(
               child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProjectView(element)),
-                  );
-                },
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      child: Gallery(element["id"].toString(), 2),
-                      width: 150,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProjectView(element)),
+                    );
+                  },
+                  child: Container(
+                    width: 370,
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 25),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: <Color>[
+                          Color(0xff1f005c),
+                          Color(0xff5b0060),
+                          Color(0xff870160),
+                        ], // Gradient from https://learnui.design/tools/gradient-generator.html
+                        tileMode: TileMode.mirror,
+                      ),
                     ),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("Name: " + element["projectName"]),
-                          Text("Auftraggeber: " + element["client"]),
-                          //  Text("Fälligkeitsdatum: 15.05.2022"),
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.all(5.0),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    FileUtils.deleteSpecificProject(
-                                        element["id"]);
-                                    FileUtils.deleteImageFolder(element["id"]);
-                                  },
-                                  child: Icon(Icons.delete),
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Colors.red),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.all(5.0),
-                                child: ElevatedButton(
-                                    onPressed: () {
-                                      FileUtils.archieveSpecificProject(
-                                          element["id"]);
-                                    },
-                                    child: Icon(Icons.archive)),
-                              ),
-                            ],
-                          )
-                        ])
-                  ],
-                ),
-              ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                          child: Gallery(element["id"].toString(), 2),
+                          width: 150,
+                        ),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text("Name: " + element["projectName"],
+                                  style: TextStyle(color: Colors.white)),
+                              Text("Auftraggeber: " + element["client"],
+                                  style: TextStyle(color: Colors.white)),
+                              //  Text("Fälligkeitsdatum: 15.05.2022"),
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(5.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        FileUtils.deleteSpecificProject(
+                                            element["id"]);
+                                        FileUtils.deleteImageFolder(
+                                            element["id"]);
+                                      },
+                                      child: Icon(Icons.delete),
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.red),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.all(5.0),
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          FileUtils.archieveSpecificProject(
+                                              element["id"]);
+                                        },
+                                        child: Icon(Icons.archive)),
+                                  ),
+                                ],
+                              )
+                            ])
+                      ],
+                    ),
+                  )),
             ),
           )
           .toList(),
