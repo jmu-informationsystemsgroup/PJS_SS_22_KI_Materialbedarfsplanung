@@ -33,6 +33,16 @@ class _ProjectViewState extends State<ProjectView> {
   }
   */
 
+  double getSquareMeter() {
+    var squareMeters = content["squareMeters"];
+    double totalSquareMeters = 0.0;
+    squareMeters.forEach((element) {
+      double actualSquareMeters = element["width"]! * element["height"]!;
+      totalSquareMeters = totalSquareMeters + actualSquareMeters;
+    });
+    return totalSquareMeters;
+  }
+
   @override
   Widget build(BuildContext context) {
     // getJsonValues();
@@ -46,6 +56,7 @@ class _ProjectViewState extends State<ProjectView> {
         // test to check if Project view is able to load data, which had been entered before
         Center(child: ProjectMap()),
         Text("Auftraggeber: " + content["client"]),
+        Text("Quadratmeter: " + getSquareMeter().toString()),
         Container(
           margin: const EdgeInsets.all(10.0),
           //    child: Text("Adresse: " + element + "straße"),

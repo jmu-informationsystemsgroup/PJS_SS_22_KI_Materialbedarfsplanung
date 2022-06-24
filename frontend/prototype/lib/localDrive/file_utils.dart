@@ -91,9 +91,9 @@ class FileUtils {
   /// ruft ein File mit der letzen vergebenen Id auf, Ids werden von 0 nach nahezu undendlich hochgezählt, gibt eine neue id (letzte id + 1)
   /// zurück, überschreibt die im File gespeicherte id
   static Future<int> getId() async {
-    Map<String, dynamic> idMap = {"id": 0};
     int id = 0;
     String jsonId = "";
+    Map<String, dynamic> idMap = {"id": 0};
 
     try {
       File file = await getIdFile;
@@ -102,16 +102,12 @@ class FileUtils {
 
     if (jsonId != "") {
       idMap = json.decode(jsonId);
-      id = idMap["id"]! + 1;
-      idMap["id"] = id;
+      id = idMap["id"]!;
     }
-    File file = await getIdFile;
-    await file.writeAsString(jsonEncode(idMap).toString());
 
     return id;
   }
 
-/*
   /// liefert ein angefragtes Projekt zurück.
   /// vergleicht die id's der gelisten aktiven Projekte mit der angeforderten id. Das 'erste' passende Projekt-objekt wird
   /// dann zurück gegeben
@@ -134,7 +130,6 @@ class FileUtils {
     projectJson = project.first;
     return projectJson;
   }
-  */
 
   /// löscht ein angefragtes Projekt aus dem Json File
   static deleteSpecificProject(int id) async {
@@ -210,6 +205,7 @@ class FileUtils {
     }
 
     if (completeContent.isEmpty) {
+      content.id = 0;
       completeContent = jsonEncode(content).toString();
     } else {
       content.id = await createId();
@@ -229,22 +225,30 @@ class FileUtils {
   /// Die Nutzung vom key in Map<key, value> ist unzerverlässig, da dieser sich ja für alle nachfolgenden Projekte ändert
   /// wenn z.B. eins aus der Mitte gelöscht wird.
   static Future<int> createId() async {
-    return await getId();
-    /*
+    int id = 0;
+    String jsonId = "";
+    Map<String, dynamic> idMap = {"id": 0};
+
     try {
-      List<dynamic> jsonList = await readJsonFile();
-      var element = jsonList.last;
-      return element["id"] + 1;
-    } catch (e) {
-      return 0;
+      File file = await getIdFile;
+      jsonId = await file.readAsString();
+    } catch (e) {}
+
+    if (jsonId != "") {
+      idMap = json.decode(jsonId);
+      id = idMap["id"]! + 1;
+      idMap["id"] = id;
     }
-    */
+    File file = await getIdFile;
+    await file.writeAsString(jsonEncode(idMap).toString());
+
+    return id;
   }
 
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
   static void saveImages(List<XFile?> pictures) async {
     final path = await getFilePath;
-    int id = await createId();
+    int id = await getId() + 1;
 
     // neuen ordner erstellen
     var dir = await Directory('$path/$id').create(recursive: true);

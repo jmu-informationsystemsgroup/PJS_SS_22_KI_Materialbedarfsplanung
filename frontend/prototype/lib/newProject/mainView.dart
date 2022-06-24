@@ -43,16 +43,16 @@ class _NewProjectState extends State<NewProject> {
     return row;
   }
   
+  */
 
   goToProjectView() async {
-    FileUtils.createId().then((id) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProjectView(id)),
-      );
-    });
+    int id = await FileUtils.getId() + 1;
+    Map<String, dynamic> content = await FileUtils.getSpecificProject(id);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProjectView(content)),
+    );
   }
-  */
 
   goBack() async {
     await Future.delayed(Duration(seconds: 1));
@@ -85,10 +85,11 @@ class _NewProjectState extends State<NewProject> {
                     onPressed: () {
                       FileUtils.addToJsonFile(NewProject.cash);
                       FileUtils.saveImages(NewProject.cash.pictures);
-                      //   goToProjectView();
+                      //    Content.reset(NewProject.cash);
                       setState(() {
                         visability = true;
                       });
+                      // goToProjectView();
                       goBack();
                     },
                     child: const Text('Projekt speichern und berechnen'),

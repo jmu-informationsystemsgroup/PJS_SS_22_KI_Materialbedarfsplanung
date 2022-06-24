@@ -21,7 +21,7 @@ class _MVP extends State<MVP> {
   int i = 1;
 
   Widget newWall(int i) {
-    List<double> newWallList = [];
+    Map<String, double> newWallList = {'width': 0.0, 'height': 0.0};
 
     Container container = Container(
       margin: const EdgeInsets.fromLTRB(15, 3, 15, 7),
@@ -40,12 +40,10 @@ class _MVP extends State<MVP> {
               Flexible(
                 child: TextField(
                   keyboardType: TextInputType.number,
-                  onSubmitted: (value) {
+                  onChanged: (value) {
                     setState(
                       () {
-                        newWallList.add(
-                          double.parse(value),
-                        );
+                        newWallList['width'] = double.parse(value);
                       },
                     );
                   },
@@ -56,12 +54,10 @@ class _MVP extends State<MVP> {
               Flexible(
                 child: TextField(
                   keyboardType: TextInputType.number,
-                  onSubmitted: (value) {
+                  onChanged: (value) {
                     setState(
                       () {
-                        newWallList.add(
-                          double.parse(value),
-                        );
+                        newWallList['height'] = double.parse(value);
                         print(newWallList);
                       },
                     );
