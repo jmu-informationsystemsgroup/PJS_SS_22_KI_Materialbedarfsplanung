@@ -6,6 +6,7 @@ import 'package:prototype/localDrive/file_utils.dart';
 import '../localDrive/content.dart';
 import '../projectView/mainView.dart';
 import 'input_field.dart';
+import 'mvp.dart';
 import 'newAddress.dart';
 import 'newPhotoButton.dart';
 
@@ -74,6 +75,7 @@ class _NewProjectState extends State<NewProject> {
               children: <Widget>[
                 InputField(InputType.projectName),
                 InputField(InputType.client),
+                MVP(),
                 //  NewAddress(),
                 AddPhotoButton(),
                 //    preview(),

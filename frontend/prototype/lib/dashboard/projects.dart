@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:prototype/localDrive/file_utils.dart';
+import 'package:prototype/styles/container.dart';
 import 'package:prototype/projectView/mainView.dart';
 
 import '../projectView/gallery.dart';
@@ -70,19 +71,7 @@ class Projects extends StatelessWidget {
                   child: Container(
                     width: 370,
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 25),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: <Color>[
-                          Color(0xff1f005c),
-                          Color(0xff5b0060),
-                          Color(0xff870160),
-                        ], // Gradient from https://learnui.design/tools/gradient-generator.html
-                        tileMode: TileMode.mirror,
-                      ),
-                    ),
+                    decoration: ContainerStyles.getBoxDecoration(),
                     child: Row(
                       children: <Widget>[
                         Container(
@@ -94,9 +83,9 @@ class Projects extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text("Name: " + element["projectName"],
-                                  style: TextStyle(color: Colors.white)),
+                                  style: ContainerStyles.getTextStyle()),
                               Text("Auftraggeber: " + element["client"],
-                                  style: TextStyle(color: Colors.white)),
+                                  style: ContainerStyles.getTextStyle()),
                               //  Text("Fälligkeitsdatum: 15.05.2022"),
                               Row(
                                 children: [

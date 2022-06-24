@@ -22,10 +22,12 @@ class FileUtils {
     return tempPath;
   }
 
+/*
   static Future<File> get getFile async {
     final path = await getFilePath;
     return File('$path/myfile.txt');
   }
+  */
 
   static Future<File> get getIdFile async {
     final path = await getFilePath;
@@ -45,6 +47,7 @@ class FileUtils {
     return File('$path/archievedProjects.json');
   }
 
+/*
   static Future<File> saveToFile(String data) async {
     final file = await getFile;
     return file.writeAsString(data);
@@ -59,6 +62,7 @@ class FileUtils {
       return "File konnte nicht gefunden werden";
     }
   }
+  */
 
   /// gibt eine Liste der aktiven Projekte zurück
   static Future<List<dynamic>> readJsonFile() async {
@@ -107,6 +111,7 @@ class FileUtils {
     return id;
   }
 
+/*
   /// liefert ein angefragtes Projekt zurück.
   /// vergleicht die id's der gelisten aktiven Projekte mit der angeforderten id. Das 'erste' passende Projekt-objekt wird
   /// dann zurück gegeben
@@ -129,11 +134,11 @@ class FileUtils {
     projectJson = project.first;
     return projectJson;
   }
+  */
 
-  /// löscht ein angefragtes Projekt aus dem Json File und entfernt zugehörigen Imagefolder
+  /// löscht ein angefragtes Projekt aus dem Json File
   static deleteSpecificProject(int id) async {
     List<dynamic> jsonList = await readJsonFile();
-    Map<String, dynamic> projectJson = Content.createMap();
 
     jsonList.removeWhere((element) {
       if (element["id"] == id) {
@@ -198,7 +203,8 @@ class FileUtils {
     try {
       final file = await getActiveProjects;
       completeContent = await file.readAsString();
-      completeContent = completeContent.replaceAll(RegExp(r'[[]|]'), "");
+      completeContent =
+          completeContent.substring(1, completeContent.length - 1);
     } catch (e) {
       print("addToJsonFile konnte File nicht finden");
     }
