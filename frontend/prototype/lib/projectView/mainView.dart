@@ -43,6 +43,16 @@ class _ProjectViewState extends State<ProjectView> {
     return totalSquareMeters;
   }
 
+  double getPrice() {
+    String material = content["material"];
+    Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
+    double totalPrice = 0.0;
+
+    totalPrice = getSquareMeter() * valueInterpreter[material]!;
+
+    return totalPrice;
+  }
+
   @override
   Widget build(BuildContext context) {
     // getJsonValues();
@@ -57,6 +67,7 @@ class _ProjectViewState extends State<ProjectView> {
         Center(child: ProjectMap()),
         Text("Auftraggeber: " + content["client"]),
         Text("Quadratmeter: " + getSquareMeter().toString()),
+        Text("Preis: " + getPrice().toString()),
         Container(
           margin: const EdgeInsets.all(10.0),
           //    child: Text("Adresse: " + element + "straße"),

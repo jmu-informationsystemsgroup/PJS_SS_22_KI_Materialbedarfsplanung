@@ -11,19 +11,22 @@ class Content {
   List<Map<String, double>> squareMeters = [];
   //Enum marterial
   List<XFile?> pictures = [];
+  String material = "Q2";
 
   set fromJson(Map<String, dynamic> json) {
     id = json['id'];
     projectName = json['projectName'];
     client = json['client'];
     squareMeters = json['squareMeters'];
+    material = json['material'];
   }
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'projectName': projectName,
         'client': client,
-        'squareMeters': squareMeters
+        'squareMeters': squareMeters,
+        'material': material
       };
 
   static Map<String, dynamic> createMap() {
@@ -31,7 +34,8 @@ class Content {
       'id': '',
       'projectName': "",
       'client': "",
-      'squaremeters': []
+      'squaremeters': [],
+      'material': ""
     };
 
     return content;

@@ -7,14 +7,14 @@ import 'package:prototype/newProject/mainView.dart';
 
 import '../styles/container.dart';
 
-class MVP extends StatefulWidget {
+class MVPWalls extends StatefulWidget {
   @override
-  _MVP createState() {
-    return _MVP();
+  _MVPWalls createState() {
+    return _MVPWalls();
   }
 }
 
-class _MVP extends State<MVP> {
+class _MVPWalls extends State<MVPWalls> {
   final TextEditingController nameController = TextEditingController();
 
   List<Widget> walls = [];
