@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype/localDrive/content.dart';
 import 'package:prototype/newProject/mainView.dart';
@@ -22,6 +23,8 @@ class _MVP extends State<MVP> {
 
   Widget newWall(int i) {
     Map<String, double> newWallList = {'width': 0.0, 'height': 0.0};
+    NewProject.cash.squareMeters.add({});
+    print(NewProject.cash.squareMeters);
 
     Container container = Container(
       margin: const EdgeInsets.fromLTRB(15, 3, 15, 7),
@@ -60,7 +63,6 @@ class _MVP extends State<MVP> {
                     setState(
                       () {
                         newWallList['height'] = double.parse(value);
-                        print(newWallList);
                       },
                     );
                     print(newWallList.toString());
@@ -68,17 +70,35 @@ class _MVP extends State<MVP> {
                   decoration: ContainerStyles.getInputStyle("Höhe"),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(
-                    () {
-                      NewProject.cash.squareMeters.add(newWallList);
-                      print(newWallList.toString());
+              Column(
+                children: <Widget>[
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                    onPressed: () {
+                      setState(
+                        () {
+                          walls.remove(walls[i - 1]);
+                          NewProject.cash.squareMeters[i - 1] = {
+                            "width": 0.0,
+                            "height": 0.0
+                          };
+                        },
+                      );
                     },
-                  );
-                },
-                child: Text("Fertig"),
-              ),
+                    child: const Text("Löschen"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(
+                        () {
+                          NewProject.cash.squareMeters[i - 1] = newWallList;
+                        },
+                      );
+                    },
+                    child: const Text("Speichern"),
+                  ),
+                ],
+              )
             ],
           ),
         ],
@@ -107,7 +127,7 @@ class _MVP extends State<MVP> {
 
             print(walls.toString());
           },
-          child: Text("Wand hinzufügen"),
+          child: const Text("Wand hinzufügen"),
         )
       ],
     );
