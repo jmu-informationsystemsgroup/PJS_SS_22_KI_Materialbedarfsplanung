@@ -151,7 +151,7 @@ class FileUtils {
 
   static deleteImageFolder(int id) async {
     final path = await getFilePath;
-    var dir = await Directory('$path/$id');
+    var dir = await Directory('$path/material_images/$id');
     dir.delete();
   }
 
@@ -248,10 +248,15 @@ class FileUtils {
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
   static void saveImages(List<XFile?> pictures) async {
     final path = await getFilePath;
-    int id = await getId() + 1;
+    int id = 0;
+    try {
+      File file = await getIdFile;
+      id = await getId() + 1;
+    } catch (e) {}
 
     // neuen ordner erstellen
-    var dir = await Directory('$path/$id').create(recursive: true);
+    var dir =
+        await Directory('$path/material_images/$id').create(recursive: true);
 
     var fileloc = dir.path;
     int pictureNr = 0;
@@ -263,7 +268,7 @@ class FileUtils {
 
   static Future<List<FileSystemEntity>> getImages(String src) async {
     var path = await getFilePath;
-    var dir = Directory('$path/$src');
+    var dir = Directory('$path/material_images/$src');
     var list = dir.list();
     return list.toList();
   }
