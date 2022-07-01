@@ -1,4 +1,5 @@
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -207,11 +208,16 @@ class FileUtils {
     if (completeContent.isEmpty) {
       content.id = 0;
       completeContent = jsonEncode(content).toString();
+      if (kDebugMode) {
+        print("i was triggered");
+      }
     } else {
       content.id = await createId();
       completeContent = completeContent + "," + jsonEncode(content).toString();
     }
-    print(completeContent.toString());
+    if (kDebugMode) {
+      print(completeContent.toString());
+    }
 
     File finalFile = await getActiveProjects;
     await finalFile.writeAsString("[$completeContent]");
@@ -252,7 +258,9 @@ class FileUtils {
     try {
       File file = await getIdFile;
       id = await getId() + 1;
-    } catch (e) {}
+    } catch (e) {
+      id = 0;
+    }
 
     // neuen ordner erstellen
     var dir =
