@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:prototype/archive.dart';
+import 'package:prototype/archived/archive.dart';
 import 'package:prototype/newProject/mainView.dart';
 import 'projectManager.dart';
 
@@ -13,9 +13,9 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  final screens = [ProjectManager(), NewProject(), Archive()];
+  final screens = [ProjectManager(), NewProject(), Archieve()];
 
-  final titles = [ProjectManager().title, NewProject().title, Archive().title];
+  final titles = [ProjectManager().title, NewProject().title, Archieve().title];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -29,6 +29,7 @@ class _NavBarState extends State<NavBar> {
       child: Scaffold(
         body: screens[widget.startingPoint],
         bottomNavigationBar: BottomNavigationBar(
+          elevation: 0.0,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -44,7 +45,6 @@ class _NavBarState extends State<NavBar> {
             ),
           ],
           currentIndex: widget.startingPoint,
-          selectedItemColor: Colors.amber[800],
           onTap: _onItemTapped,
         ),
       ),

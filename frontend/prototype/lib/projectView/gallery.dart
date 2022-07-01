@@ -5,20 +5,39 @@ import 'dart:io';
 import 'package:prototype/projectView/mainView.dart';
 
 class Gallery extends StatefulWidget {
+  String src;
+  int length;
+  Gallery(this.src, [this.length = 8000]);
+
   _GalleryState createState() {
+    print(src);
     // TODO: implement createState
-    return _GalleryState();
+    return _GalleryState(src, length);
   }
 }
 
 class _GalleryState extends State<Gallery> {
+  String src;
+  int length;
+  _GalleryState(this.src, [this.length = 8000]);
   var galleryList = [];
 
   /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
   List<dynamic> getList() {
-    FileUtils.getImages(ProjectView.src).then((loadedImages) {
-      galleryList = loadedImages;
+    FileUtils.getImages(src).then((loadedImages) {
+      setState(() {
+        galleryList = loadedImages;
+      });
     });
+    /*
+     if (length > 5) {
+        print(loadedImages.take(length).toList().toString() +
+            "-----------------------------------------------------------------------------------");
+      }
+    print(length);
+    */
+    galleryList = galleryList.take(length).toList();
+
     return galleryList;
   }
 

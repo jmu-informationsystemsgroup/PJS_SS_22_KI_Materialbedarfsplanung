@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:prototype/localDrive/file_utils.dart';
 import 'package:prototype/localDrive/content.dart';
 import 'package:prototype/projectView/gallery.dart';
@@ -6,50 +7,79 @@ import 'package:prototype/projectView/projectGalerydemoVersion.dart';
 import 'package:prototype/projectView/projectMap.dart';
 
 class ProjectView extends StatefulWidget {
-  String element;
-  ProjectView(this.element);
+  Map<String, dynamic> content;
+  ProjectView(this.content);
   static String src = "";
   _ProjectViewState createState() {
+    print(content.toString());
     // TODO: implement createState
-    return _ProjectViewState(element);
+    return _ProjectViewState(content);
   }
 }
 
 class _ProjectViewState extends State<ProjectView> {
-  String element;
-  _ProjectViewState(this.element);
+  Map<String, dynamic> content;
+  _ProjectViewState(this.content);
 
-  Map<String, dynamic> content = Content.createMap();
-
-  Map<String, dynamic> getJsonValue() {
-    FileUtils.readJsonFile().then((loadedContent) {
+/*
+  Map<String, dynamic> getJsonValues() {
+    FileUtils.getSpecificProject(id).then((loadedContent) {
       setState(() {
         content = loadedContent;
-        ProjectView.src = loadedContent["projectName"];
+        ProjectView.src = loadedContent["id"].toString();
       });
     });
     return content;
   }
+  */
+
+  double getSquareMeter() {
+    var squareMeters = content["squareMeters"];
+    double totalSquareMeters = 0.0;
+    squareMeters.forEach((element) {
+      double width = 0.0;
+      double height = 0.0;
+      try {
+        width = element["width"];
+        height = element["height"];
+      } catch (e) {}
+      double actualSquareMeters = width * height;
+      totalSquareMeters = totalSquareMeters + actualSquareMeters;
+    });
+    return totalSquareMeters;
+  }
+
+  double getPrice() {
+    String material = content["material"];
+    Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
+    double totalPrice = 0.0;
+
+    totalPrice = getSquareMeter() * valueInterpreter[material]!;
+
+    return totalPrice;
+  }
 
   @override
   Widget build(BuildContext context) {
-    getJsonValue();
+    // getJsonValues();
     return Scaffold(
       appBar: AppBar(
-        title: Text(content["projectName"]),
-        primary: true,
+        title: Text(
+          content["projectName"],
+        ),
       ),
       body: Column(children: [
         // test to check if Project view is able to load data, which had been entered before
         Center(child: ProjectMap()),
         Text("Auftraggeber: " + content["client"]),
+        Text("Quadratmeter: " + getSquareMeter().toString()),
+        Text("Preis: " + getPrice().toString()),
         Container(
           margin: const EdgeInsets.all(10.0),
-          child: Text("Adresse: " + element + "straße"),
+          //    child: Text("Adresse: " + element + "straße"),
         ),
         Text("Fälligkeitsdatum: 15.05.2022"),
-        //  ProjectGalery() -- musste auskommentiert werden wegen endlosschleife, eh nur demozwecke
-        Gallery(),
+        Gallery(content["id"].toString()),
       ]),
     );
   }

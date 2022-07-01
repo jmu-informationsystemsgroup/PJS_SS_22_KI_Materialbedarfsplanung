@@ -1,10 +1,29 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:prototype/localDrive/file_utils.dart';
+import 'package:prototype/styles/container.dart';
 import 'package:prototype/projectView/mainView.dart';
 
-class Projects extends StatelessWidget {
-  List<String> projects;
+import '../projectView/gallery.dart';
 
+class Projects extends StatelessWidget {
+  List<dynamic> projects;
   Projects(this.projects);
+
+  var galleryList = [];
+
+/*
+  /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
+  List<dynamic> getSampleImages(String src) {
+    FileUtils.getImages(src).then((loadedImages) {
+      galleryList = loadedImages;
+      galleryList = galleryList[0];
+    });
+    print(galleryList);
+    return galleryList;
+  }
+  */
 
   List<Widget> sampleImages() {
     List<Widget> containerList = [];
@@ -20,6 +39,20 @@ class Projects extends StatelessWidget {
     return containerList;
   }
 
+  Widget renderGallery(String src) {
+    //   getSampleImages(src);
+    Row row = Row(
+      children: [],
+    );
+    galleryList.forEach((element) {
+      row.children.add(Image.file(
+        File(element.path),
+        width: 50,
+      ));
+    });
+    return row;
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -28,47 +61,63 @@ class Projects extends StatelessWidget {
           .map(
             (element) => Card(
               child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProjectView(element)),
-                  );
-                },
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      child: Row(
-                        children: sampleImages(),
-                      ),
-                      width: 150,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProjectView(element)),
+                    );
+                  },
+                  child: Container(
+                    width: 370,
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 25),
+                    decoration: ContainerStyles.getBoxDecoration(),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                          child: Gallery(element["id"].toString(), 2),
+                          width: 150,
+                        ),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text("Name: " + element["projectName"],
+                                  style: ContainerStyles.getTextStyle()),
+                              Text("Auftraggeber: " + element["client"],
+                                  style: ContainerStyles.getTextStyle()),
+                              //  Text("Fälligkeitsdatum: 15.05.2022"),
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(5.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        FileUtils.deleteSpecificProject(
+                                            element["id"]);
+                                        FileUtils.deleteImageFolder(
+                                            element["id"]);
+                                      },
+                                      child: Icon(Icons.delete),
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.red),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.all(5.0),
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          FileUtils.archieveSpecificProject(
+                                              element["id"]);
+                                        },
+                                        child: Icon(Icons.archive)),
+                                  ),
+                                ],
+                              )
+                            ])
+                      ],
                     ),
-                    Column(children: <Widget>[
-                      Text("Name: " + element),
-                      Text("Adresse: " + element + "straße"),
-                      Text("Fälligkeitsdatum: 15.05.2022"),
-                      Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(5.0),
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: Icon(Icons.delete),
-                              style:
-                                  ElevatedButton.styleFrom(primary: Colors.red),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(5.0),
-                            child: ElevatedButton(
-                                onPressed: () {}, child: Icon(Icons.archive)),
-                          ),
-                        ],
-                      )
-                    ])
-                  ],
-                ),
-              ),
+                  )),
             ),
           )
           .toList(),
