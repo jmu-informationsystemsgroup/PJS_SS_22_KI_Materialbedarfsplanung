@@ -80,12 +80,21 @@ class _CameraPageState extends State<CameraPage> {
         Padding(
           padding: const EdgeInsets.all(8),
           child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              padding: EdgeInsets.all(17),
+              primary: Colors.white,
+            ),
             onPressed: () async {
               pictureFile = await controller.takePicture();
               images.add(pictureFile!);
               setState(() {});
             },
-            child: const Icon(Icons.camera),
+            child: const Icon(
+              Icons.camera,
+              color: Color.fromARGB(80, 0, 0, 0),
+              size: 45,
+            ),
           ),
         ),
         Padding(
