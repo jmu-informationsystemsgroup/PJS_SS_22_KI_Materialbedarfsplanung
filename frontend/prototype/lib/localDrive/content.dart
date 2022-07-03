@@ -4,6 +4,7 @@ import 'file_utils.dart';
 
 /// erzeugt ein Objekt das als Zwischenspeicher für die zukünftig zu speichernden Informationen
 /// dient. Die Content Klasse beinhaltet außerdem Funktionen zum Arbeiten mit JSON-Dateien
+/// TODO: singleton class? https://www.youtube.com/watch?v=noi6aYsP7Go
 class Content {
   int id = 0;
   String projectName = "Default";
