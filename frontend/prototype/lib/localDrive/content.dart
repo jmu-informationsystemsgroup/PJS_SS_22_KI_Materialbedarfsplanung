@@ -10,10 +10,11 @@ class Content {
   String projectName = "Default";
   String client = "Default";
   List<Map<String, double>> squareMeters = [];
-  //Enum marterial
   List<XFile?> pictures = [];
   String material = "Q2";
+  // status: active / inactive
 
+  /// übersetzt Objekt aus Json Format
   set fromJson(Map<String, dynamic> json) {
     id = json['id'];
     projectName = json['projectName'];
@@ -22,6 +23,7 @@ class Content {
     material = json['material'];
   }
 
+  /// übersetzt Objekt in Json Format
   Map<String, dynamic> toJson() => {
         'id': id,
         'projectName': projectName,
@@ -30,6 +32,7 @@ class Content {
         'material': material
       };
 
+  /// erzeugt ein leeres Porjekt, in welches später geladen JSON Daten eingesetzt werden können
   static Map<String, dynamic> createMap() {
     Map<String, dynamic> content = {
       'id': '',
@@ -40,11 +43,6 @@ class Content {
     };
 
     return content;
-  }
-
-  static Map<String, dynamic> reset(var element) {
-    element = createMap();
-    return element;
   }
 }
 

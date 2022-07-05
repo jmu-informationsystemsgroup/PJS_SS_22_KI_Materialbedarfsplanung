@@ -20,8 +20,8 @@ class _ProjectManagerState extends State<ProjectManager> {
   List<String> _projects = [];
   static List<dynamic> allProjects = [];
 
-  getAllProjects() async {
-    FileUtils.readJsonFile().then((loadedContent) {
+  activateList() async {
+    FileUtils.getAllProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -31,7 +31,7 @@ class _ProjectManagerState extends State<ProjectManager> {
 
   @override
   Widget build(BuildContext context) {
-    getAllProjects();
+    activateList();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Projektübersicht"),

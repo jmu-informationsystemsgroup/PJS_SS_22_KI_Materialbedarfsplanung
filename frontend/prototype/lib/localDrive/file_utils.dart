@@ -66,7 +66,7 @@ class FileUtils {
   */
 
   /// gibt eine Liste der aktiven Projekte zurück
-  static Future<List<dynamic>> readJsonFile() async {
+  static Future<List<dynamic>> getAllProjects() async {
     String fileContents = '';
     try {
       final file = await getActiveProjects;
@@ -89,6 +89,7 @@ class FileUtils {
     return json.decode(fileContents);
   }
 
+  /// FÄLLT BEI DATENBANK WEG
   /// ruft ein File mit der letzen vergebenen Id auf, Ids werden von 0 nach nahezu undendlich hochgezählt, gibt eine neue id (letzte id + 1)
   /// zurück, überschreibt die im File gespeicherte id
   static Future<int> getId() async {
@@ -115,7 +116,7 @@ class FileUtils {
   static Future<Map<String, dynamic>> getSpecificProject(int id) async {
     List<dynamic> jsonList = [];
     try {
-      jsonList = await readJsonFile();
+      jsonList = await getAllProjects();
     } catch (e) {
       jsonList = await readarchievedJsonFile();
     }
@@ -134,7 +135,7 @@ class FileUtils {
 
   /// löscht ein angefragtes Projekt aus dem Json File
   static deleteSpecificProject(int id) async {
-    List<dynamic> jsonList = await readJsonFile();
+    List<dynamic> jsonList = await getAllProjects();
 
     jsonList.removeWhere((element) {
       if (element["id"] == id) {
@@ -156,11 +157,12 @@ class FileUtils {
     dir.delete();
   }
 
+  /// später bei datenbank: einfach status flag ändern
   /// löscht ein angefragtes Projekt aus dem activeJson File und fügt es in das archievedJson File ein. Imagefolder bleibt bestehen
   static archieveSpecificProject(int id) async {
     // in die Liste der archivierten Projekte einfügen
     String archievedContent = "";
-    List<dynamic> jsonList = await readJsonFile();
+    List<dynamic> jsonList = await getAllProjects();
     var project = jsonList.where((element) {
       if (element["id"] == id) {
         return true;
@@ -191,9 +193,10 @@ class FileUtils {
     deleteSpecificProject(id);
   }
 
+  /// für Datenbank: new Project
   /// fügt das erzeugte Datenobjekt in ein JSON File ein, dazu müssen die bisherigen Daten herausgelesen werden, mit dem neuen Datenobjekt zu einem
   /// neuen JSON String kombiniert werden. Dieser JSON String überschreibt dann den bisherigen
-  static Future<Content> addToJsonFile(data) async {
+  static Future<Content> createNewProject(data) async {
     final Content content = data;
     String completeContent = "";
     try {

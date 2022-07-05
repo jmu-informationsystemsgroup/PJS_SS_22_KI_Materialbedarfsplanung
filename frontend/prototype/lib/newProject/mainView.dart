@@ -85,7 +85,7 @@ class _NewProjectState extends State<NewProject> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     onPressed: () {
-                      FileUtils.addToJsonFile(NewProject.cash);
+                      FileUtils.createNewProject(NewProject.cash);
                       FileUtils.saveImages(NewProject.cash.pictures);
                       //    Content.reset(NewProject.cash);
                       setState(() {
