@@ -24,11 +24,13 @@ class _GalleryState extends State<Gallery> {
 
   /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
   List<dynamic> getList() {
-    FileUtils.getImages(src).then((loadedImages) {
-      setState(() {
-        galleryList = loadedImages;
+    try {
+      FileUtils.getImages(src).then((loadedImages) {
+        setState(() {
+          galleryList = loadedImages;
+        });
       });
-    });
+    } catch (e) {}
     /*
      if (length > 5) {
         print(loadedImages.take(length).toList().toString() +

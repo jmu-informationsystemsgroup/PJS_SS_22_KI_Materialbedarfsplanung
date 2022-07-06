@@ -22,7 +22,7 @@ class RootClass extends StatelessWidget {
           shadowColor: Colors.transparent,
         ),
       ),
-      home: NavBar(0),
+      home: ProjectManager(),
     );
   }
 
