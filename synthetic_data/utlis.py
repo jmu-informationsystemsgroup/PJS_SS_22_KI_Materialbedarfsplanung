@@ -11,7 +11,9 @@ def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, dra
     kernel= np.ones((5,5))
     imgDial = cv2.dilate(imgCanny,kernel,iterations=3)
     imgThre=cv2.erode(imgDial,kernel,iterations=2)
-    if showCanny: cv2.imshow('Canny', imgCanny)
+    if showCanny:
+         #cv2.imshow('Canny', imgCanny)
+         cv2.imwrite("F:\\Projektseminar\\Edge Detection\\Kanten.jpg", imgCanny) 
 
     contours,hierarchy= cv2.findContours(imgThre,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE) #Filter für bestimmte Formen
     finalContours= []
@@ -34,7 +36,7 @@ def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, dra
     return img, finalContours
 
 def reorder(myPoints):
-    print(myPoints.shape)
+    #print(myPoints.shape)
     myPointsNew=np.zeros_like(myPoints)
     myPoints=myPoints.reshape((4,2))
     add=myPoints.sum(1)
@@ -47,7 +49,7 @@ def reorder(myPoints):
 
 def warpImg (img,points,w,h): #Höhe und Breite des Bilds 
     # print(points)
-    print(reorder(points))
+    points=reorder(points)
     pts1=np.float32(points)
     pts2= np.float32([[0,0],[w,0],[0,h],[w,h]])
     matrix=cv2.getPerspectiveTransform(pts1,pts2)
