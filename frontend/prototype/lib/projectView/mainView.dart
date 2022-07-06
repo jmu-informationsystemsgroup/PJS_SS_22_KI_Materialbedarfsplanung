@@ -10,17 +10,13 @@ class ProjectView extends StatefulWidget {
   Map<String, dynamic> content;
   ProjectView(this.content);
   static String src = "";
+  @override
   _ProjectViewState createState() {
-    print(content.toString());
-    // TODO: implement createState
-    return _ProjectViewState(content);
+    return _ProjectViewState();
   }
 }
 
 class _ProjectViewState extends State<ProjectView> {
-  Map<String, dynamic> content;
-  _ProjectViewState(this.content);
-
 /*
   Map<String, dynamic> getJsonValues() {
     FileUtils.getSpecificProject(id).then((loadedContent) {
@@ -34,7 +30,7 @@ class _ProjectViewState extends State<ProjectView> {
   */
 
   double getSquareMeter() {
-    var squareMeters = content["squareMeters"];
+    var squareMeters = widget.content["squareMeters"];
     double totalSquareMeters = 0.0;
     if (squareMeters != null) {
       squareMeters.forEach((element) {
@@ -52,7 +48,7 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   double getPrice() {
-    String material = content["material"];
+    String material = widget.content["material"];
     Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
     double totalPrice = 0.0;
 
@@ -63,6 +59,7 @@ class _ProjectViewState extends State<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> content = widget.content;
     // getJsonValues();
     return Scaffold(
       appBar: AppBar(

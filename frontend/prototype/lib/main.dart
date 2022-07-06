@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'dashboard/navBar.dart';
 
+// TODO: initialflutter binding
 void main() => runApp(RootClass());
 
 class RootClass extends StatelessWidget {
@@ -21,7 +22,7 @@ class RootClass extends StatelessWidget {
           shadowColor: Colors.transparent,
         ),
       ),
-      home: NavBar(0),
+      home: ProjectManager(),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/dashboard/navBar.dart';
 
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
@@ -46,6 +47,7 @@ class _ArchieveState extends State<Archieve> {
           ],
         ),
       ),
+      bottomNavigationBar: NavBar(2),
     );
   }
 }
