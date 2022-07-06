@@ -36,16 +36,18 @@ class _ProjectViewState extends State<ProjectView> {
   double getSquareMeter() {
     var squareMeters = content["squareMeters"];
     double totalSquareMeters = 0.0;
-    squareMeters.forEach((element) {
-      double width = 0.0;
-      double height = 0.0;
-      try {
-        width = element["width"];
-        height = element["height"];
-      } catch (e) {}
-      double actualSquareMeters = width * height;
-      totalSquareMeters = totalSquareMeters + actualSquareMeters;
-    });
+    if (squareMeters != null) {
+      squareMeters.forEach((element) {
+        double width = 0.0;
+        double height = 0.0;
+        try {
+          width = element["width"];
+          height = element["height"];
+        } catch (e) {}
+        double actualSquareMeters = width * height;
+        totalSquareMeters = totalSquareMeters + actualSquareMeters;
+      });
+    }
     return totalSquareMeters;
   }
 

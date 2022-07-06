@@ -9,6 +9,7 @@ import 'package:camera/camera.dart';
 
 import 'package:prototype/localDrive/content.dart';
 import 'package:prototype/newProject/mainView.dart';
+import 'package:sqflite/sqflite.dart' as sql;
 
 /// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
 class FileUtils {
@@ -35,11 +36,28 @@ class FileUtils {
     return File('$path/idFile.json');
   }
 
-  /// gibt ein JSON File mit allen aktiven Projekten zurück
-  static Future<File> get getActiveProjects async {
-    final path = await getFilePath;
-    await Permission.manageExternalStorage.request();
-    return File('$path/activeProjects.json');
+  /// erstellt die Tabelle für die Datenbank
+  static Future<void> createTables(sql.Database database) async {
+    await database.execute("""CREATE TABLE items(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        projectName TEXT,
+        client TEXT,
+        material TEXT
+      )
+      """);
+  }
+
+  /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
+  static Future<sql.Database> getDataBase() async {
+    Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
+    String? tempPath = tempDir?.path;
+    return sql.openDatabase(
+      '$tempPath/kindacode.db',
+      version: 1,
+      onCreate: (sql.Database database, int version) async {
+        await createTables(database);
+      },
+    );
   }
 
   /// gibt ein JSON File mit allen archivierten Projekten zurück
@@ -65,16 +83,10 @@ class FileUtils {
   }
   */
 
-  /// gibt eine Liste der aktiven Projekte zurück
+  /// gibt eine Liste aller Projekte zurück
   static Future<List<dynamic>> getAllProjects() async {
-    String fileContents = '';
-    try {
-      final file = await getActiveProjects;
-      fileContents = await file.readAsString();
-    } catch (e) {
-      print("readJsonFile konnte File nicht finden");
-    }
-    return json.decode(fileContents);
+    final db = await FileUtils.getDataBase();
+    return db.query('items', orderBy: "id");
   }
 
   /// gibt eine Liste der archivierten Projekte zurück
@@ -146,9 +158,10 @@ class FileUtils {
     });
 
     String newContent = jsonEncode(jsonList).toString();
-
-    File finalFile = await getActiveProjects;
+/*
+    File finalFile = await getDataBase;
     await finalFile.writeAsString(newContent);
+    */
   }
 
   static deleteImageFolder(int id) async {
@@ -196,36 +209,19 @@ class FileUtils {
   /// für Datenbank: new Project
   /// fügt das erzeugte Datenobjekt in ein JSON File ein, dazu müssen die bisherigen Daten herausgelesen werden, mit dem neuen Datenobjekt zu einem
   /// neuen JSON String kombiniert werden. Dieser JSON String überschreibt dann den bisherigen
-  static Future<Content> createNewProject(data) async {
-    final Content content = data;
-    String completeContent = "";
-    try {
-      final file = await getActiveProjects;
-      completeContent = await file.readAsString();
-      completeContent =
-          completeContent.substring(1, completeContent.length - 1);
-    } catch (e) {
-      print("addToJsonFile konnte File nicht finden");
-    }
+  static Future<int> createNewProject(Content data) async {
+    final db = await FileUtils.getDataBase();
 
-    if (completeContent.isEmpty) {
-      content.id = 0;
-      completeContent = jsonEncode(content).toString();
-      if (kDebugMode) {
-        print("i was triggered");
-      }
-    } else {
-      content.id = await createId();
-      completeContent = completeContent + "," + jsonEncode(content).toString();
-    }
-    if (kDebugMode) {
-      print(completeContent.toString());
-    }
+    final dbData = {
+      'projectName': data.projectName,
+      'client': data.client,
+      'material': data.material
+    };
 
-    File finalFile = await getActiveProjects;
-    await finalFile.writeAsString("[$completeContent]");
+    final id = await db.insert('items', dbData,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
-    return data;
+    return id;
   }
 
   /// id muss automatisch erstellt werden, damit Projekte unterscheidbar sind, und um die richtigen Bilder zu verlinken.
