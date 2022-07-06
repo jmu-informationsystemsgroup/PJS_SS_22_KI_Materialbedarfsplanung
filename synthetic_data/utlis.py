@@ -23,13 +23,13 @@ def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, dra
             bbox=cv2.boundingRect(approx)
             if filter >0:
                 if len(approx) == filter:
-                    finalContours.append(len(approx), area, approx, bbox, i)
+                    finalContours.append([len(approx), area, approx, bbox, i])
             else:   
-                finalContours.append(len(approx), area, approx, bbox, i)
-    finalContours = sorted(finalContours,key= lamda x:x[1], reverse=True) #Reverse=True für Absteigend
+                finalContours.append([len(approx), area, approx, bbox, i])
+    finalContours = sorted(finalContours,key= lambda x:x[1], reverse=True) #Reverse=True für Absteigend
     if draw:
         for con in finalContours:
-            cv2.drawContours(img,con[4],-1(0,0,255),3) #Farbe (Rot); Dicke (3)
+            cv2.drawContours(img,con[4],-1,(0,0,255),3) #Farbe (Rot); Dicke (3)
 
     return img, finalContours
 
