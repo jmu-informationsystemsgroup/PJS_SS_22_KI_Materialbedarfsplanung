@@ -207,8 +207,7 @@ class FileUtils {
   }
 
   /// für Datenbank: new Project
-  /// fügt das erzeugte Datenobjekt in ein JSON File ein, dazu müssen die bisherigen Daten herausgelesen werden, mit dem neuen Datenobjekt zu einem
-  /// neuen JSON String kombiniert werden. Dieser JSON String überschreibt dann den bisherigen
+  /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {
     final db = await FileUtils.getDataBase();
 
