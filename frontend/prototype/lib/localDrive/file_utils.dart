@@ -42,7 +42,8 @@ class FileUtils {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         projectName TEXT,
         client TEXT,
-        material TEXT
+        material TEXT,
+        statusActive INTEGER
       )
       """);
   }
@@ -83,22 +84,16 @@ class FileUtils {
   }
   */
 
-  /// gibt eine Liste aller Projekte zurück
-  static Future<List<dynamic>> getAllProjects() async {
+  /// gibt eine Liste aller aktiven Projekte zurück
+  static Future<List<dynamic>> getAllActiveProjects() async {
     final db = await FileUtils.getDataBase();
-    return db.query('items', orderBy: "id");
+    return db.query('items', orderBy: "id", where: "statusActive = 1");
   }
 
   /// gibt eine Liste der archivierten Projekte zurück
-  static Future<List<dynamic>> readarchievedJsonFile() async {
-    String fileContents = '';
-    try {
-      final file = await getArchievedProjects;
-      fileContents = await file.readAsString();
-    } catch (e) {
-      print("readJsonFile konnte File nicht finden");
-    }
-    return json.decode(fileContents);
+  static Future<List<dynamic>> getAllArchivedProjects() async {
+    final db = await FileUtils.getDataBase();
+    return db.query('items', orderBy: "id", where: "statusActive = 0");
   }
 
   /// FÄLLT BEI DATENBANK WEG
@@ -128,9 +123,9 @@ class FileUtils {
   static Future<Map<String, dynamic>> getSpecificProject(int id) async {
     List<dynamic> jsonList = [];
     try {
-      jsonList = await getAllProjects();
+      jsonList = await getAllActiveProjects();
     } catch (e) {
-      jsonList = await readarchievedJsonFile();
+      jsonList = await getAllArchivedProjects();
     }
     Map<String, dynamic> projectJson = Content.createMap();
     var project = jsonList.where((element) {
@@ -146,22 +141,13 @@ class FileUtils {
   }
 
   /// löscht ein angefragtes Projekt aus dem Json File
-  static deleteSpecificProject(int id) async {
-    List<dynamic> jsonList = await getAllProjects();
-
-    jsonList.removeWhere((element) {
-      if (element["id"] == id) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    String newContent = jsonEncode(jsonList).toString();
-/*
-    File finalFile = await getDataBase;
-    await finalFile.writeAsString(newContent);
-    */
+  static deleteProject(int id) async {
+    final db = await FileUtils.getDataBase();
+    try {
+      await db.delete("items", where: "id = ?", whereArgs: [id]);
+    } catch (err) {
+      debugPrint("Something went wrong when deleting an item: $err");
+    }
   }
 
   static deleteImageFolder(int id) async {
@@ -170,40 +156,18 @@ class FileUtils {
     dir.delete();
   }
 
-  /// später bei datenbank: einfach status flag ändern
-  /// löscht ein angefragtes Projekt aus dem activeJson File und fügt es in das archievedJson File ein. Imagefolder bleibt bestehen
-  static archieveSpecificProject(int id) async {
-    // in die Liste der archivierten Projekte einfügen
-    String archievedContent = "";
-    List<dynamic> jsonList = await getAllProjects();
-    var project = jsonList.where((element) {
-      if (element["id"] == id) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    try {
-      final file = await getArchievedProjects;
-      archievedContent = await file.readAsString();
-      archievedContent = archievedContent.replaceAll(RegExp(r'[[]|]'), "");
-    } catch (e) {
-      print("addToJsonFile konnte File nicht finden");
-    }
+  /// ändert statusActive = 1 in statusActive = 0, dadruch wird das Projekt
+  /// nicht mehr in der Liste der aktiven Projekte angezeigt
+  static archieveProject(int id) async {
+    final db = await FileUtils.getDataBase();
 
-    Map<String, dynamic> archievedPorject = project.first;
+    final data = {
+      'statusActive': 0,
+    };
 
-    if (archievedContent.isEmpty) {
-      archievedContent = jsonEncode(archievedPorject).toString();
-    } else {
-      archievedContent =
-          archievedContent + "," + jsonEncode(archievedPorject).toString();
-    }
-
-    File archieveFile = await getArchievedProjects;
-    await archieveFile.writeAsString("[$archievedContent]");
-    // aus den aktiven Projekten rauslöschen
-    deleteSpecificProject(id);
+    final result =
+        await db.update('items', data, where: "id = ?", whereArgs: [id]);
+    return result;
   }
 
   /// für Datenbank: new Project
@@ -214,7 +178,8 @@ class FileUtils {
     final dbData = {
       'projectName': data.projectName,
       'client': data.client,
-      'material': data.material
+      'material': data.material,
+      'statusActive': data.statusActive
     };
 
     final id = await db.insert('items', dbData,

@@ -7,9 +7,9 @@ import 'package:prototype/projectView/mainView.dart';
 
 import '../projectView/gallery.dart';
 
-class Project extends StatelessWidget {
+class ProjectList extends StatelessWidget {
   List<dynamic> projects;
-  Project(this.projects);
+  ProjectList(this.projects);
 
   var galleryList = [];
 
@@ -93,8 +93,7 @@ class Project extends StatelessWidget {
                                     margin: const EdgeInsets.all(5.0),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        FileUtils.deleteSpecificProject(
-                                            element["id"]);
+                                        FileUtils.deleteProject(element["id"]);
                                         FileUtils.deleteImageFolder(
                                             element["id"]);
                                       },
@@ -107,7 +106,7 @@ class Project extends StatelessWidget {
                                     margin: const EdgeInsets.all(5.0),
                                     child: ElevatedButton(
                                         onPressed: () {
-                                          FileUtils.archieveSpecificProject(
+                                          FileUtils.archieveProject(
                                               element["id"]);
                                         },
                                         child: Icon(Icons.archive)),

@@ -20,8 +20,8 @@ class _ArchieveState extends State<Archieve> {
   List<String> _projects = [];
   static List<dynamic> allProjects = [];
 
-  getAllProjects() async {
-    FileUtils.readarchievedJsonFile().then((loadedContent) {
+  activateList() async {
+    FileUtils.getAllArchivedProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -31,7 +31,7 @@ class _ArchieveState extends State<Archieve> {
 
   @override
   Widget build(BuildContext context) {
-    getAllProjects();
+    activateList();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -42,7 +42,7 @@ class _ArchieveState extends State<Archieve> {
         child: Column(
           children: [
             projectMessage(),
-            Project(allProjects),
+            ProjectList(allProjects),
             AddProjectButton()
           ],
         ),

@@ -22,7 +22,7 @@ class _DashboardState extends State<Dashboard> {
   static List<dynamic> allProjects = [];
 
   activateList() async {
-    FileUtils.getAllProjects().then((loadedContent) {
+    FileUtils.getAllActiveProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -42,7 +42,7 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             projectMessage(),
-            Project(allProjects),
+            ProjectList(allProjects),
             /*
             Center(
               child: ElevatedButton(

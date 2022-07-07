@@ -12,7 +12,7 @@ class Content {
   List<Map<String, double>> squareMeters = [];
   List<XFile?> pictures = [];
   String material = "Q2";
-  bool statusActive = true;
+  int statusActive = 1;
 
   /// übersetzt Objekt aus Json Format
   set fromJson(Map<String, dynamic> json) {
