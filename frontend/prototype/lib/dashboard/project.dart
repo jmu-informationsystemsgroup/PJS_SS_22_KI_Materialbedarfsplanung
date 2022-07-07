@@ -7,9 +7,9 @@ import 'package:prototype/projectView/mainView.dart';
 
 import '../projectView/gallery.dart';
 
-class Projects extends StatelessWidget {
+class Project extends StatelessWidget {
   List<dynamic> projects;
-  Projects(this.projects);
+  Project(this.projects);
 
   var galleryList = [];
 

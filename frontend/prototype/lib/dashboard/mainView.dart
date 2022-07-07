@@ -5,19 +5,19 @@ import 'package:prototype/dashboard/navBar.dart';
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
 import '../localDrive/file_utils.dart';
-import 'projects.dart';
+import 'project.dart';
 
-class ProjectManager extends StatefulWidget {
+class Dashboard extends StatefulWidget {
   String title = "Projektübersicht";
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _ProjectManagerState();
+    return _DashboardState();
   }
 }
 
-class _ProjectManagerState extends State<ProjectManager> {
+class _DashboardState extends State<Dashboard> {
   List<String> _projects = [];
   static List<dynamic> allProjects = [];
 
@@ -42,7 +42,7 @@ class _ProjectManagerState extends State<ProjectManager> {
         child: Column(
           children: [
             projectMessage(),
-            Projects(allProjects),
+            Project(allProjects),
             /*
             Center(
               child: ElevatedButton(
@@ -70,7 +70,7 @@ class _ProjectManagerState extends State<ProjectManager> {
 class projectMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (_ProjectManagerState.allProjects.isEmpty) {
+    if (_DashboardState.allProjects.isEmpty) {
       return Center(
         child: Column(
           children: <Widget>[

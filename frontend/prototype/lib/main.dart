@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:prototype/dashboard/projectManager.dart';
+import 'package:prototype/dashboard/mainView.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'dashboard/navBar.dart';
@@ -22,7 +22,7 @@ class RootClass extends StatelessWidget {
           shadowColor: Colors.transparent,
         ),
       ),
-      home: ProjectManager(),
+      home: Dashboard(),
     );
   }
 

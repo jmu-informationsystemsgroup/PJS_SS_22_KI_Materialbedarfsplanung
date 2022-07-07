@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:prototype/archived/archive.dart';
 import 'package:prototype/newProject/mainView.dart';
-import 'projectManager.dart';
+import 'mainView.dart';
 
 class NavBar extends StatefulWidget {
   late int currentIndex;
@@ -14,9 +14,9 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  final screens = [ProjectManager(), NewProject(), Archieve()];
+  final screens = [Dashboard(), NewProject(), Archieve()];
 
-  final titles = [ProjectManager().title, NewProject().title, Archieve().title];
+  final titles = [Dashboard().title, NewProject().title, Archieve().title];
 
   void _onItemTapped(int index) {
     Navigator.pushAndRemoveUntil(

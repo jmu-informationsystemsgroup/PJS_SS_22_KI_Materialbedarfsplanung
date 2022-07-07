@@ -12,7 +12,7 @@ class Content {
   List<Map<String, double>> squareMeters = [];
   List<XFile?> pictures = [];
   String material = "Q2";
-  // status: active / inactive
+  bool statusActive = true;
 
   /// übersetzt Objekt aus Json Format
   set fromJson(Map<String, dynamic> json) {
@@ -21,6 +21,7 @@ class Content {
     client = json['client'];
     squareMeters = json['squareMeters'];
     material = json['material'];
+    statusActive = json['statusActive'];
   }
 
   /// übersetzt Objekt in Json Format
@@ -29,7 +30,8 @@ class Content {
         'projectName': projectName,
         'client': client,
         'squareMeters': squareMeters,
-        'material': material
+        'material': material,
+        'statusActive': statusActive
       };
 
   /// erzeugt ein leeres Porjekt, in welches später geladen JSON Daten eingesetzt werden können
@@ -39,13 +41,10 @@ class Content {
       'projectName': "",
       'client': "",
       'squaremeters': [],
-      'material': ""
+      'material': "",
+      'statusActive': ""
     };
 
     return content;
   }
 }
-
-
-
-// TODO project id: get highest id + 1

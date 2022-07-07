@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:prototype/dashboard/navBar.dart';
-import 'package:prototype/dashboard/projectManager.dart';
+import 'package:prototype/dashboard/mainView.dart';
 import 'package:prototype/localDrive/file_utils.dart';
 
 import '../localDrive/content.dart';
@@ -61,7 +61,7 @@ class _NewProjectState extends State<NewProject> {
     await Future.delayed(Duration(seconds: 1));
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => ProjectManager()),
+      MaterialPageRoute(builder: (context) => Dashboard()),
       (Route<dynamic> route) => false,
     );
   }
