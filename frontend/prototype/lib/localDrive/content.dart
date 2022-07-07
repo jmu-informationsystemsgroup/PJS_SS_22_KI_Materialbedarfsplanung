@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 
-import 'file_utils.dart';
+import 'data_base_functions.dart';
 
 /// erzeugt ein Objekt das als Zwischenspeicher für die zukünftig zu speichernden Informationen
 /// dient. Die Content Klasse beinhaltet außerdem Funktionen zum Arbeiten mit JSON-Dateien

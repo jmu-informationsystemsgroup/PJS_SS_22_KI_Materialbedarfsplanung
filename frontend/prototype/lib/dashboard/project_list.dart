@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:prototype/localDrive/file_utils.dart';
+import 'package:prototype/localDrive/data_base_functions.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/projectView/mainView.dart';
 
@@ -58,14 +58,14 @@ class ProjectList extends StatelessWidget {
     if (status == "inActive") {
       return ElevatedButton(
         onPressed: () {
-          FileUtils.activateProject(id);
+          DataBase.activateProject(id);
         },
         child: const Icon(Icons.settings_backup_restore),
       );
     } else {
       return ElevatedButton(
         onPressed: () {
-          FileUtils.archieveProject(id);
+          DataBase.archieveProject(id);
         },
         child: const Icon(Icons.archive),
       );
@@ -112,8 +112,8 @@ class ProjectList extends StatelessWidget {
                                     margin: const EdgeInsets.all(5.0),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        FileUtils.deleteProject(element["id"]);
-                                        FileUtils.deleteImageFolder(
+                                        DataBase.deleteProject(element["id"]);
+                                        DataBase.deleteImageFolder(
                                             element["id"]);
                                       },
                                       child: Icon(Icons.delete),

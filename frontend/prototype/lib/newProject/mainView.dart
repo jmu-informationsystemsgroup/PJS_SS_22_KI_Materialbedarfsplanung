@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:prototype/dashboard/navBar.dart';
 import 'package:prototype/dashboard/mainView.dart';
-import 'package:prototype/localDrive/file_utils.dart';
+import 'package:prototype/localDrive/data_base_functions.dart';
 
 import '../localDrive/content.dart';
 import '../projectView/mainView.dart';
@@ -49,12 +49,14 @@ class _NewProjectState extends State<NewProject> {
   */
 
   goToProjectView() async {
+    /*
     int id = await FileUtils.getId() + 1;
     Map<String, dynamic> content = await FileUtils.getSpecificProject(id);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ProjectView(content)),
     );
+    */
   }
 
   goBack() async {
@@ -91,8 +93,8 @@ class _NewProjectState extends State<NewProject> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     onPressed: () {
-                      FileUtils.createNewProject(NewProject.cash);
-                      FileUtils.saveImages(NewProject.cash.pictures);
+                      DataBase.createNewProject(NewProject.cash);
+                      DataBase.saveImages(NewProject.cash.pictures);
                       //    Content.reset(NewProject.cash);
                       setState(() {
                         visability = true;

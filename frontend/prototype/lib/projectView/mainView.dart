@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prototype/localDrive/file_utils.dart';
+import 'package:prototype/localDrive/data_base_functions.dart';
 import 'package:prototype/localDrive/content.dart';
 import 'package:prototype/projectView/gallery.dart';
 import 'package:prototype/projectView/projectGalerydemoVersion.dart';

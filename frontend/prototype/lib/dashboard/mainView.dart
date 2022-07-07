@@ -4,7 +4,7 @@ import 'package:prototype/dashboard/navBar.dart';
 
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
-import '../localDrive/file_utils.dart';
+import '../localDrive/data_base_functions.dart';
 import 'project_list.dart';
 
 class Dashboard extends StatefulWidget {
@@ -22,7 +22,7 @@ class _DashboardState extends State<Dashboard> {
   static List<dynamic> allProjects = [];
 
   activateList() async {
-    FileUtils.getAllActiveProjects().then((loadedContent) {
+    DataBase.getAllActiveProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });

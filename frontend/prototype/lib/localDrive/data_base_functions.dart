@@ -12,7 +12,7 @@ import 'package:prototype/newProject/mainView.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 /// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
-class FileUtils {
+class DataBase {
   static Future<String?> get getFilePath async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -23,13 +23,6 @@ class FileUtils {
     String? tempPath = tempDir?.path;
     return tempPath;
   }
-
-/*
-  static Future<File> get getFile async {
-    final path = await getFilePath;
-    return File('$path/myfile.txt');
-  }
-  */
 
   static Future<File> get getIdFile async {
     final path = await getFilePath;
@@ -61,38 +54,15 @@ class FileUtils {
     );
   }
 
-  /// gibt ein JSON File mit allen archivierten Projekten zurück
-  static Future<File> get getArchievedProjects async {
-    final path = await getFilePath;
-    return File('$path/archievedProjects.json');
-  }
-
-/*
-  static Future<File> saveToFile(String data) async {
-    final file = await getFile;
-    return file.writeAsString(data);
-  }
-
-  static Future<String> readFromFile() async {
-    try {
-      final file = await getFile;
-      String fileContents = await file.readAsString();
-      return fileContents;
-    } catch (e) {
-      return "File konnte nicht gefunden werden";
-    }
-  }
-  */
-
   /// gibt eine Liste aller aktiven Projekte zurück
   static Future<List<dynamic>> getAllActiveProjects() async {
-    final db = await FileUtils.getDataBase();
+    final db = await DataBase.getDataBase();
     return db.query('items', orderBy: "id", where: "statusActive = 1");
   }
 
   /// gibt eine Liste der archivierten Projekte zurück
   static Future<List<dynamic>> getAllArchivedProjects() async {
-    final db = await FileUtils.getDataBase();
+    final db = await DataBase.getDataBase();
     return db.query('items', orderBy: "id", where: "statusActive = 0");
   }
 
@@ -117,32 +87,9 @@ class FileUtils {
     return id;
   }
 
-  /// liefert ein angefragtes Projekt zurück.
-  /// vergleicht die id's der gelisten aktiven Projekte mit der angeforderten id. Das 'erste' passende Projekt-objekt wird
-  /// dann zurück gegeben
-  static Future<Map<String, dynamic>> getSpecificProject(int id) async {
-    List<dynamic> jsonList = [];
-    try {
-      jsonList = await getAllActiveProjects();
-    } catch (e) {
-      jsonList = await getAllArchivedProjects();
-    }
-    Map<String, dynamic> projectJson = Content.createMap();
-    var project = jsonList.where((element) {
-      if (element["id"] == id) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    projectJson = project.first;
-    return projectJson;
-  }
-
-  /// löscht ein angefragtes Projekt aus dem Json File
+  /// löscht das Projekt aus der Datenbank
   static deleteProject(int id) async {
-    final db = await FileUtils.getDataBase();
+    final db = await DataBase.getDataBase();
     try {
       await db.delete("items", where: "id = ?", whereArgs: [id]);
     } catch (err) {
@@ -159,7 +106,7 @@ class FileUtils {
   /// ändert statusActive = 1 in statusActive = 0, dadruch wird das Projekt
   /// nicht mehr in der Liste der aktiven Projekte angezeigt
   static archieveProject(int id) async {
-    final db = await FileUtils.getDataBase();
+    final db = await DataBase.getDataBase();
 
     final data = {
       'statusActive': 0,
@@ -173,7 +120,7 @@ class FileUtils {
   /// ändert statusActive = 0 zurück in statusActive = 1, dadruch wird das Projekt
   /// nicht mehr in der Liste der aktiven Projekte angezeigt
   static activateProject(int id) async {
-    final db = await FileUtils.getDataBase();
+    final db = await DataBase.getDataBase();
 
     final data = {
       'statusActive': 1,
@@ -187,7 +134,7 @@ class FileUtils {
   /// für Datenbank: new Project
   /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {
-    final db = await FileUtils.getDataBase();
+    final db = await DataBase.getDataBase();
 
     final dbData = {
       'projectName': data.projectName,
@@ -198,32 +145,6 @@ class FileUtils {
 
     final id = await db.insert('items', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
-
-    return id;
-  }
-
-  /// id muss automatisch erstellt werden, damit Projekte unterscheidbar sind, und um die richtigen Bilder zu verlinken.
-  /// Dazu muss auch durch die bisherigen Projekte iteriert werden, um zu überprüfen, dass garantiert kein anderes Projekt
-  /// dieselbe Id schon hat.
-  /// Die Nutzung vom key in Map<key, value> ist unzerverlässig, da dieser sich ja für alle nachfolgenden Projekte ändert
-  /// wenn z.B. eins aus der Mitte gelöscht wird.
-  static Future<int> createId() async {
-    int id = 0;
-    String jsonId = "";
-    Map<String, dynamic> idMap = {"id": 0};
-
-    try {
-      File file = await getIdFile;
-      jsonId = await file.readAsString();
-    } catch (e) {}
-
-    if (jsonId != "") {
-      idMap = json.decode(jsonId);
-      id = idMap["id"]! + 1;
-      idMap["id"] = id;
-    }
-    File file = await getIdFile;
-    await file.writeAsString(jsonEncode(idMap).toString());
 
     return id;
   }

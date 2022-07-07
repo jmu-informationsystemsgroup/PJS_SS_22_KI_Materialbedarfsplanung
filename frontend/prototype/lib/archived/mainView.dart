@@ -3,7 +3,7 @@ import 'package:prototype/dashboard/navBar.dart';
 
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
-import '../localDrive/file_utils.dart';
+import '../localDrive/data_base_functions.dart';
 import '../dashboard/project_list.dart';
 
 class Archieve extends StatefulWidget {
@@ -21,7 +21,7 @@ class _ArchieveState extends State<Archieve> {
   static List<dynamic> allProjects = [];
 
   activateList() async {
-    FileUtils.getAllArchivedProjects().then((loadedContent) {
+    DataBase.getAllArchivedProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
