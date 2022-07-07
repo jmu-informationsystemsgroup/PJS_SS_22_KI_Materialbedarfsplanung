@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:prototype/dashboard/navBar.dart';
+import 'package:prototype/dashboard/projectManager.dart';
 import 'package:prototype/localDrive/file_utils.dart';
 
 import '../localDrive/content.dart';
@@ -57,7 +59,11 @@ class _NewProjectState extends State<NewProject> {
 
   goBack() async {
     await Future.delayed(Duration(seconds: 1));
-    Navigator.of(context).pop();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => ProjectManager()),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -105,6 +111,7 @@ class _NewProjectState extends State<NewProject> {
             ),
           ),
         ),
+        bottomNavigationBar: NavBar(1),
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:prototype/newProject/newNavBar.dart';
 import 'mainView.dart';
 
 class AddProjectButton extends StatefulWidget {
@@ -17,10 +16,10 @@ class _AddProjectButtonState extends State<AddProjectButton> {
     return Center(
       child: ElevatedButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NewProjectNavBar()),
-          );
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => NewProject()),
+              (Route<dynamic> route) => false);
         },
         child: const Text('Neues Projekt anlegen'),
       ),

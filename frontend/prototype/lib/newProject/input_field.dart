@@ -32,18 +32,16 @@ class InputField extends StatefulWidget {
 
   @override
   _InputFieldState createState() {
-    return _InputFieldState(type);
+    return _InputFieldState();
   }
 }
 
 class _InputFieldState extends State<InputField> {
-  late Enum type;
-  _InputFieldState(this.type);
-
   final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    var type = widget.type;
     return Container(
       margin: const EdgeInsets.all(15.0),
       child: TextField(
