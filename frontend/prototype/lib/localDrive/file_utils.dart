@@ -170,6 +170,20 @@ class FileUtils {
     return result;
   }
 
+  /// ändert statusActive = 0 zurück in statusActive = 1, dadruch wird das Projekt
+  /// nicht mehr in der Liste der aktiven Projekte angezeigt
+  static activateProject(int id) async {
+    final db = await FileUtils.getDataBase();
+
+    final data = {
+      'statusActive': 1,
+    };
+
+    final result =
+        await db.update('items', data, where: "id = ?", whereArgs: [id]);
+    return result;
+  }
+
   /// für Datenbank: new Project
   /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {

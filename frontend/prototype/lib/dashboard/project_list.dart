@@ -9,7 +9,8 @@ import '../projectView/gallery.dart';
 
 class ProjectList extends StatelessWidget {
   List<dynamic> projects;
-  ProjectList(this.projects);
+  String status;
+  ProjectList(this.projects, [this.status = "active"]);
 
   var galleryList = [];
 
@@ -51,6 +52,24 @@ class ProjectList extends StatelessWidget {
       ));
     });
     return row;
+  }
+
+  Widget renderArchiveButton(int id) {
+    if (status == "inActive") {
+      return ElevatedButton(
+        onPressed: () {
+          FileUtils.activateProject(id);
+        },
+        child: const Icon(Icons.settings_backup_restore),
+      );
+    } else {
+      return ElevatedButton(
+        onPressed: () {
+          FileUtils.archieveProject(id);
+        },
+        child: const Icon(Icons.archive),
+      );
+    }
   }
 
   @override
@@ -104,12 +123,7 @@ class ProjectList extends StatelessWidget {
                                   ),
                                   Container(
                                     margin: const EdgeInsets.all(5.0),
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                          FileUtils.archieveProject(
-                                              element["id"]);
-                                        },
-                                        child: Icon(Icons.archive)),
+                                    child: renderArchiveButton(element["id"]),
                                   ),
                                 ],
                               )

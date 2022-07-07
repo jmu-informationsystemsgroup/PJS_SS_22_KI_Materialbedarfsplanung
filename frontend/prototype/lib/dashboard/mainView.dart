@@ -5,7 +5,7 @@ import 'package:prototype/dashboard/navBar.dart';
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
 import '../localDrive/file_utils.dart';
-import 'project.dart';
+import 'project_list.dart';
 
 class Dashboard extends StatefulWidget {
   String title = "Projektübersicht";

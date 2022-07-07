@@ -4,7 +4,7 @@ import 'package:prototype/dashboard/navBar.dart';
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
 import '../localDrive/file_utils.dart';
-import '../dashboard/project.dart';
+import '../dashboard/project_list.dart';
 
 class Archieve extends StatefulWidget {
   String title = "Projektübersicht";
@@ -42,7 +42,7 @@ class _ArchieveState extends State<Archieve> {
         child: Column(
           children: [
             projectMessage(),
-            ProjectList(allProjects),
+            ProjectList(allProjects, "inActive"),
             AddProjectButton()
           ],
         ),
