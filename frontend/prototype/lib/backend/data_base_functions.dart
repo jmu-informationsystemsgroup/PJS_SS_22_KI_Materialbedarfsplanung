@@ -59,8 +59,7 @@ class DataBase {
   /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
   static Future<sql.Database> getProjectsDataBase() async {
     String? tempPath = await getFilePath;
-    print(
-        "$tempPath-------------------------------------------------------------------------------------------");
+
     return sql.openDatabase(
       '$tempPath/projects.db',
       version: 1,
@@ -192,6 +191,13 @@ class DataBase {
       final id = await db.insert('walls', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
     });
+  }
+
+  /// gibt alle Wände eines bestimmten Projekts anhand der Id zurück
+  static getWalls(int id) async {
+    final db = await DataBase.getWallsDataBase();
+
+    return db.query('walls', orderBy: "id", where: "id = ?", whereArgs: [id]);
   }
 
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
