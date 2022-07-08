@@ -14,7 +14,8 @@ import 'package:sqflite/sqflite.dart' as sql;
 /// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
 class DataBase {
   /// für allem fürs Debugging: legt Dateien im Downloads Ordner an, sodass diese
-  /// ausgelesen und kontrolliert werden können
+  /// ausgelesen und kontrolliert werden können, stellt außerdem eine Berechtigungsfrage
+  /// ans das Handy auf Speicherzugriff
   static Future<String?> get getFilePath async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -57,40 +58,41 @@ class DataBase {
   }
 
   /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
-  static Future<sql.Database> getProjectsDataBase() async {
+  static Future<sql.Database> getDataBase() async {
     String? tempPath = await getFilePath;
 
     return sql.openDatabase(
-      '$tempPath/projects.db',
+      '$tempPath/spachtlerData.db',
       version: 1,
       onCreate: (sql.Database database, int version) async {
         await createProjectTable(database);
+        await createWallTable(database);
       },
     );
   }
 
+/*
   /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
   static Future<sql.Database> getWallsDataBase() async {
     String? tempPath = await getFilePath;
     return sql.openDatabase(
       '$tempPath/mvp_walls.db',
       version: 1,
-      onCreate: (sql.Database database, int version) async {
-        await createWallTable(database);
-      },
+      onCreate: (sql.Database database, int version) async {},
     );
   }
+  */
 
   /// gibt eine Liste aller aktiven Projekte zurück
   static Future<List<dynamic>> getAllActiveProjects() async {
-    final db = await DataBase.getProjectsDataBase();
+    final db = await DataBase.getDataBase();
 
     return db.query('projects', orderBy: "id", where: "statusActive = 1");
   }
 
   /// gibt eine Liste der archivierten Projekte zurück
   static Future<List<dynamic>> getAllArchivedProjects() async {
-    final db = await DataBase.getProjectsDataBase();
+    final db = await DataBase.getDataBase();
     return db.query('projects', orderBy: "id", where: "statusActive = 0");
   }
 
@@ -117,7 +119,7 @@ class DataBase {
 
   /// löscht das Projekt aus der Datenbank
   static deleteProject(int id) async {
-    final db = await DataBase.getProjectsDataBase();
+    final db = await DataBase.getDataBase();
     try {
       await db.delete("projects", where: "id = ?", whereArgs: [id]);
     } catch (err) {
@@ -134,7 +136,7 @@ class DataBase {
   /// ändert statusActive = 1 in statusActive = 0, dadruch wird das Projekt
   /// nicht mehr in der Liste der aktiven Projekte angezeigt
   static archieveProject(int id) async {
-    final db = await DataBase.getProjectsDataBase();
+    final db = await DataBase.getDataBase();
     final data = {
       'statusActive': 0,
     };
@@ -147,7 +149,7 @@ class DataBase {
   /// ändert statusActive = 0 zurück in statusActive = 1, dadruch wird das Projekt
   /// nicht mehr in der Liste der aktiven Projekte angezeigt
   static activateProject(int id) async {
-    final db = await DataBase.getProjectsDataBase();
+    final db = await DataBase.getDataBase();
 
     final data = {
       'statusActive': 1,
@@ -160,7 +162,7 @@ class DataBase {
 
   /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {
-    final db = await DataBase.getProjectsDataBase();
+    final db = await DataBase.getDataBase();
 
     final dbData = {
       'projectName': data.projectName,
@@ -178,7 +180,7 @@ class DataBase {
 
   /// FÜR MVP: Wenn es eine Wall Liste gibt, werden die Elemente dieser in den MVP Wand Tabelle eingetragen
   static createWallsForProject(Content data, int projectId) async {
-    final db = await DataBase.getWallsDataBase();
+    final db = await DataBase.getDataBase();
 
     List<Wall> squareMeters = data.squareMeters;
 
@@ -193,11 +195,12 @@ class DataBase {
     });
   }
 
-  /// gibt alle Wände eines bestimmten Projekts anhand der Id zurück
+  /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück
   static getWalls(int id) async {
-    final db = await DataBase.getWallsDataBase();
+    final db = await DataBase.getDataBase();
 
-    return db.query('walls', orderBy: "id", where: "id = ?", whereArgs: [id]);
+    return db
+        .query('walls', orderBy: "id", where: "projectId = ?", whereArgs: [id]);
   }
 
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
