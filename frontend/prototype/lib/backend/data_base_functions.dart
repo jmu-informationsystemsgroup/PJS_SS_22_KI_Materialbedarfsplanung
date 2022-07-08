@@ -7,12 +7,14 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:camera/camera.dart';
 
-import 'package:prototype/localDrive/content.dart';
+import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/newProject/mainView.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 /// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
 class DataBase {
+  /// für allem fürs Debugging: legt Dateien im Downloads Ordner an, sodass diese
+  /// ausgelesen und kontrolliert werden können
   static Future<String?> get getFilePath async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -24,14 +26,16 @@ class DataBase {
     return tempPath;
   }
 
+  /// wird aktuell noch für Fotos benötigt, kann entfernt werden, soblald komplett auf
+  /// Datenbanken umgezogen wurde
   static Future<File> get getIdFile async {
     final path = await getFilePath;
     return File('$path/idFile.json');
   }
 
-  /// erstellt die Tabelle für die Datenbank
-  static Future<void> createTables(sql.Database database) async {
-    await database.execute("""CREATE TABLE items(
+  /// erstellt die Projekttabelle für die Datenbank
+  static Future<void> createProjectTable(sql.Database database) async {
+    await database.execute("""CREATE TABLE projects(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         projectName TEXT,
         client TEXT,
@@ -41,29 +45,54 @@ class DataBase {
       """);
   }
 
+  /// FÜR MVP: erstellt die Wandtabelle für die Datenbank
+  static Future<void> createWallTable(sql.Database database) async {
+    await database.execute("""CREATE TABLE walls(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        projectId INTEGER,
+        width REAL,
+        height REAL
+      )
+      """);
+  }
+
   /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
-  static Future<sql.Database> getDataBase() async {
-    Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
-    String? tempPath = tempDir?.path;
+  static Future<sql.Database> getProjectsDataBase() async {
+    String? tempPath = await getFilePath;
+    print(
+        "$tempPath-------------------------------------------------------------------------------------------");
     return sql.openDatabase(
-      '$tempPath/kindacode.db',
+      '$tempPath/projects.db',
       version: 1,
       onCreate: (sql.Database database, int version) async {
-        await createTables(database);
+        await createProjectTable(database);
+      },
+    );
+  }
+
+  /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
+  static Future<sql.Database> getWallsDataBase() async {
+    String? tempPath = await getFilePath;
+    return sql.openDatabase(
+      '$tempPath/mvp_walls.db',
+      version: 1,
+      onCreate: (sql.Database database, int version) async {
+        await createWallTable(database);
       },
     );
   }
 
   /// gibt eine Liste aller aktiven Projekte zurück
   static Future<List<dynamic>> getAllActiveProjects() async {
-    final db = await DataBase.getDataBase();
-    return db.query('items', orderBy: "id", where: "statusActive = 1");
+    final db = await DataBase.getProjectsDataBase();
+
+    return db.query('projects', orderBy: "id", where: "statusActive = 1");
   }
 
   /// gibt eine Liste der archivierten Projekte zurück
   static Future<List<dynamic>> getAllArchivedProjects() async {
-    final db = await DataBase.getDataBase();
-    return db.query('items', orderBy: "id", where: "statusActive = 0");
+    final db = await DataBase.getProjectsDataBase();
+    return db.query('projects', orderBy: "id", where: "statusActive = 0");
   }
 
   /// FÄLLT BEI DATENBANK WEG
@@ -89,9 +118,9 @@ class DataBase {
 
   /// löscht das Projekt aus der Datenbank
   static deleteProject(int id) async {
-    final db = await DataBase.getDataBase();
+    final db = await DataBase.getProjectsDataBase();
     try {
-      await db.delete("items", where: "id = ?", whereArgs: [id]);
+      await db.delete("projects", where: "id = ?", whereArgs: [id]);
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }
@@ -106,35 +135,33 @@ class DataBase {
   /// ändert statusActive = 1 in statusActive = 0, dadruch wird das Projekt
   /// nicht mehr in der Liste der aktiven Projekte angezeigt
   static archieveProject(int id) async {
-    final db = await DataBase.getDataBase();
-
+    final db = await DataBase.getProjectsDataBase();
     final data = {
       'statusActive': 0,
     };
 
     final result =
-        await db.update('items', data, where: "id = ?", whereArgs: [id]);
+        await db.update('projects', data, where: "id = ?", whereArgs: [id]);
     return result;
   }
 
   /// ändert statusActive = 0 zurück in statusActive = 1, dadruch wird das Projekt
   /// nicht mehr in der Liste der aktiven Projekte angezeigt
   static activateProject(int id) async {
-    final db = await DataBase.getDataBase();
+    final db = await DataBase.getProjectsDataBase();
 
     final data = {
       'statusActive': 1,
     };
 
     final result =
-        await db.update('items', data, where: "id = ?", whereArgs: [id]);
+        await db.update('projects', data, where: "id = ?", whereArgs: [id]);
     return result;
   }
 
-  /// für Datenbank: new Project
   /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {
-    final db = await DataBase.getDataBase();
+    final db = await DataBase.getProjectsDataBase();
 
     final dbData = {
       'projectName': data.projectName,
@@ -143,10 +170,28 @@ class DataBase {
       'statusActive': data.statusActive
     };
 
-    final id = await db.insert('items', dbData,
+    final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    createWallsForProject(data, id);
 
     return id;
+  }
+
+  /// FÜR MVP: Wenn es eine Wall Liste gibt, werden die Elemente dieser in den MVP Wand Tabelle eingetragen
+  static createWallsForProject(Content data, int projectId) async {
+    final db = await DataBase.getWallsDataBase();
+
+    List<Wall> squareMeters = data.squareMeters;
+
+    squareMeters.forEach((element) async {
+      final dbData = {
+        'projectId': projectId,
+        'width': element.width,
+        'height': element.height
+      };
+      final id = await db.insert('walls', dbData,
+          conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    });
   }
 
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird

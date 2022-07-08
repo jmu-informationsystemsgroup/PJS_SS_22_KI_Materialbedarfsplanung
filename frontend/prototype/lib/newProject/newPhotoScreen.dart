@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:prototype/localDrive/content.dart';
+import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/newProject/mainView.dart';
 
 import 'mainView.dart';

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:prototype/dashboard/navBar.dart';
 import 'package:prototype/dashboard/mainView.dart';
-import 'package:prototype/localDrive/data_base_functions.dart';
+import 'package:prototype/backend/data_base_functions.dart';
 
-import '../localDrive/content.dart';
+import '../backend/helper_objects.dart';
 import '../projectView/mainView.dart';
 import 'input_field.dart';
 import 'mvp_checklist.dart';
@@ -95,6 +95,7 @@ class _NewProjectState extends State<NewProject> {
                     onPressed: () {
                       DataBase.createNewProject(NewProject.cash);
                       DataBase.saveImages(NewProject.cash.pictures);
+
                       //    Content.reset(NewProject.cash);
                       setState(() {
                         visability = true;

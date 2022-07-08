@@ -4,7 +4,7 @@ import 'package:prototype/dashboard/navBar.dart';
 
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
-import '../localDrive/data_base_functions.dart';
+import '../backend/data_base_functions.dart';
 import 'project_list.dart';
 
 class Dashboard extends StatefulWidget {

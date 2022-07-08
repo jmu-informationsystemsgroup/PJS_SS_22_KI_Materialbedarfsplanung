@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prototype/localDrive/data_base_functions.dart';
-import 'package:prototype/localDrive/content.dart';
+import 'package:prototype/backend/data_base_functions.dart';
+import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/projectView/gallery.dart';
 import 'package:prototype/projectView/projectGalerydemoVersion.dart';
 import 'package:prototype/projectView/projectMap.dart';
@@ -71,8 +71,8 @@ class _ProjectViewState extends State<ProjectView> {
         // test to check if Project view is able to load data, which had been entered before
         Center(child: ProjectMap()),
         Text("Auftraggeber: " + content["client"]),
-        Text("Quadratmeter: " + getSquareMeter().toString()),
-        Text("Preis: " + getPrice().toString()),
+        //  Text("Quadratmeter: " + getSquareMeter().toString()),
+        //   Text("Preis: " + getPrice().toString()),
         Container(
           margin: const EdgeInsets.all(10.0),
           //    child: Text("Adresse: " + element + "straße"),

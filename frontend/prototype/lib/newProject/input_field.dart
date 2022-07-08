@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/localDrive/content.dart';
+import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/newProject/mainView.dart';
 
 enum InputType { projectName, client }
