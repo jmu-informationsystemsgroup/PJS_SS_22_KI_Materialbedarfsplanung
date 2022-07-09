@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:prototype/dashboard/navBar.dart';
-import 'package:prototype/dashboard/projectManager.dart';
-import 'package:prototype/localDrive/file_utils.dart';
+import 'package:prototype/dashboard/mainView.dart';
+import 'package:prototype/backend/data_base_functions.dart';
 
-import '../localDrive/content.dart';
+import '../backend/helper_objects.dart';
 import '../projectView/mainView.dart';
 import 'input_field.dart';
 import 'mvp_checklist.dart';
@@ -49,19 +49,21 @@ class _NewProjectState extends State<NewProject> {
   */
 
   goToProjectView() async {
+    /*
     int id = await FileUtils.getId() + 1;
     Map<String, dynamic> content = await FileUtils.getSpecificProject(id);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ProjectView(content)),
     );
+    */
   }
 
   goBack() async {
     await Future.delayed(Duration(seconds: 1));
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => ProjectManager()),
+      MaterialPageRoute(builder: (context) => Dashboard()),
       (Route<dynamic> route) => false,
     );
   }
@@ -91,8 +93,9 @@ class _NewProjectState extends State<NewProject> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     onPressed: () {
-                      FileUtils.addToJsonFile(NewProject.cash);
-                      FileUtils.saveImages(NewProject.cash.pictures);
+                      DataBase.createNewProject(NewProject.cash);
+                      DataBase.saveImages(NewProject.cash.pictures);
+
                       //    Content.reset(NewProject.cash);
                       setState(() {
                         visability = true;

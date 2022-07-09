@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:prototype/localDrive/content.dart';
+import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/newProject/mainView.dart';
 
 import '../styles/container.dart';
@@ -22,8 +22,8 @@ class _MVPWalls extends State<MVPWalls> {
   int i = 1;
 
   Widget newWall(int i) {
-    Map<String, double> newWallList = {'width': 0.0, 'height': 0.0};
-    NewProject.cash.squareMeters.add({});
+    Wall newWall = new Wall();
+    NewProject.cash.squareMeters.add(new Wall());
     print(NewProject.cash.squareMeters);
 
     Container container = Container(
@@ -47,7 +47,7 @@ class _MVPWalls extends State<MVPWalls> {
                   onChanged: (value) {
                     setState(
                       () {
-                        newWallList['width'] = double.parse(value);
+                        newWall.width = double.parse(value);
                       },
                     );
                   },
@@ -62,10 +62,10 @@ class _MVPWalls extends State<MVPWalls> {
                   onChanged: (value) {
                     setState(
                       () {
-                        newWallList['height'] = double.parse(value);
+                        newWall.height = double.parse(value);
                       },
                     );
-                    print(newWallList.toString());
+                    print(newWall.toString());
                   },
                   decoration: ContainerStyles.getInputStyle("Höhe"),
                 ),
@@ -78,10 +78,7 @@ class _MVPWalls extends State<MVPWalls> {
                       setState(
                         () {
                           walls.remove(walls[i - 1]);
-                          NewProject.cash.squareMeters[i - 1] = {
-                            "width": 0.0,
-                            "height": 0.0
-                          };
+                          NewProject.cash.squareMeters[i - 1] = Wall();
                         },
                       );
                     },
@@ -91,7 +88,7 @@ class _MVPWalls extends State<MVPWalls> {
                     onPressed: () {
                       setState(
                         () {
-                          NewProject.cash.squareMeters[i - 1] = newWallList;
+                          NewProject.cash.squareMeters[i - 1] = newWall;
                         },
                       );
                     },

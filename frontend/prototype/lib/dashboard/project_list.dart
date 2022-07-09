@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:prototype/localDrive/file_utils.dart';
+import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/projectView/mainView.dart';
 
 import '../projectView/gallery.dart';
 
-class Projects extends StatelessWidget {
+class ProjectList extends StatelessWidget {
   List<dynamic> projects;
-  Projects(this.projects);
+  String status;
+  ProjectList(this.projects, [this.status = "active"]);
 
   var galleryList = [];
 
@@ -53,6 +54,24 @@ class Projects extends StatelessWidget {
     return row;
   }
 
+  Widget renderArchiveButton(int id) {
+    if (status == "inActive") {
+      return ElevatedButton(
+        onPressed: () {
+          DataBase.activateProject(id);
+        },
+        child: const Icon(Icons.settings_backup_restore),
+      );
+    } else {
+      return ElevatedButton(
+        onPressed: () {
+          DataBase.archieveProject(id);
+        },
+        child: const Icon(Icons.archive),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -93,9 +112,8 @@ class Projects extends StatelessWidget {
                                     margin: const EdgeInsets.all(5.0),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        FileUtils.deleteSpecificProject(
-                                            element["id"]);
-                                        FileUtils.deleteImageFolder(
+                                        DataBase.deleteProject(element["id"]);
+                                        DataBase.deleteImageFolder(
                                             element["id"]);
                                       },
                                       child: Icon(Icons.delete),
@@ -105,12 +123,7 @@ class Projects extends StatelessWidget {
                                   ),
                                   Container(
                                     margin: const EdgeInsets.all(5.0),
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                          FileUtils.archieveSpecificProject(
-                                              element["id"]);
-                                        },
-                                        child: Icon(Icons.archive)),
+                                    child: renderArchiveButton(element["id"]),
                                   ),
                                 ],
                               )

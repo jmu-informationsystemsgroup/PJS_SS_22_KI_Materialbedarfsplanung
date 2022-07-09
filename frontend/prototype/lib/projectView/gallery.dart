@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/localDrive/file_utils.dart';
+import 'package:prototype/backend/data_base_functions.dart';
 import 'dart:io';
 
 import 'package:prototype/projectView/mainView.dart';
@@ -23,7 +23,7 @@ class _GalleryState extends State<Gallery> {
     String src = widget.src;
     int length = widget.length;
     try {
-      FileUtils.getImages(src).then((loadedImages) {
+      DataBase.getImages(src).then((loadedImages) {
         setState(() {
           galleryList = loadedImages;
         });

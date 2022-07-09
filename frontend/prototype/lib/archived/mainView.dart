@@ -3,8 +3,8 @@ import 'package:prototype/dashboard/navBar.dart';
 
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
-import '../localDrive/file_utils.dart';
-import '../dashboard/projects.dart';
+import '../backend/data_base_functions.dart';
+import '../dashboard/project_list.dart';
 
 class Archieve extends StatefulWidget {
   String title = "Projektübersicht";
@@ -20,8 +20,8 @@ class _ArchieveState extends State<Archieve> {
   List<String> _projects = [];
   static List<dynamic> allProjects = [];
 
-  getAllProjects() async {
-    FileUtils.readarchievedJsonFile().then((loadedContent) {
+  activateList() async {
+    DataBase.getAllArchivedProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -31,7 +31,7 @@ class _ArchieveState extends State<Archieve> {
 
   @override
   Widget build(BuildContext context) {
-    getAllProjects();
+    activateList();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -42,7 +42,7 @@ class _ArchieveState extends State<Archieve> {
         child: Column(
           children: [
             projectMessage(),
-            Projects(allProjects),
+            ProjectList(allProjects, "inActive"),
             AddProjectButton()
           ],
         ),

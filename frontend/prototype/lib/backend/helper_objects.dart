@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 
-import 'file_utils.dart';
+import 'data_base_functions.dart';
 
 /// erzeugt ein Objekt das als Zwischenspeicher für die zukünftig zu speichernden Informationen
 /// dient. Die Content Klasse beinhaltet außerdem Funktionen zum Arbeiten mit JSON-Dateien
@@ -9,45 +9,48 @@ class Content {
   int id = 0;
   String projectName = "Default";
   String client = "Default";
-  List<Map<String, double>> squareMeters = [];
-  //Enum marterial
+  List<Wall> squareMeters = [];
   List<XFile?> pictures = [];
   String material = "Q2";
+  int statusActive = 1;
 
+  /// übersetzt Objekt aus Json Format
   set fromJson(Map<String, dynamic> json) {
     id = json['id'];
     projectName = json['projectName'];
     client = json['client'];
     squareMeters = json['squareMeters'];
     material = json['material'];
+    statusActive = json['statusActive'];
   }
 
+  /// übersetzt Objekt in Json Format
   Map<String, dynamic> toJson() => {
         'id': id,
         'projectName': projectName,
         'client': client,
         'squareMeters': squareMeters,
-        'material': material
+        'material': material,
+        'statusActive': statusActive
       };
 
+  /// erzeugt ein leeres Porjekt, in welches später geladen JSON Daten eingesetzt werden können
   static Map<String, dynamic> createMap() {
     Map<String, dynamic> content = {
       'id': '',
       'projectName': "",
       'client': "",
       'squaremeters': [],
-      'material': ""
+      'material': "",
+      'statusActive': ""
     };
 
     return content;
   }
-
-  static Map<String, dynamic> reset(var element) {
-    element = createMap();
-    return element;
-  }
 }
 
-
-
-// TODO project id: get highest id + 1
+/// erzeugt eine MVP Wand, standardmäßig mit den Werten 0.0 * 0.0
+class Wall {
+  double width = 0.0;
+  double height = 0.0;
+}

@@ -4,25 +4,25 @@ import 'package:prototype/dashboard/navBar.dart';
 
 import 'package:prototype/newProject/newProjectButton.dart';
 import 'package:prototype/newProject/mainView.dart';
-import '../localDrive/file_utils.dart';
-import 'projects.dart';
+import '../backend/data_base_functions.dart';
+import 'project_list.dart';
 
-class ProjectManager extends StatefulWidget {
+class Dashboard extends StatefulWidget {
   String title = "Projektübersicht";
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _ProjectManagerState();
+    return _DashboardState();
   }
 }
 
-class _ProjectManagerState extends State<ProjectManager> {
+class _DashboardState extends State<Dashboard> {
   List<String> _projects = [];
   static List<dynamic> allProjects = [];
 
-  getAllProjects() async {
-    FileUtils.readJsonFile().then((loadedContent) {
+  activateList() async {
+    DataBase.getAllActiveProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -32,7 +32,7 @@ class _ProjectManagerState extends State<ProjectManager> {
 
   @override
   Widget build(BuildContext context) {
-    getAllProjects();
+    activateList();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Projektübersicht"),
@@ -42,7 +42,7 @@ class _ProjectManagerState extends State<ProjectManager> {
         child: Column(
           children: [
             projectMessage(),
-            Projects(allProjects),
+            ProjectList(allProjects),
             /*
             Center(
               child: ElevatedButton(
@@ -70,7 +70,7 @@ class _ProjectManagerState extends State<ProjectManager> {
 class projectMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (_ProjectManagerState.allProjects.isEmpty) {
+    if (_DashboardState.allProjects.isEmpty) {
       return Center(
         child: Column(
           children: <Widget>[
