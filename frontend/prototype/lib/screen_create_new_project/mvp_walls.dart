@@ -20,8 +20,6 @@ class _MVPWalls extends State<MVPWalls> {
   Map<int, Widget> walls = {};
 
   Widget newWall(int i) {
-    print("wallleeeeeeeeeeeeeeeeeeeeee" + walls.toString());
-    print("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii $i");
     Wall newWall = Wall();
     int wallTitle = i + 1;
 
