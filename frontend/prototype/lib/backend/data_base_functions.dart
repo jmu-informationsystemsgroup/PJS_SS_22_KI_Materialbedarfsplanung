@@ -183,7 +183,7 @@ class DataBase {
   static createWallsForProject(Content data, int projectId) async {
     final db = await DataBase.getDataBase();
 
-    List<Wall> squareMeters = data.squareMeters;
+    Iterable<Wall> squareMeters = data.squareMeters.values;
 
     squareMeters.forEach((element) async {
       final dbData = {

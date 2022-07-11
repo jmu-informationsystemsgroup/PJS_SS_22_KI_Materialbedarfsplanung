@@ -19,9 +19,9 @@ class _MVPWalls extends State<MVPWalls> {
 
   Map<int, Widget> walls = {};
 
-  Widget newWall(int i) {
+  Widget newWall(int widgetId) {
     Wall newWall = Wall();
-    int wallTitle = i + 1;
+    int wallTitle = widgetId + 1;
 
     Container container = Container(
       margin: const EdgeInsets.fromLTRB(15, 3, 15, 7),
@@ -74,9 +74,9 @@ class _MVPWalls extends State<MVPWalls> {
                     onPressed: () {
                       setState(
                         () {
-                          walls.removeWhere((key, value) => key == i);
+                          walls.removeWhere((key, value) => key == widgetId);
                           NewProject.cash.squareMeters
-                              .removeWhere((element) => element.key == i);
+                              .removeWhere((key, value) => key == widgetId);
                         },
                       );
                     },
@@ -86,8 +86,7 @@ class _MVPWalls extends State<MVPWalls> {
                     onPressed: () {
                       setState(
                         () {
-                          newWall.key = i;
-                          NewProject.cash.squareMeters.add(newWall);
+                          NewProject.cash.squareMeters[widgetId] = newWall;
                         },
                       );
                     },
@@ -106,6 +105,8 @@ class _MVPWalls extends State<MVPWalls> {
   int i = 0;
   @override
   Widget build(BuildContext context) {
+    print("Safe area ---------------------------------------" +
+        NewProject.cash.squareMeters.toString());
     return Column(
       children: <Widget>[
         ElevatedButton(

@@ -9,7 +9,7 @@ class Content {
   int id = 0;
   String projectName = "Default";
   String client = "Default";
-  List<Wall> squareMeters = [];
+  Map<int, Wall> squareMeters = {};
   List<XFile?> pictures = [];
   String material = "Q2";
   int statusActive = 1;
@@ -51,7 +51,6 @@ class Content {
 
 /// erzeugt eine MVP Wand, standardmäßig mit den Werten 0.0 * 0.0
 class Wall {
-  late int key;
   double width = 0.0;
   double height = 0.0;
 }
