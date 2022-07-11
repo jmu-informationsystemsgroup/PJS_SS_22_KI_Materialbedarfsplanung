@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:prototype/home/mainView.dart';
+import 'package:prototype/home/_main_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // TODO: initialflutter binding

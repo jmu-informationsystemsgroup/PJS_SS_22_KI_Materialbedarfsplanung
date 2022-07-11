@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:prototype/archive/mainView.dart';
-import 'package:prototype/screen_create_new_project/mainView.dart';
-import '../home/mainView.dart';
+import 'package:prototype/archive/_main_view.dart';
+import 'package:prototype/screen_create_new_project/_main_view.dart';
+import '../home/_main_view.dart';
 
 class NavBar extends StatefulWidget {
   late int currentIndex;

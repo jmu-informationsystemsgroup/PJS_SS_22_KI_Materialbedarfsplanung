@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/screen_create_new_project/mainView.dart';
+import 'package:prototype/screen_create_new_project/_main_view.dart';
 
-import 'mainView.dart';
+import '_main_view.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;

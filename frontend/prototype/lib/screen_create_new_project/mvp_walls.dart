@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/screen_create_new_project/mainView.dart';
+import 'package:prototype/screen_create_new_project/_main_view.dart';
 
 import '../styles/container.dart';
 

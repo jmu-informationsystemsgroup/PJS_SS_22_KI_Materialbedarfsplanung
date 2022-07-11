@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/screen_create_new_project/mainView.dart';
+import 'package:prototype/screen_create_new_project/_main_view.dart';
 
 enum InputType { projectName, client }
 

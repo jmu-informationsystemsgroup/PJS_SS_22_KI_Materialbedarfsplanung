@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:prototype/components/navBar.dart';
 
 import 'package:prototype/home/button_new_project.dart';
-import 'package:prototype/screen_create_new_project/mainView.dart';
+import 'package:prototype/screen_create_new_project/_main_view.dart';
 import '../backend/data_base_functions.dart';
 import '../components/project_list.dart';
 
-class Archieve extends StatefulWidget {
+class Dashboard extends StatefulWidget {
   String title = "Projektübersicht";
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _ArchieveState();
+    return _DashboardState();
   }
 }
 
-class _ArchieveState extends State<Archieve> {
+class _DashboardState extends State<Dashboard> {
   List<String> _projects = [];
   static List<dynamic> allProjects = [];
 
   activateList() async {
-    DataBase.getAllArchivedProjects().then((loadedContent) {
+    DataBase.getAllActiveProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -34,20 +35,19 @@ class _ArchieveState extends State<Archieve> {
     activateList();
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Archiv",
-        ),
+        title: const Text("Projektübersicht"),
+        primary: true,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             projectMessage(),
-            ProjectList(allProjects, "inActive"),
+            ProjectList(allProjects),
             AddProjectButton()
           ],
         ),
       ),
-      bottomNavigationBar: NavBar(2),
+      bottomNavigationBar: NavBar(0),
     );
   }
 }
@@ -55,7 +55,7 @@ class _ArchieveState extends State<Archieve> {
 class projectMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (_ArchieveState.allProjects.isEmpty) {
+    if (_DashboardState.allProjects.isEmpty) {
       return Center(
         child: Column(
           children: <Widget>[
