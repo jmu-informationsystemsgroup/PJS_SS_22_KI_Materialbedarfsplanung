@@ -1,10 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:prototype/dashboard/mainView.dart';
+import 'package:prototype/home/mainView.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'dashboard/navBar.dart';
 
 // TODO: initialflutter binding
 void main() => runApp(RootClass());

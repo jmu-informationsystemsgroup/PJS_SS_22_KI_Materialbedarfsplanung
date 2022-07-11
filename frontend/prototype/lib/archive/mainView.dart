@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/dashboard/navBar.dart';
+import 'package:prototype/components/navBar.dart';
 
-import 'package:prototype/newProject/newProjectButton.dart';
-import 'package:prototype/newProject/mainView.dart';
+import 'package:prototype/home/button_new_project.dart';
+import 'package:prototype/screen_create_new_project/mainView.dart';
 import '../backend/data_base_functions.dart';
-import '../dashboard/project_list.dart';
+import '../components/project_list.dart';
 
 class Archieve extends StatefulWidget {
   String title = "Projektübersicht";

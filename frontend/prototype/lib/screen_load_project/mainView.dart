@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/projectView/gallery.dart';
-import 'package:prototype/projectView/projectGalerydemoVersion.dart';
-import 'package:prototype/projectView/projectMap.dart';
+import 'package:prototype/components/gallery.dart';
+import 'package:prototype/screen_load_project/projectMap.dart';
 
 class ProjectView extends StatefulWidget {
   Map<String, dynamic> content;

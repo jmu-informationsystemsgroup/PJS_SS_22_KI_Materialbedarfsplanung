@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:camera/camera.dart';
 
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/newProject/mainView.dart';
+import 'package:prototype/screen_create_new_project/mainView.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 /// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
@@ -84,6 +84,7 @@ class DataBase {
   */
 
   /// gibt eine Liste aller aktiven Projekte zurück
+  /// SPÄTER: NACH NÄCHSTEM FÄLLIGKEITSDATUM ORDNEN
   static Future<List<dynamic>> getAllActiveProjects() async {
     final db = await DataBase.getDataBase();
 
@@ -146,7 +147,7 @@ class DataBase {
     return result;
   }
 
-  /// ändert statusActive = 0 zurück in statusActive = 1, dadruch wird das Projekt
+  /// ändert statusActive = 0 zurück in statusActive = 1, dadurch wird das Projekt
   /// nicht mehr in der Liste der aktiven Projekte angezeigt
   static activateProject(int id) async {
     final db = await DataBase.getDataBase();

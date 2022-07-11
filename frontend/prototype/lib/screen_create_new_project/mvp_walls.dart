@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/newProject/mainView.dart';
+import 'package:prototype/screen_create_new_project/mainView.dart';
 
 import '../styles/container.dart';
 
@@ -17,14 +17,13 @@ class MVPWalls extends StatefulWidget {
 class _MVPWalls extends State<MVPWalls> {
   final TextEditingController nameController = TextEditingController();
 
-  List<Widget> walls = [];
-
-  int i = 1;
+  Map<int, Widget> walls = {};
 
   Widget newWall(int i) {
-    Wall newWall = new Wall();
-    NewProject.cash.squareMeters.add(new Wall());
-    print(NewProject.cash.squareMeters);
+    print("wallleeeeeeeeeeeeeeeeeeeeee" + walls.toString());
+    print("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii $i");
+    Wall newWall = Wall();
+    int wallTitle = i + 1;
 
     Container container = Container(
       margin: const EdgeInsets.fromLTRB(15, 3, 15, 7),
@@ -35,7 +34,7 @@ class _MVPWalls extends State<MVPWalls> {
         runSpacing: 20, // to apply margin in the cross axis of the wrap
         children: <Widget>[
           Text(
-            "Wand $i",
+            "Wand $wallTitle",
             style: ContainerStyles.getTextStyle(),
           ),
           Row(
@@ -77,8 +76,9 @@ class _MVPWalls extends State<MVPWalls> {
                     onPressed: () {
                       setState(
                         () {
-                          walls.remove(walls[i - 1]);
-                          NewProject.cash.squareMeters[i - 1] = Wall();
+                          walls.removeWhere((key, value) => key == i);
+                          NewProject.cash.squareMeters
+                              .removeWhere((element) => element.key == i);
                         },
                       );
                     },
@@ -88,7 +88,8 @@ class _MVPWalls extends State<MVPWalls> {
                     onPressed: () {
                       setState(
                         () {
-                          NewProject.cash.squareMeters[i - 1] = newWall;
+                          newWall.key = i;
+                          NewProject.cash.squareMeters.add(newWall);
                         },
                       );
                     },
@@ -104,28 +105,25 @@ class _MVPWalls extends State<MVPWalls> {
     return container;
   }
 
+  int i = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Column(
-          children: walls,
-        ),
         ElevatedButton(
           onPressed: () {
             setState(
               () {
-                walls.add(
-                  newWall(i),
-                );
+                walls[i] = newWall(i);
                 i += 1;
               },
             );
-
-            print(walls.toString());
           },
           child: const Text("Wand hinzufügen"),
-        )
+        ),
+        Column(
+          children: walls.values.toList(),
+        ),
       ],
     );
   }

@@ -1,17 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:prototype/dashboard/navBar.dart';
-import 'package:prototype/dashboard/mainView.dart';
+import 'package:prototype/components/navBar.dart';
+import 'package:prototype/home/mainView.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 
 import '../backend/helper_objects.dart';
-import '../projectView/mainView.dart';
+import '../screen_load_project/mainView.dart';
 import 'input_field.dart';
 import 'mvp_checklist.dart';
 import 'mvp_walls.dart';
-import 'newAddress.dart';
-import 'newPhotoButton.dart';
+import 'input_field_address.dart';
+import 'button_add_photo.dart';
 
 class NewProject extends StatefulWidget {
   String title = "Neues Projekt";

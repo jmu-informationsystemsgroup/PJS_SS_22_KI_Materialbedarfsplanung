@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/styles/container.dart';
-import 'package:prototype/projectView/mainView.dart';
+import 'package:prototype/screen_load_project/mainView.dart';
 
-import '../projectView/gallery.dart';
+import 'gallery.dart';
 
 class ProjectList extends StatelessWidget {
   List<dynamic> projects;

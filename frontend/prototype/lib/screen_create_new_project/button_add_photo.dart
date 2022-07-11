@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-import 'newPhotoScreen.dart';
+import 'screen_camera.dart';
 
 class AddPhotoButton extends StatefulWidget {
   @override

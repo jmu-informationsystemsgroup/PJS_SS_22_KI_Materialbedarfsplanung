@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prototype/dashboard/navBar.dart';
+import 'package:prototype/components/navBar.dart';
 
-import 'package:prototype/newProject/newProjectButton.dart';
-import 'package:prototype/newProject/mainView.dart';
+import 'package:prototype/home/button_new_project.dart';
+import 'package:prototype/screen_create_new_project/mainView.dart';
 import '../backend/data_base_functions.dart';
-import 'project_list.dart';
+import '../components/project_list.dart';
 
 class Dashboard extends StatefulWidget {
   String title = "Projektübersicht";
@@ -43,21 +43,6 @@ class _DashboardState extends State<Dashboard> {
           children: [
             projectMessage(),
             ProjectList(allProjects),
-            /*
-            Center(
-              child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      i += 1;
-                      _projects.add('Bauprojekt ' + (i).toString());
-                    });
-                    print(_projects);
-                  },
-                  child: Text('Neues Projekt anlegen (demoVersion)'),
-                  style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(43, 0, 110, 255))),
-            ),
-            */
             AddProjectButton()
           ],
         ),

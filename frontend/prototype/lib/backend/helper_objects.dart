@@ -51,6 +51,7 @@ class Content {
 
 /// erzeugt eine MVP Wand, standardmäßig mit den Werten 0.0 * 0.0
 class Wall {
+  late int key;
   double width = 0.0;
   double height = 0.0;
 }

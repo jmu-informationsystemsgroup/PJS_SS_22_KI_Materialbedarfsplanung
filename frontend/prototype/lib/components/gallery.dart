@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'dart:io';
 
-import 'package:prototype/projectView/mainView.dart';
+import 'package:prototype/screen_load_project/mainView.dart';
 
 class Gallery extends StatefulWidget {
   String src;
