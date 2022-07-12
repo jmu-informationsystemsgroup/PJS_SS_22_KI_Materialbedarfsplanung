@@ -58,4 +58,4 @@ def warpImg (img,points,w,h): #Höhe und Breite des Bilds
     #Hier wird noch Padding genutzt um die Bildränder zu verkleinern aber für uns irrelevant minute:41
 
 def findDis(pts1,pts2):
-    return ((pts2[0]-pts1[0])**2+(pts2[1]-pts1[1]))**0.5 #Distanz der Linie
+    return ((pts2[0]-pts1[0])**2+(pts2[1]-pts1[1])**2)**0.5 #Distanz der Linie
