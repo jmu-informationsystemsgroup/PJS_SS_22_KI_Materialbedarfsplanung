@@ -3,6 +3,8 @@ from cv2 import GaussianBlur
 from cv2 import Canny
 import numpy as np
 
+#Notiz Nicolas ist COOOL
+
 def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, draw=False): #100,100 Verändern für Edge Detection bei Canny #ShowCanny=True für Vorschau #Filter für geometrische Figuren
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #Bild wird schwarz weiß
     imgBlur=cv2.GaussianBlur(imgGray,(5,5),1) #Kernel 5*5
