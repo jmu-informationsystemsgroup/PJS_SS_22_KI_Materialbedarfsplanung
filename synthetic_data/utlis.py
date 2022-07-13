@@ -3,7 +3,7 @@ from cv2 import GaussianBlur
 from cv2 import Canny
 import numpy as np
 
-def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, draw=False): #100,100 Verändern für Edge Detection bei Canny #ShowCanny=True für Vorschau #Filter für geometrische Figuren
+def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, draw=True): #100,100 Verändern für Edge Detection bei Canny #ShowCanny=True für Vorschau #Filter für geometrische Figuren
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #Bild wird schwarz weiß
     imgBlur=cv2.GaussianBlur(imgGray,(5,5),1) #Kernel 5*5
     imgCanny=cv2.Canny(imgBlur,cThr[0], cThr[1])
@@ -29,6 +29,7 @@ def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, dra
             else:   
                 finalContours.append([len(approx), area, approx, bbox, i])
     finalContours = sorted(finalContours,key= lambda x:x[1], reverse=True) #Reverse=True für Absteigend
+    print("final contours", finalContours)
     if draw:
         for con in finalContours:
             cv2.drawContours(img,con[4],-1,(0,0,255),3) #Farbe (Rot); Dicke (3)
