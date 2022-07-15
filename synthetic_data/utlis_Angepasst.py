@@ -19,23 +19,23 @@ def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, dra
          cv2.imwrite("F:\\Projektseminar\\Edge Detection\\Kanten.jpg", imgCanny) 
 
     contours,hierarchy= cv2.findContours(imgThre,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE) #Extrahiert die Koordinaten der Eckpunkte in ein Array [] final Contours; Filter für bestimmte Formen
-    print("contours ist",contours)
+    #print("contours ist",contours)
     finalContours= []
     for i in contours: #i ist jede einzelne Kante [(i),(i),(i)]
-        area=cv2.contourArea(i)
+        area=cv2.contourArea(i) #Area ist Float
         if area > minArea:
-            peri=cv2.arcLength(i,True) #True weil Area geschlossen ist
-            approx =cv2.approxPolyDP(i,0.02*peri,True) #0.02 ist die Resolution
-            bbox=cv2.boundingRect(approx)
+            peri=cv2.arcLength(i,True) #True weil Area geschlossen ist; gibt Länge zurück [Float]
+            approx =cv2.approxPolyDP(i,0.02*peri,True) #0.02 ist die Resolution; approximiert die Form
+            bbox=cv2.boundingRect(approx) #Überlagert rechteckige Bounding Box
             if filter >0:
                 if len(approx) == filter:
                     finalContours.append([len(approx), area, approx, bbox, i])
             else:   
-                finalContours.append([len(approx), area, approx, bbox, i])
+                finalContours.append([len(approx), area, approx, bbox, i]) #Dimensionen sind Länge, Fläche, Approx (array), BBOX (Array), i (Array)
     finalContours = sorted(finalContours,key= lambda x:x[1], reverse=True) #Reverse=True für Absteigend
     if draw:
         for con in finalContours:
-            cv2.drawContours(img,con[4],-1,(0,0,255),3) #Farbe (Rot); Dicke (3)
+            cv2.drawContours(img,con[4],-1,(0,0,255),3) #Farbe (Rot); Dicke (3); er malt i weil 4. Eintrag in Final Contours
 
     return img, finalContours
 
@@ -53,7 +53,7 @@ def reorder(myPoints):
 
 def warpImg (img,points,w,h): #Höhe und Breite des Bilds 
     # print(points)
-    print(points)
+    #print(points)
     points=reorder(points)
     pts1=np.float32(points)
     pts2= np.float32([[0,0],[w,0],[0,h],[w,h]])
