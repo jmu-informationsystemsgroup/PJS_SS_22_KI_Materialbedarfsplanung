@@ -5,7 +5,7 @@ import numpy as np
 
 #Notiz Nicolas ist COOOL
 
-def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, draw=False): #100,100 Verändern für Edge Detection bei Canny #ShowCanny=True für Vorschau #Filter für geometrische Figuren
+def getContours(img,cThr=[100,100], showCanny=True, minArea=1000, filter=0, draw=False): #100,100 Verändern für Edge Detection bei Canny #ShowCanny=True für Vorschau #Filter für geometrische Figuren
     #Bildbearbeitung
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #Bild wird schwarz weiß
     imgBlur=cv2.GaussianBlur(imgGray,(5,5),1) #Kernel 5*5
@@ -13,10 +13,10 @@ def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, dra
     #Smoothing der Kanten
     kernel= np.ones((5,5)) #Neues Array 5*5 groß
     imgDial = cv2.dilate(imgCanny,kernel,iterations=3) #Neues Bild, welches verwässert ist
-    imgThre=cv2.erode(imgDial,kernel,iterations=2) #Neues Bild, welches verschlankt ist
+    imgThre=cv2.erode(imgDial,kernel,iterations=2) #Neues Bild, welches verschlankt ist 
     if showCanny:
          #cv2.imshow('Canny', imgCanny)
-         cv2.imwrite("F:\\Projektseminar\\Edge Detection\\Kanten.jpg", imgCanny) 
+         cv2.imwrite("F:\\Projektseminar\\Edge Detection\\Kanten2.jpg", imgCanny) 
 
     contours,hierarchy= cv2.findContours(imgThre,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE) #Extrahiert die Koordinaten der Eckpunkte in ein Array [] final Contours; Filter für bestimmte Formen
     #print("contours ist",contours)
@@ -37,13 +37,13 @@ def getContours(img,cThr=[100,100], showCanny=False, minArea=1000, filter=0, dra
         for con in finalContours:
             cv2.drawContours(img,con[4],-1,(0,0,255),3) #Farbe (Rot); Dicke (3); er malt i weil 4. Eintrag in Final Contours
 
-    return img, finalContours
+    return img, finalContours, imgCanny
 
 def reorder(myPoints):
     #print(myPoints.shape)
-    myPointsNew=np.zeros_like(myPoints)
-    myPoints=myPoints.reshape((4,2))
-    add=myPoints.sum(1)
+    myPointsNew=np.zeros_like(myPoints) #nimmt myPoints und überschreibt es mit Nullen
+    myPoints=myPoints.reshape((4,2)) #Konvertierung in 4x2 Matrix
+    add=myPoints.sum(1) 
     myPointsNew[0]=myPoints[np.argmin(add)]
     myPointsNew[3]=myPoints[np.argmax(add)]
     diff = np.diff(myPoints,axis=1)
