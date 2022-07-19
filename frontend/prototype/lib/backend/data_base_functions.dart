@@ -46,6 +46,7 @@ class DataBase {
       """);
   }
 
+// ToDo: Primary Key (zusammengesetzter Primärschlüssel aus WallID und projectID)
   /// FÜR MVP: erstellt die Wandtabelle für die Datenbank
   static Future<void> createWallTable(sql.Database database) async {
     await database.execute("""CREATE TABLE walls(
