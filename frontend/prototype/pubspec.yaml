@@ -48,6 +48,10 @@ dependencies:
   # adding camera component
   camera: any
 
+  # ai integration
+  tflite: any
+  meta: any
+
   # adding georgraphic map component
   flutter_map: any
   geocoder: any
@@ -59,7 +63,6 @@ dependencies:
   flutter_image: ^3.0.0
   vector_math: ^2.0.0
   proj4dart: ^2.0.0
-  meta: ^1.1.0
   collection: ^1.14.0
 
 dev_dependencies:
@@ -93,6 +96,7 @@ flutter:
    - assets/bathRoom1.jpg
    - assets/bathRoom2.jpg
    - assets/bathRoom3.jpg
+   - assets/material_model.tflite
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

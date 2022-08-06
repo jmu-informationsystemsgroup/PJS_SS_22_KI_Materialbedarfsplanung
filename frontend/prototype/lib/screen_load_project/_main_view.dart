@@ -4,6 +4,9 @@ import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/screen_load_project/projectMap.dart';
+import 'package:tflite/tflite.dart';
+
+import '../components/gallery2.dart';
 
 class ProjectView extends StatefulWidget {
   Map<String, dynamic> content;
@@ -18,10 +21,14 @@ class ProjectView extends StatefulWidget {
 class _ProjectViewState extends State<ProjectView> {
   double totalSquareMeters = 0.0;
   double totalPrice = 0.0;
+  var images = [];
 
   @override
   initState() {
+    super.initState();
     totalSquareMeters = getSquareMeter();
+    images = loadImages();
+    loadAiModel();
   }
 /*
   Map<String, dynamic> getJsonValues() {
@@ -34,6 +41,22 @@ class _ProjectViewState extends State<ProjectView> {
     return content;
   }
   */
+
+  loadImages() {
+    var images = [];
+    DataBase.getImages(widget.content["id"].toString()).then((imagelist) => {
+          imagelist.forEach((element) {
+            setState(() {
+              images.add(element);
+            });
+          })
+        });
+    return images;
+  }
+
+  loadAiModel() async {
+    var model = await Tflite.loadModel(model: "assets/material_model.tflite");
+  }
 
   double getSquareMeter() {
     DataBase.getWalls(widget.content["id"]).then((walls) {
@@ -67,6 +90,7 @@ class _ProjectViewState extends State<ProjectView> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> content = widget.content;
+    print("------------------------------------$images");
     totalPrice = getPrice();
     // getJsonValues();
     return Scaffold(
@@ -86,7 +110,7 @@ class _ProjectViewState extends State<ProjectView> {
           //    child: Text("Adresse: " + element + "straße"),
         ),
         Text("Fälligkeitsdatum: 15.05.2022"),
-        Gallery(content["id"].toString()),
+        Gallery2(images),
       ]),
     );
   }
