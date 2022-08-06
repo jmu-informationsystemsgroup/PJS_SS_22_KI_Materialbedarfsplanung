@@ -9,6 +9,8 @@ import 'package:prototype/components/gallery.dart';
 import 'package:prototype/screen_load_project/projectMap.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:tflite/tflite.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
 
 import '../components/gallery2.dart';
 
@@ -65,20 +67,19 @@ class _ProjectViewState extends State<ProjectView> {
 
   loadAiModel() async {
     var model = await Tflite.loadModel(model: "assets/material_model.tflite");
-    print("++++++++++++++++++++++++++++++++" + model.toString());
   }
 
-// applyModelOnImage methode im inder video wird nirgends aufgraufen
   applyModelOnImage() async {
-    File sth = File("assets/bathRoom1.jpg");
-    // woher weiß das programm im inder video, welches modell gemeint ist, er stellt keine verknüpfung modell, das modell wird nirgends gespeichert, auch
-    // sonst wird die load model mthode nirgends nochmal verwendet außer in init state
-    var res = await Tflite.runModelOnImage(path: sth.toString());
-
-    print("-------------------------------------" + res.toString());
+    final interpreter = await Interpreter.fromAsset("material_model.tflite");
+    File sth = File("assets/bathRoom12.jpg");
+    // var res = await Tflite.runModelOnImage(path: sth.toString());
+    var output = List.filled(1, 0).reshape([1, 1]);
+    interpreter.run(sth, output);
+    print(output[0][0]);
 
     setState(() {
-      outcome = res.toString();
+      //  outcome = res.toString();
+      outcome = output[0][0].toString();
     });
   }
 
@@ -113,7 +114,7 @@ class _ProjectViewState extends State<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
-    // applyModelOnImage();
+    applyModelOnImage();
     Map<String, dynamic> content = widget.content;
 
     totalPrice = getPrice();
@@ -127,7 +128,6 @@ class _ProjectViewState extends State<ProjectView> {
       body: Column(children: [
         // test to check if Project view is able to load data, which had been entered before
         Center(child: ProjectMap()),
-        // Image(image: AssetImage('assets/bathRoom1.jpg')),
         Text("Auftraggeber: " + content["client"]),
         Text("Quadratmeter: " + totalSquareMeters.toString()),
         Text("Preis: " + totalPrice.toString()),

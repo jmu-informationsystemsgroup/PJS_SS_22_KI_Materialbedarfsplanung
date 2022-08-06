@@ -51,6 +51,7 @@ dependencies:
   # ai integration
   tflite: any
   meta: any
+  tflite_flutter: any
 
   # adding georgraphic map component
   flutter_map: any
