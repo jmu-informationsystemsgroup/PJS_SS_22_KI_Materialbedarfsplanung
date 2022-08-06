@@ -21,4 +21,17 @@ double getSquareMeter() {
     return totalSquareMeters;
   }
 */
+
+/*
+  Map<String, dynamic> getJsonValues() {
+    FileUtils.getSpecificProject(id).then((loadedContent) {
+      setState(() {
+        content = loadedContent;
+        ProjectView.src = loadedContent["id"].toString();
+      });
+    });
+    return content;
+  }
+  */
+
 }

@@ -39,17 +39,6 @@ class _ProjectViewState extends State<ProjectView> {
     images = loadImages();
     loadAiModel();
   }
-/*
-  Map<String, dynamic> getJsonValues() {
-    FileUtils.getSpecificProject(id).then((loadedContent) {
-      setState(() {
-        content = loadedContent;
-        ProjectView.src = loadedContent["id"].toString();
-      });
-    });
-    return content;
-  }
-  */
 
   loadImages() {
     var images = [];
@@ -66,7 +55,7 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   loadAiModel() async {
-    var model = await Tflite.loadModel(model: "assets/material_model.tflite");
+    // var model = await Tflite.loadModel(model: "assets/material_model.tflite");
   }
 
   applyModelOnImage() async {
@@ -81,8 +70,10 @@ class _ProjectViewState extends State<ProjectView> {
       //  outcome = res.toString();
       outcome = output[0][0].toString();
     });
+    interpreter.close();
   }
 
+  /// für MVP mit Wandeingabe
   double getSquareMeter() {
     DataBase.getWalls(widget.content["id"]).then((walls) {
       walls.forEach((element) async {
@@ -102,6 +93,7 @@ class _ProjectViewState extends State<ProjectView> {
     return totalSquareMeters;
   }
 
+  /// für MVP mit Wandeingabe
   double getPrice() {
     String material = widget.content["material"];
     Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
@@ -114,11 +106,11 @@ class _ProjectViewState extends State<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
-    applyModelOnImage();
+    // applyModelOnImage();
     Map<String, dynamic> content = widget.content;
 
     totalPrice = getPrice();
-    // getJsonValues();
+    // getJsonValues(); find the method in helper class
     return Scaffold(
       appBar: AppBar(
         title: Text(
