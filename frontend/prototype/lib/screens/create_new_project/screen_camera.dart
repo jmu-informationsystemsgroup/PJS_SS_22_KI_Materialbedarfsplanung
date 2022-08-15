@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/screen_create_new_project/_main_view.dart';
+import 'package:prototype/screens/create_new_project/_main_view.dart';
 
 import '_main_view.dart';
 

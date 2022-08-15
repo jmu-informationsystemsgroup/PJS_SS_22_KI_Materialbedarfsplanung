@@ -2,15 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:prototype/components/navBar.dart';
-import 'package:prototype/home/_main_view.dart';
+import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 
-import '../backend/helper_objects.dart';
-import '../screen_load_project/_main_view.dart';
+import '../../backend/helper_objects.dart';
 import 'input_field.dart';
 import 'mvp_checklist.dart';
 import 'mvp_walls.dart';
-import 'input_field_address.dart';
 import 'button_add_photo.dart';
 
 class NewProject extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/styles/container.dart';
-import 'package:prototype/screen_load_project/_main_view.dart';
+import 'package:prototype/screens/load_project/_main_view.dart';
 
 import 'gallery.dart';
 

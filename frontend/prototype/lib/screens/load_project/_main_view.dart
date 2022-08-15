@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:prototype/backend/data_base_functions.dart';
-import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/gallery.dart';
-import 'package:prototype/screen_load_project/projectMap.dart';
+import 'package:prototype/screens/load_project/projectMap.dart';
 
-import '../backend/value_calculator.dart';
+import '../../backend/value_calculator.dart';
 
 class ProjectView extends StatefulWidget {
   Map<String, dynamic> content;
