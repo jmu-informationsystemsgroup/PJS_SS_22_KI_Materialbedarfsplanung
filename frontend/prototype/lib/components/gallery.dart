@@ -40,12 +40,16 @@ class _GalleryState extends State<Gallery> {
     Row row = Row(
       children: [],
     );
-    galleryList.forEach((element) {
+
+    for (int i = 0; i < galleryList.length; i++) {
+      if (i == widget.length) break;
+      var element = galleryList[i];
       row.children.add(Image.file(
         File(element["image"].path),
         width: 50,
       ));
-    });
+    }
+
     return row;
   }
 
