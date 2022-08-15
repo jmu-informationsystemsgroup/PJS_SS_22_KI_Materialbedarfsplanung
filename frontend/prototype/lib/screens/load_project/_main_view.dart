@@ -15,7 +15,7 @@ class ProjectView extends StatefulWidget {
 }
 
 class _ProjectViewState extends State<ProjectView> {
-  Map<String, dynamic> outcome = {};
+  Map<String, dynamic> calculatedOutcome = {};
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _ProjectViewState extends State<ProjectView> {
   getOutcome() {
     ValueCalculator.getOutcomeObject(widget.content).then((value) => {
           setState(() {
-            outcome = value;
+            calculatedOutcome = value;
           })
         });
   }
@@ -57,9 +57,10 @@ class _ProjectViewState extends State<ProjectView> {
         // test to check if Project view is able to load data, which had been entered before
         Center(child: ProjectMap()),
         Text("Auftraggeber: " + content["client"]),
-        Text("Quadratmeter: " + outcome["totalSquareMeters"].toString()),
-        Text("Preis: " + outcome["totalPrice"].toString()),
-        Text("KI-Ergebnis: " + outcome["aiOutcome"].toString()),
+        Text("Quadratmeter: " +
+            calculatedOutcome["totalSquareMeters"].toString()),
+        Text("Preis: " + calculatedOutcome["totalPrice"].toString()),
+        Text("KI-Ergebnis: " + calculatedOutcome["aiOutcome"].toString()),
         Container(
           margin: const EdgeInsets.all(10.0),
           //    child: Text("Adresse: " + element + "straße"),

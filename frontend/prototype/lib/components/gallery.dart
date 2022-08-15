@@ -42,7 +42,7 @@ class _GalleryState extends State<Gallery> {
     );
     galleryList.forEach((element) {
       row.children.add(Image.file(
-        File(element.path),
+        File(element["image"].path),
         width: 50,
       ));
     });

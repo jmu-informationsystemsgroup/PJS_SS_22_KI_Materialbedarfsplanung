@@ -247,7 +247,12 @@ class DataBase {
           images.forEach((element) {
             var imageId = element["id"];
 
-            list.add(File('$path/material_images/$imageId.jpg'));
+            var imageObject = {
+              "image": File('$path/material_images/$imageId.jpg'),
+              "aiValue": element["aiValue"]
+            };
+
+            list.add(imageObject);
           })
         });
 
