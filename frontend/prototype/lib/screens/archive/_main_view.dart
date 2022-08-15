@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:prototype/components/navBar.dart';
 
-import 'package:prototype/home/button_new_project.dart';
-import 'package:prototype/screen_create_new_project/_main_view.dart';
-import '../backend/data_base_functions.dart';
-import '../components/project_list.dart';
+import 'package:prototype/screens/home/button_new_project.dart';
+import '../../backend/data_base_functions.dart';
+import '../../components/project_list.dart';
 
-class Dashboard extends StatefulWidget {
+class Archieve extends StatefulWidget {
   String title = "Projektübersicht";
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _DashboardState();
+    return _ArchieveState();
   }
 }
 
-class _DashboardState extends State<Dashboard> {
+class _ArchieveState extends State<Archieve> {
   List<String> _projects = [];
   static List<dynamic> allProjects = [];
 
   activateList() async {
-    DataBase.getAllActiveProjects().then((loadedContent) {
+    DataBase.getAllArchivedProjects().then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -35,19 +33,20 @@ class _DashboardState extends State<Dashboard> {
     activateList();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Projektübersicht"),
-        primary: true,
+        title: const Text(
+          "Archiv",
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             projectMessage(),
-            ProjectList(allProjects),
+            ProjectList(allProjects, "inActive"),
             AddProjectButton()
           ],
         ),
       ),
-      bottomNavigationBar: NavBar(0),
+      bottomNavigationBar: NavBar(2),
     );
   }
 }
@@ -55,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
 class projectMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (_DashboardState.allProjects.isEmpty) {
+    if (_ArchieveState.allProjects.isEmpty) {
       return Center(
         child: Column(
           children: <Widget>[

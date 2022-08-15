@@ -13,6 +13,7 @@ class Content {
   List<XFile?> pictures = [];
   String material = "Q2";
   int statusActive = 1;
+  double aiValue = 41.0;
 
   /// übersetzt Objekt aus Json Format
   set fromJson(Map<String, dynamic> json) {
