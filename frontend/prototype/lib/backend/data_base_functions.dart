@@ -138,6 +138,39 @@ class DataBase {
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }
+
+    deleteImages(id);
+    deleteWalls(id);
+  }
+
+  static deleteImages(int projectId) async {
+    final db = await DataBase.getDataBase();
+
+    var images = await db.query('images',
+        orderBy: "id", where: "projectId = ?", whereArgs: [projectId]);
+
+    final path = await getFilePath;
+    var dir = await Directory('$path/material_images');
+
+    for (var element in images) {
+      var imageId = element["id"];
+      var file = File('$path/material_images/$imageId.jpg');
+      file.delete();
+    }
+    try {
+      await db.delete("images", where: "projectId = ?", whereArgs: [projectId]);
+    } catch (err) {
+      debugPrint("Something went wrong when deleting an item: $err");
+    }
+  }
+
+  static deleteWalls(int projectId) async {
+    final db = await DataBase.getDataBase();
+    try {
+      await db.delete("walls", where: "projectId = ?", whereArgs: [projectId]);
+    } catch (err) {
+      debugPrint("Something went wrong when deleting an item: $err");
+    }
   }
 
   /// ändert statusActive = 1 in statusActive = 0, dadruch wird das Projekt
