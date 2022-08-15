@@ -5,6 +5,8 @@ import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/screen_load_project/projectMap.dart';
 
+import '../backend/value_calculator.dart';
+
 class ProjectView extends StatefulWidget {
   Map<String, dynamic> content;
   ProjectView(this.content);
@@ -16,14 +18,13 @@ class ProjectView extends StatefulWidget {
 }
 
 class _ProjectViewState extends State<ProjectView> {
-  double totalSquareMeters = 0.0;
-  double totalPrice = 0.0;
-  double aiOutcome = 0.0;
+  Map<String, dynamic> outcome = {};
 
   @override
-  initState() {
-    totalSquareMeters = getSquareMeter();
-    aiOutcome = getAIOutcome();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getOutcome();
   }
 /*
   Map<String, dynamic> getJsonValues() {
@@ -37,50 +38,17 @@ class _ProjectViewState extends State<ProjectView> {
   }
   */
 
-  double getAIOutcome() {
-    DataBase.getImages(widget.content["id"]).then((images) {
-      images.forEach((element) async {
-        setState(() {
-          aiOutcome = aiOutcome + element["aiValue"];
+  getOutcome() {
+    ValueCalculator.getOutcomeObject(widget.content).then((value) => {
+          setState(() {
+            outcome = value;
+          })
         });
-      });
-    });
-    return aiOutcome;
-  }
-
-  double getSquareMeter() {
-    DataBase.getWalls(widget.content["id"]).then((walls) {
-      walls.forEach((element) async {
-        double width = 0.0;
-        double height = 0.0;
-        try {
-          width = element["width"];
-          height = element["height"];
-        } catch (e) {}
-        double actualSquareMeters = width * height;
-        setState(() {
-          totalSquareMeters = totalSquareMeters + actualSquareMeters;
-        });
-      });
-    });
-
-    return totalSquareMeters;
-  }
-
-  double getPrice() {
-    String material = widget.content["material"];
-    Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
-    setState(() {
-      totalPrice = totalSquareMeters * valueInterpreter[material]!;
-    });
-
-    return totalPrice;
   }
 
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> content = widget.content;
-    totalPrice = getPrice();
     // getJsonValues();
     return Scaffold(
       appBar: AppBar(
@@ -92,9 +60,9 @@ class _ProjectViewState extends State<ProjectView> {
         // test to check if Project view is able to load data, which had been entered before
         Center(child: ProjectMap()),
         Text("Auftraggeber: " + content["client"]),
-        Text("Quadratmeter: " + totalSquareMeters.toString()),
-        Text("Preis: " + totalPrice.toString()),
-        Text("KI-Ergebnis: " + aiOutcome.toString()),
+        Text("Quadratmeter: " + outcome["totalSquareMeters"].toString()),
+        Text("Preis: " + outcome["totalPrice"].toString()),
+        Text("KI-Ergebnis: " + outcome["aiOutcome"].toString()),
         Container(
           margin: const EdgeInsets.all(10.0),
           //    child: Text("Adresse: " + element + "straße"),

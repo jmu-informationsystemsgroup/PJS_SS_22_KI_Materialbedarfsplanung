@@ -23,6 +23,7 @@ class _GalleryState extends State<Gallery> {
     galleryList = getImages();
   }
 
+  /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
   getImages() {
     int projectID = int.parse(widget.src);
 
@@ -31,29 +32,6 @@ class _GalleryState extends State<Gallery> {
             galleryList = value;
           })
         });
-
-    return galleryList;
-  }
-
-  /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
-  List<dynamic> getList() {
-    int projectID = int.parse(widget.src);
-    int length = widget.length;
-    try {
-      DataBase.getImages(projectID).then((loadedImages) {
-        setState(() {
-          galleryList = loadedImages;
-        });
-      });
-    } catch (e) {}
-    /*
-     if (length > 5) {
-        print(loadedImages.take(length).toList().toString() +
-            "-----------------------------------------------------------------------------------");
-      }
-    print(length);
-    */
-    galleryList = galleryList.take(length).toList();
 
     return galleryList;
   }
