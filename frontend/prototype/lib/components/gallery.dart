@@ -18,12 +18,29 @@ class Gallery extends StatefulWidget {
 class _GalleryState extends State<Gallery> {
   var galleryList = [];
 
+  @override
+  initState() {
+    galleryList = getImages();
+  }
+
+  getImages() {
+    int projectID = int.parse(widget.src);
+
+    DataBase.getImages(projectID).then((value) => {
+          setState(() {
+            galleryList = value;
+          })
+        });
+
+    return galleryList;
+  }
+
   /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
   List<dynamic> getList() {
-    String src = widget.src;
+    int projectID = int.parse(widget.src);
     int length = widget.length;
     try {
-      DataBase.getImages(src).then((loadedImages) {
+      DataBase.getImages(projectID).then((loadedImages) {
         setState(() {
           galleryList = loadedImages;
         });
@@ -58,7 +75,7 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
-    getList();
+    //  getList();
     return renderGallery();
   }
 }

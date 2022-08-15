@@ -94,7 +94,6 @@ class _NewProjectState extends State<NewProject> {
                   child: ElevatedButton(
                     onPressed: () {
                       DataBase.createNewProject(NewProject.cash);
-                      DataBase.saveImages(NewProject.cash.pictures);
 
                       //    Content.reset(NewProject.cash);
                       setState(() {

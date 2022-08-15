@@ -18,10 +18,12 @@ class ProjectView extends StatefulWidget {
 class _ProjectViewState extends State<ProjectView> {
   double totalSquareMeters = 0.0;
   double totalPrice = 0.0;
+  double aiOutcome = 0.0;
 
   @override
   initState() {
     totalSquareMeters = getSquareMeter();
+    aiOutcome = getAIOutcome();
   }
 /*
   Map<String, dynamic> getJsonValues() {
@@ -34,6 +36,17 @@ class _ProjectViewState extends State<ProjectView> {
     return content;
   }
   */
+
+  double getAIOutcome() {
+    DataBase.getImages(widget.content["id"]).then((images) {
+      images.forEach((element) async {
+        setState(() {
+          aiOutcome = aiOutcome + element["aiValue"];
+        });
+      });
+    });
+    return aiOutcome;
+  }
 
   double getSquareMeter() {
     DataBase.getWalls(widget.content["id"]).then((walls) {
@@ -81,6 +94,7 @@ class _ProjectViewState extends State<ProjectView> {
         Text("Auftraggeber: " + content["client"]),
         Text("Quadratmeter: " + totalSquareMeters.toString()),
         Text("Preis: " + totalPrice.toString()),
+        Text("KI-Ergebnis: " + aiOutcome.toString()),
         Container(
           margin: const EdgeInsets.all(10.0),
           //    child: Text("Adresse: " + element + "straße"),

@@ -113,8 +113,6 @@ class ProjectList extends StatelessWidget {
                                     child: ElevatedButton(
                                       onPressed: () {
                                         DataBase.deleteProject(element["id"]);
-                                        DataBase.deleteImageFolder(
-                                            element["id"]);
                                       },
                                       child: Icon(Icons.delete),
                                       style: ElevatedButton.styleFrom(
