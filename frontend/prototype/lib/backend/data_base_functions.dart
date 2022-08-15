@@ -241,20 +241,19 @@ class DataBase {
 
     var list = [];
 
-    db.query('images', orderBy: "id", where: "projectId = ?", whereArgs: [
-      projectId
-    ]).then((images) => {
-          images.forEach((element) {
-            var imageId = element["id"];
+    var images = await db.query('images',
+        orderBy: "id", where: "projectId = ?", whereArgs: [projectId]);
 
-            var imageObject = {
-              "image": File('$path/material_images/$imageId.jpg'),
-              "aiValue": element["aiValue"]
-            };
+    for (var element in images) {
+      var imageId = element["id"];
 
-            list.add(imageObject);
-          })
-        });
+      var imageObject = {
+        "image": File('$path/material_images/$imageId.jpg'),
+        "aiValue": element["aiValue"]
+      };
+
+      list.add(imageObject);
+    }
 
     return list;
   }

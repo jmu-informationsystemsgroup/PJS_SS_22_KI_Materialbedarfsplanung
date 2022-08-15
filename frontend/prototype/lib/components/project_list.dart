@@ -12,48 +12,6 @@ class ProjectList extends StatelessWidget {
   String status;
   ProjectList(this.projects, [this.status = "active"]);
 
-  var galleryList = [];
-
-/*
-  /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
-  List<dynamic> getSampleImages(String src) {
-    FileUtils.getImages(src).then((loadedImages) {
-      galleryList = loadedImages;
-      galleryList = galleryList[0];
-    });
-    print(galleryList);
-    return galleryList;
-  }
-  */
-
-  List<Widget> sampleImages() {
-    List<Widget> containerList = [];
-    for (var i = 1; i < 3; i++) {
-      var src = 'assets/livingRoom' + i.toString() + '.jpg';
-      print(src);
-      containerList.add(Container(
-        margin: const EdgeInsets.all(3.0),
-        child: Image.asset(src.toString()),
-        width: 65,
-      ));
-    }
-    return containerList;
-  }
-
-  Widget renderGallery(String src) {
-    //   getSampleImages(src);
-    Row row = Row(
-      children: [],
-    );
-    galleryList.forEach((element) {
-      row.children.add(Image.file(
-        File(element.path),
-        width: 50,
-      ));
-    });
-    return row;
-  }
-
   Widget renderArchiveButton(int id) {
     if (status == "inActive") {
       return ElevatedButton(

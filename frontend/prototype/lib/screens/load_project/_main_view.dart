@@ -23,17 +23,6 @@ class _ProjectViewState extends State<ProjectView> {
     super.initState();
     getOutcome();
   }
-/*
-  Map<String, dynamic> getJsonValues() {
-    FileUtils.getSpecificProject(id).then((loadedContent) {
-      setState(() {
-        content = loadedContent;
-        ProjectView.src = loadedContent["id"].toString();
-      });
-    });
-    return content;
-  }
-  */
 
   getOutcome() {
     ValueCalculator.getOutcomeObject(widget.content).then((value) => {

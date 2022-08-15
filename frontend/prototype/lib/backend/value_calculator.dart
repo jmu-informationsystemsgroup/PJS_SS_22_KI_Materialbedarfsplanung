@@ -21,7 +21,6 @@ class ValueCalculator {
   static Future<double> getAIOutcome(int id) async {
     double aiOutcome = 0.0;
     List images = await DataBase.getImages(id);
-    print("dsfffffffffffffffffffff" + images.toString());
 
     for (var element in images) {
       aiOutcome = aiOutcome + element["aiValue"];
