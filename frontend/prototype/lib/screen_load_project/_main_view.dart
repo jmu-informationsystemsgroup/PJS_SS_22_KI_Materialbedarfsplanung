@@ -10,8 +10,8 @@ import 'package:prototype/screen_load_project/projectMap.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:tflite/tflite.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
 
+import '../backend/ai.dart';
 import '../components/gallery2.dart';
 
 class ProjectView extends StatefulWidget {
@@ -37,7 +37,7 @@ class _ProjectViewState extends State<ProjectView> {
     super.initState();
     totalSquareMeters = getSquareMeter();
     images = loadImages();
-    loadAiModel();
+    //  outcome = AI.applyModelOnImage().toString();
   }
 
   loadImages() {
@@ -52,25 +52,6 @@ class _ProjectViewState extends State<ProjectView> {
         });
 
     return images;
-  }
-
-  loadAiModel() async {
-    // var model = await Tflite.loadModel(model: "assets/material_model.tflite");
-  }
-
-  applyModelOnImage() async {
-    final interpreter = await Interpreter.fromAsset("material_model.tflite");
-    File sth = File("assets/bathRoom12.jpg");
-    // var res = await Tflite.runModelOnImage(path: sth.toString());
-    var output = List.filled(1, 0).reshape([1, 1]);
-    interpreter.run(sth, output);
-    print(output[0][0]);
-
-    setState(() {
-      //  outcome = res.toString();
-      outcome = output[0][0].toString();
-    });
-    interpreter.close();
   }
 
   /// für MVP mit Wandeingabe

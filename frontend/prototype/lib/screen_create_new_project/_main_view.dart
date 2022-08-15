@@ -5,6 +5,7 @@ import 'package:prototype/components/navBar.dart';
 import 'package:prototype/home/_main_view.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 
+import '../backend/ai.dart';
 import '../backend/helper_objects.dart';
 import '../screen_load_project/_main_view.dart';
 import 'input_field.dart';
@@ -92,9 +93,22 @@ class _NewProjectState extends State<NewProject> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
+                    child: const Text('AI Test'),
+                    onPressed: () {
+                      AI.applyModelOnImage();
+                    },
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    child: const Text('Projekt speichern und berechnen'),
                     onPressed: () {
                       DataBase.createNewProject(NewProject.cash);
                       DataBase.saveImages(NewProject.cash.pictures);
+                      //  if (NewProject.cash.pictures.length > 0) {
+                      //  AI.applyModelOnImage(NewProject.cash.pictures[0]);
+                      //   }
 
                       //    Content.reset(NewProject.cash);
                       setState(() {
@@ -104,7 +118,6 @@ class _NewProjectState extends State<NewProject> {
                       // goToProjectView();
                       goBack();
                     },
-                    child: const Text('Projekt speichern und berechnen'),
                   ),
                 ),
                 Visibility(

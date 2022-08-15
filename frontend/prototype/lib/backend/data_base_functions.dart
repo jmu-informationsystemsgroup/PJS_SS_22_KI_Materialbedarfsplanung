@@ -234,4 +234,11 @@ class DataBase {
     var list = dir.list();
     return list.toList();
   }
+
+  static Future<FileSystemEntity> loadImageFromHardcodedPath() async {
+    var path = await getFilePath;
+    var file = File('$path/material_images/1/IMG_2098.JPG');
+
+    return file;
+  }
 }
