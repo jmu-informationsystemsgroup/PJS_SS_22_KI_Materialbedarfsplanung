@@ -46,7 +46,7 @@ class ProjectList extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: 370,
+                    margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 25),
                     decoration: ContainerStyles.getBoxDecoration(),
                     child: Row(

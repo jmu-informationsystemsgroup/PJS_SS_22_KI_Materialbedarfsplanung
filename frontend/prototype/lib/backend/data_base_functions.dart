@@ -154,7 +154,6 @@ class DataBase {
         orderBy: "id", where: "projectId = ?", whereArgs: [projectId]);
 
     final path = await getFilePath;
-    var dir = await Directory('$path/material_images');
 
     for (var element in images) {
       var imageId = element["id"];
