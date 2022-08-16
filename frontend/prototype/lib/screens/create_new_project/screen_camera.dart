@@ -67,18 +67,16 @@ class _CameraPageState extends State<CameraPage> {
     }
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
+        Expanded(
+          flex: 7,
           child: Center(
             child: SizedBox(
-              height: 500,
-              width: 400,
               child: CameraPreview(controller),
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8),
+        Expanded(
+          flex: 1,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: CircleBorder(),
@@ -97,19 +95,25 @@ class _CameraPageState extends State<CameraPage> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: ElevatedButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              setState(() {
-                NewProject.cash.pictures = images;
-              });
-            },
-            child: Text("Kameransicht verlassen"),
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: const EdgeInsets.all(25),
+            child: ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                setState(() {
+                  NewProject.cash.pictures = images;
+                });
+              },
+              child: Text("Kameransicht verlassen"),
+            ),
           ),
         ),
-        getLibrary(),
+        Expanded(
+          flex: 1,
+          child: getLibrary(),
+        )
       ],
     );
   }
