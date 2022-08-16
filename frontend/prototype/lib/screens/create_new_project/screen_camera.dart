@@ -68,31 +68,38 @@ class _CameraPageState extends State<CameraPage> {
     return Column(
       children: [
         Expanded(
-          flex: 7,
-          child: Center(
-            child: SizedBox(
-              child: CameraPreview(controller),
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: CircleBorder(),
-              padding: EdgeInsets.all(17),
-              primary: Colors.white,
-            ),
-            onPressed: () async {
-              pictureFile = await controller.takePicture();
-              images.add(pictureFile!);
-              setState(() {});
-            },
-            child: const Icon(
-              Icons.camera,
-              color: Color.fromARGB(80, 0, 0, 0),
-              size: 45,
-            ),
+          flex: 8,
+          child: Stack(
+            children: [
+              Center(
+                child: SizedBox(
+                  child: CameraPreview(controller),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(17),
+                      primary: Colors.white,
+                    ),
+                    onPressed: () async {
+                      pictureFile = await controller.takePicture();
+                      images.add(pictureFile!);
+                      setState(() {});
+                    },
+                    child: const Icon(
+                      Icons.camera,
+                      color: Color.fromARGB(80, 0, 0, 0),
+                      size: 45,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(
