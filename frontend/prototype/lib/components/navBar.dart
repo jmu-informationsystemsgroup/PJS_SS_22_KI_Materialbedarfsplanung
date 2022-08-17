@@ -5,10 +5,6 @@ import 'package:prototype/screens/create_new_project/_main_view.dart';
 import '../screens/home/_main_view.dart';
 
 class NavBar extends StatefulWidget {
-  late int currentIndex;
-  NavBar(int currentIndex) {
-    this.currentIndex = currentIndex;
-  }
   @override
   State<NavBar> createState() => _NavBarState();
 }
@@ -44,7 +40,6 @@ class _NavBarState extends State<NavBar> {
           label: 'Archiv',
         ),
       ],
-      currentIndex: widget.currentIndex,
       onTap: _onItemTapped,
     );
   }

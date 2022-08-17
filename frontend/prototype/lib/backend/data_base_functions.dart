@@ -106,6 +106,13 @@ class DataBase {
         .query('walls', orderBy: "id", where: "projectId = ?", whereArgs: [id]);
   }
 
+  static getSpecificProject(int id) async {
+    final db = await DataBase.getDataBase();
+
+    return db
+        .query('projects', orderBy: "id", where: "id = ?", whereArgs: [id]);
+  }
+
   static Future<List> getImages(int projectId) async {
     final db = await DataBase.getDataBase();
 
@@ -226,7 +233,6 @@ class DataBase {
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     createWallsForProject(data, id);
     saveImages(data, id);
-
     return id;
   }
 

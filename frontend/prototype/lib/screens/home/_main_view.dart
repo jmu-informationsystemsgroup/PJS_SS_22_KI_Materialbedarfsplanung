@@ -46,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
       ),
-      bottomNavigationBar: NavBar(0),
+      bottomNavigationBar: NavBar(),
     );
   }
 }

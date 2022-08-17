@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/gallery.dart';
+import 'package:prototype/components/navBar.dart';
 import 'package:prototype/screens/load_project/projectMap.dart';
 
 import '../../backend/value_calculator.dart';
@@ -57,6 +58,7 @@ class _ProjectViewState extends State<ProjectView> {
         Text("Fälligkeitsdatum: 15.05.2022"),
         Gallery(content["id"].toString()),
       ]),
+      bottomNavigationBar: NavBar(),
     );
   }
 }
