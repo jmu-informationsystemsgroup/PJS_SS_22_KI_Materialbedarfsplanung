@@ -114,7 +114,7 @@ class _NewProjectState extends State<NewProject> {
             ),
           ),
         ),
-        bottomNavigationBar: NavBar(),
+        bottomNavigationBar: NavBar(1),
       ),
     );
   }

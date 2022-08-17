@@ -58,7 +58,7 @@ class _ProjectViewState extends State<ProjectView> {
         Text("Fälligkeitsdatum: 15.05.2022"),
         Gallery(content["id"].toString()),
       ]),
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: NavBar(4),
     );
   }
 }

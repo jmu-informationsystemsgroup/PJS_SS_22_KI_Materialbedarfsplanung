@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:prototype/screens/archive/_main_view.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
+import 'package:prototype/styles/buttons.dart';
 import '../screens/home/_main_view.dart';
 
 class NavBar extends StatefulWidget {
+  late int currentIndex;
+  NavBar(int currentIndex) {
+    this.currentIndex = currentIndex;
+  }
   @override
   State<NavBar> createState() => _NavBarState();
 }
@@ -14,7 +19,7 @@ class _NavBarState extends State<NavBar> {
 
   final titles = [Dashboard().title, NewProject().title, Archieve().title];
 
-  void _onItemTapped(int index) {
+  _onItemTapped(int index) {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => screens[index]),
@@ -22,25 +27,61 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
+  Color getCurrentIndexColor(int buttonPosition) {
+    if (widget.currentIndex == buttonPosition) {
+      return Color.fromARGB(255, 0, 0, 0);
+    } else
+      return Color.fromARGB(80, 0, 0, 0);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      elevation: 0.0,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      ElevatedButton(
+        child: Icon(
+          Icons.home,
+          color: getCurrentIndexColor(0),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add_a_photo),
-          label: 'Neues Projekt',
+        style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(30),
+          primary: Colors.white,
+          shadowColor: Color.fromARGB(0, 0, 0, 0),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.archive),
-          label: 'Archiv',
+        onPressed: () {
+          _onItemTapped(0);
+        },
+      ),
+      ElevatedButton(
+        child: Icon(
+          Icons.add_a_photo,
+          color: getCurrentIndexColor(1),
+          size: 50,
         ),
-      ],
-      onTap: _onItemTapped,
-    );
+        style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(30),
+          primary: Colors.white,
+        ),
+        onPressed: () {
+          _onItemTapped(1);
+        },
+      ),
+      ElevatedButton(
+        child: Icon(
+          Icons.archive,
+          color: getCurrentIndexColor(2),
+        ),
+        style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(30),
+          primary: Colors.white,
+          shadowColor: Color.fromARGB(0, 0, 0, 0),
+        ),
+        onPressed: () {
+          _onItemTapped(2);
+        },
+      ),
+    ]);
   }
 }

@@ -46,7 +46,7 @@ class _ArchieveState extends State<Archieve> {
           ],
         ),
       ),
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: NavBar(2),
     );
   }
 }
