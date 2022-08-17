@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/screen_create_new_project/_main_view.dart';
+import 'package:prototype/screens/create_new_project/_main_view.dart';
 
-import '../styles/container.dart';
+import '../../styles/container.dart';
 
 class MVPChecklist extends StatefulWidget {
   @override

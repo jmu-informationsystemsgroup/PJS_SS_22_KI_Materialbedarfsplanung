@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'dart:io';
 
-import 'package:prototype/screen_load_project/_main_view.dart';
-
 class Gallery extends StatefulWidget {
   String src;
   int length;
@@ -18,25 +16,20 @@ class Gallery extends StatefulWidget {
 class _GalleryState extends State<Gallery> {
   var galleryList = [];
 
+  @override
+  initState() {
+    galleryList = getImages();
+  }
+
   /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
-  List<dynamic> getList() {
-    String src = widget.src;
-    int length = widget.length;
-    try {
-      DataBase.getImages(src).then((loadedImages) {
-        setState(() {
-          galleryList = loadedImages;
+  getImages() {
+    int projectID = int.parse(widget.src);
+
+    DataBase.getImages(projectID).then((value) => {
+          setState(() {
+            galleryList = value;
+          })
         });
-      });
-    } catch (e) {}
-    /*
-     if (length > 5) {
-        print(loadedImages.take(length).toList().toString() +
-            "-----------------------------------------------------------------------------------");
-      }
-    print(length);
-    */
-    galleryList = galleryList.take(length).toList();
 
     return galleryList;
   }
@@ -47,18 +40,22 @@ class _GalleryState extends State<Gallery> {
     Row row = Row(
       children: [],
     );
-    galleryList.forEach((element) {
+
+    for (int i = 0; i < galleryList.length; i++) {
+      if (i == widget.length) break;
+      var element = galleryList[i];
       row.children.add(Image.file(
-        File(element.path),
+        File(element["image"].path),
         width: 50,
       ));
-    });
+    }
+
     return row;
   }
 
   @override
   Widget build(BuildContext context) {
-    getList();
+    //  getList();
     return renderGallery();
   }
 }

@@ -1,14 +1,12 @@
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:camera/camera.dart';
 
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/screen_create_new_project/_main_view.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 /// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
@@ -27,12 +25,9 @@ class DataBase {
     return tempPath;
   }
 
-  /// wird aktuell noch für Fotos benötigt, kann entfernt werden, soblald komplett auf
-  /// Datenbanken umgezogen wurde
-  static Future<File> get getIdFile async {
-    final path = await getFilePath;
-    return File('$path/idFile.json');
-  }
+  /// ####################################################################################################################################
+  /// ############## Datenbank und Datenbanktabellen
+  /// ####################################################################################################################################
 
   /// erstellt die Projekttabelle für die Datenbank
   static Future<void> createProjectTable(sql.Database database) async {
@@ -58,6 +53,18 @@ class DataBase {
       """);
   }
 
+  /// erstellt die Tabelle mit Verweisen auf die Fotos für die Datenbank
+  /// die Fotos slebst werden nicht in der Datenbank abgelegt, stattdessen werden hier Verweise auf die Lokation
+  /// der Fotoas abgelegt
+  static Future<void> createImageTable(sql.Database database) async {
+    await database.execute("""CREATE TABLE images(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        projectId INTEGER,
+        aiValue REAL
+      )
+      """);
+  }
+
   /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
   static Future<sql.Database> getDataBase() async {
     String? tempPath = await getFilePath;
@@ -68,21 +75,14 @@ class DataBase {
       onCreate: (sql.Database database, int version) async {
         await createProjectTable(database);
         await createWallTable(database);
+        await createImageTable(database);
       },
     );
   }
 
-/*
-  /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
-  static Future<sql.Database> getWallsDataBase() async {
-    String? tempPath = await getFilePath;
-    return sql.openDatabase(
-      '$tempPath/mvp_walls.db',
-      version: 1,
-      onCreate: (sql.Database database, int version) async {},
-    );
-  }
-  */
+  /// ####################################################################################################################################
+  /// ############## Daten laden
+  /// ####################################################################################################################################
 
   /// gibt eine Liste aller aktiven Projekte zurück
   /// SPÄTER: NACH NÄCHSTEM FÄLLIGKEITSDATUM ORDNEN
@@ -98,26 +98,48 @@ class DataBase {
     return db.query('projects', orderBy: "id", where: "statusActive = 0");
   }
 
-  /// FÄLLT BEI DATENBANK WEG
-  /// ruft ein File mit der letzen vergebenen Id auf, Ids werden von 0 nach nahezu undendlich hochgezählt, gibt eine neue id (letzte id + 1)
-  /// zurück, überschreibt die im File gespeicherte id
-  static Future<int> getId() async {
-    int id = 0;
-    String jsonId = "";
-    Map<String, dynamic> idMap = {"id": 0};
+  /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück
+  static getWalls(int id) async {
+    final db = await DataBase.getDataBase();
 
-    try {
-      File file = await getIdFile;
-      jsonId = await file.readAsString();
-    } catch (e) {}
+    return db
+        .query('walls', orderBy: "id", where: "projectId = ?", whereArgs: [id]);
+  }
 
-    if (jsonId != "") {
-      idMap = json.decode(jsonId);
-      id = idMap["id"]!;
+  static getSpecificProject(int id) async {
+    final db = await DataBase.getDataBase();
+
+    return db
+        .query('projects', orderBy: "id", where: "id = ?", whereArgs: [id]);
+  }
+
+  static Future<List> getImages(int projectId) async {
+    final db = await DataBase.getDataBase();
+
+    var path = await getFilePath;
+
+    var list = [];
+
+    var images = await db.query('images',
+        orderBy: "id", where: "projectId = ?", whereArgs: [projectId]);
+
+    for (var element in images) {
+      var imageId = element["id"];
+
+      var imageObject = {
+        "image": File('$path/material_images/$imageId.jpg'),
+        "aiValue": element["aiValue"]
+      };
+
+      list.add(imageObject);
     }
 
-    return id;
+    return list;
   }
+
+  /// ####################################################################################################################################
+  /// ############## Daten löschen
+  /// ####################################################################################################################################
 
   /// löscht das Projekt aus der Datenbank
   static deleteProject(int id) async {
@@ -127,13 +149,43 @@ class DataBase {
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }
+
+    deleteImages(id);
+    deleteWalls(id);
   }
 
-  static deleteImageFolder(int id) async {
+  static deleteImages(int projectId) async {
+    final db = await DataBase.getDataBase();
+
+    var images = await db.query('images',
+        orderBy: "id", where: "projectId = ?", whereArgs: [projectId]);
+
     final path = await getFilePath;
-    var dir = await Directory('$path/material_images/$id');
-    dir.delete();
+
+    for (var element in images) {
+      var imageId = element["id"];
+      var file = File('$path/material_images/$imageId.jpg');
+      file.delete();
+    }
+    try {
+      await db.delete("images", where: "projectId = ?", whereArgs: [projectId]);
+    } catch (err) {
+      debugPrint("Something went wrong when deleting an item: $err");
+    }
   }
+
+  static deleteWalls(int projectId) async {
+    final db = await DataBase.getDataBase();
+    try {
+      await db.delete("walls", where: "projectId = ?", whereArgs: [projectId]);
+    } catch (err) {
+      debugPrint("Something went wrong when deleting an item: $err");
+    }
+  }
+
+  /// ####################################################################################################################################
+  /// ############## Daten bearbeiten
+  /// ####################################################################################################################################
 
   /// ändert statusActive = 1 in statusActive = 0, dadruch wird das Projekt
   /// nicht mehr in der Liste der aktiven Projekte angezeigt
@@ -162,6 +214,10 @@ class DataBase {
     return result;
   }
 
+  /// ####################################################################################################################################
+  /// ############## Daten anlegen
+  /// ####################################################################################################################################
+
   /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {
     final db = await DataBase.getDataBase();
@@ -176,7 +232,7 @@ class DataBase {
     final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     createWallsForProject(data, id);
-
+    saveImages(data, id);
     return id;
   }
 
@@ -197,41 +253,26 @@ class DataBase {
     });
   }
 
-  /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück
-  static getWalls(int id) async {
+  /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
+  /// Bild id = Dateiname
+  static void saveImages(Content data, int projectId) async {
+    List<XFile?> pictures = data.pictures;
+
     final db = await DataBase.getDataBase();
 
-    return db
-        .query('walls', orderBy: "id", where: "projectId = ?", whereArgs: [id]);
-  }
-
-  /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
-  static void saveImages(List<XFile?> pictures) async {
     final path = await getFilePath;
-    int id = 0;
-    try {
-      File file = await getIdFile;
-      id = await getId() + 1;
-    } catch (e) {
-      id = 0;
-    }
-
-    // neuen ordner erstellen
-    var dir =
-        await Directory('$path/material_images/$id').create(recursive: true);
+    // neuen ordner erstellen, falls noch nicht vorhanden
+    var dir = await Directory('$path/material_images').create(recursive: true);
 
     var fileloc = dir.path;
-    int pictureNr = 0;
-    for (var picture in pictures) {
-      await picture?.saveTo('$fileloc/$pictureNr.jpg');
-      pictureNr += 1;
-    }
-  }
 
-  static Future<List<FileSystemEntity>> getImages(String src) async {
-    var path = await getFilePath;
-    var dir = Directory('$path/material_images/$src');
-    var list = dir.list();
-    return list.toList();
+    for (var picture in pictures) {
+      final dbData = {'projectId': projectId, 'aiValue': data.aiValue};
+
+      final id = await db.insert('images', dbData,
+          conflictAlgorithm: sql.ConflictAlgorithm.replace);
+
+      await picture?.saveTo('$fileloc/$id.jpg');
+    }
   }
 }
