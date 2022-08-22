@@ -87,10 +87,12 @@ class DataBase {
 
   /// gibt eine Liste aller aktiven Projekte zurück
   /// SPÄTER: NACH NÄCHSTEM FÄLLIGKEITSDATUM ORDNEN
-  static Future<List<dynamic>> getAllActiveProjects() async {
+  static Future<List<dynamic>> getAllActiveProjects(
+      [String orderByParamter = "id"]) async {
     final db = await DataBase.getDataBase();
 
-    return db.query('projects', orderBy: "id", where: "statusActive = 1");
+    return db.query('projects',
+        orderBy: orderByParamter, where: "statusActive = 1");
   }
 
   /// gibt eine Liste der archivierten Projekte zurück

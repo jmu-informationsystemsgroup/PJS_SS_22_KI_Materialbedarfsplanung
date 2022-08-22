@@ -36,52 +36,55 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      ElevatedButton(
-        child: Icon(
-          Icons.home,
-          color: getCurrentIndexColor(0),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+          child: Icon(
+            Icons.home,
+            color: getCurrentIndexColor(0),
+          ),
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            padding: EdgeInsets.all(30),
+            primary: Colors.white,
+            shadowColor: Color.fromARGB(0, 0, 0, 0),
+          ),
+          onPressed: () {
+            _onItemTapped(0);
+          },
         ),
-        style: ElevatedButton.styleFrom(
-          shape: CircleBorder(),
-          padding: EdgeInsets.all(30),
-          primary: Colors.white,
-          shadowColor: Color.fromARGB(0, 0, 0, 0),
+        ElevatedButton(
+          child: Icon(
+            Icons.add_a_photo,
+            color: getCurrentIndexColor(1),
+            size: 50,
+          ),
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            padding: EdgeInsets.all(30),
+            primary: Colors.white,
+          ),
+          onPressed: () {
+            _onItemTapped(1);
+          },
         ),
-        onPressed: () {
-          _onItemTapped(0);
-        },
-      ),
-      ElevatedButton(
-        child: Icon(
-          Icons.add_a_photo,
-          color: getCurrentIndexColor(1),
-          size: 50,
+        ElevatedButton(
+          child: Icon(
+            Icons.archive,
+            color: getCurrentIndexColor(2),
+          ),
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            padding: EdgeInsets.all(30),
+            primary: Colors.white,
+            shadowColor: Color.fromARGB(0, 0, 0, 0),
+          ),
+          onPressed: () {
+            _onItemTapped(2);
+          },
         ),
-        style: ElevatedButton.styleFrom(
-          shape: CircleBorder(),
-          padding: EdgeInsets.all(30),
-          primary: Colors.white,
-        ),
-        onPressed: () {
-          _onItemTapped(1);
-        },
-      ),
-      ElevatedButton(
-        child: Icon(
-          Icons.archive,
-          color: getCurrentIndexColor(2),
-        ),
-        style: ElevatedButton.styleFrom(
-          shape: CircleBorder(),
-          padding: EdgeInsets.all(30),
-          primary: Colors.white,
-          shadowColor: Color.fromARGB(0, 0, 0, 0),
-        ),
-        onPressed: () {
-          _onItemTapped(2);
-        },
-      ),
-    ]);
+      ],
+    );
   }
 }
