@@ -99,6 +99,13 @@ class DataBase {
     return db.query('projects', orderBy: "id", where: "statusActive = 0");
   }
 
+  static Future<List<dynamic>> searchProject(String term) async {
+    final db = await DataBase.getDataBase();
+
+    return db
+        .rawQuery("SELECT * FROM projects WHERE projectName LIKE '%$term%';");
+  }
+
   /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück
   static getWalls(int id) async {
     final db = await DataBase.getDataBase();
