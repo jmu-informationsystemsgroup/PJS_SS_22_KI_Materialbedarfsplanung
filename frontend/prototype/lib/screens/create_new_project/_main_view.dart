@@ -82,10 +82,10 @@ class _NewProjectState extends State<NewProject> {
           child: Form(
             child: Column(
               children: <Widget>[
-                InputField(InputType.projectName),
+                InputField(type: InputType.projectName),
                 //  NewAddress(),
                 AddPhotoButton(),
-                InputField(InputType.client),
+                InputField(type: InputType.client),
                 InputDate(),
                 MVPWalls(),
                 MVPChecklist(),

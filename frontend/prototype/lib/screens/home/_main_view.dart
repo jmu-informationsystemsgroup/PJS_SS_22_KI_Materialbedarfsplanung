@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:prototype/components/input_field_search.dart';
 import 'package:prototype/components/navBar.dart';
 
 import 'package:prototype/screens/home/button_new_project.dart';
@@ -30,8 +31,13 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     activateList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Projektübersicht"),
@@ -41,6 +47,12 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             projectMessage(),
+            InputSearch(
+                onSearchTermChange: (List list) => {
+                      setState(() {
+                        allProjects = list;
+                      })
+                    }),
             ProjectList(allProjects),
             AddProjectButton()
           ],

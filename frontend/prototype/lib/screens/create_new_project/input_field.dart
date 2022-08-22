@@ -13,7 +13,7 @@ enum InputType { projectName, client }
 //TODO rename to inputfield, make more generic using type
 class InputField extends StatefulWidget {
   late Enum type;
-  InputField(this.type, {Key? key}) : super(key: key);
+  InputField({required this.type});
 
   String getLabelText() {
     if (type == InputType.projectName) {
@@ -50,12 +50,12 @@ class _InputFieldState extends State<InputField> {
         controller: nameController,
         onChanged: (text) {
           setState(() {
-            InputField(type).setStateLocation(text);
+            InputField(type: type).setStateLocation(text);
           });
         },
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: InputField(type).getLabelText(),
+          labelText: InputField(type: type).getLabelText(),
         ),
       ),
     );

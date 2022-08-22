@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
-import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/screens/home/_main_view.dart';
 
 import '../../styles/container.dart';
 
 class InputSearch extends StatefulWidget {
+  final Function(List) onSearchTermChange;
+
+  InputSearch({required this.onSearchTermChange});
+
   @override
   _InputSearchState createState() {
     return _InputSearchState();
@@ -23,8 +25,8 @@ class _InputSearchState extends State<InputSearch> {
         controller: nameController,
         onChanged: (text) async {
           var searchedProjects = await DataBase.searchProject(text);
-
-          Dashboard.list = searchedProjects;
+          widget.onSearchTermChange(searchedProjects);
+          //   Dashboard.list = searchedProjects;
         },
         decoration: InputDecoration(
           border: OutlineInputBorder(),
