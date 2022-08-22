@@ -27,7 +27,6 @@ class _DashboardState extends State<Dashboard> {
         allProjects = loadedContent;
       });
     });
-    return allProjects;
   }
 
   @override
@@ -53,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
                         allProjects = list;
                       })
                     }),
-            ProjectList(allProjects),
+            ProjectList(allProjects, activateList),
             AddProjectButton()
           ],
         ),

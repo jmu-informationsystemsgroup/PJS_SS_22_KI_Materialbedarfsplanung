@@ -102,8 +102,8 @@ class DataBase {
   static Future<List<dynamic>> searchProject(String term) async {
     final db = await DataBase.getDataBase();
 
-    return db
-        .rawQuery("SELECT * FROM projects WHERE projectName LIKE '%$term%';");
+    return db.rawQuery(
+        "SELECT * FROM projects WHERE projectName LIKE '%$term%' OR client LIKE '%$term%';");
   }
 
   /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück

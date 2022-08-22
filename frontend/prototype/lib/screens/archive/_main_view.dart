@@ -25,7 +25,6 @@ class _ArchieveState extends State<Archieve> {
         allProjects = loadedContent;
       });
     });
-    return allProjects;
   }
 
   @override
@@ -41,7 +40,7 @@ class _ArchieveState extends State<Archieve> {
         child: Column(
           children: [
             projectMessage(),
-            ProjectList(allProjects, "inActive"),
+            ProjectList(allProjects, activateList, "inActive"),
             AddProjectButton()
           ],
         ),
