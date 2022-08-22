@@ -55,7 +55,7 @@ class _ProjectViewState extends State<ProjectView> {
           margin: const EdgeInsets.all(10.0),
           //    child: Text("Adresse: " + element + "straße"),
         ),
-        Text("Fälligkeitsdatum: 15.05.2022"),
+        Text("Datum: " + content["date"]),
         Gallery(content["id"].toString()),
       ]),
       bottomNavigationBar: NavBar(4),

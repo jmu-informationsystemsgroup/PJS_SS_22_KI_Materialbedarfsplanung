@@ -36,7 +36,8 @@ class DataBase {
         projectName TEXT,
         client TEXT,
         material TEXT,
-        statusActive INTEGER
+        statusActive INTEGER,
+        date TEXT
       )
       """);
   }
@@ -220,14 +221,15 @@ class DataBase {
 
   /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {
-    final db = await DataBase.getDataBase();
-
     final dbData = {
       'projectName': data.projectName,
       'client': data.client,
       'material': data.material,
-      'statusActive': data.statusActive
+      'statusActive': data.statusActive,
+      'date': data.date
     };
+
+    final db = await DataBase.getDataBase();
 
     final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);

@@ -9,6 +9,7 @@ class Content {
   int id = 0;
   String projectName = "Default";
   String client = "Default";
+  String date = "Default";
   Map<int, Wall> squareMeters = {};
   List<XFile?> pictures = [];
   String material = "Q2";

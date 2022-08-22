@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 
+import '../../styles/container.dart';
+
 enum InputType { projectName, client }
 
 /**
@@ -43,7 +45,7 @@ class _InputFieldState extends State<InputField> {
   Widget build(BuildContext context) {
     var type = widget.type;
     return Container(
-      margin: const EdgeInsets.all(15.0),
+      margin: ContainerStyles.getMargin(),
       child: TextField(
         controller: nameController,
         onChanged: (text) {

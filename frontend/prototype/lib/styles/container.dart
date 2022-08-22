@@ -28,6 +28,10 @@ class ContainerStyles {
     return const EdgeInsets.fromLTRB(0, 10, 0, 25);
   }
 
+  static EdgeInsets getMargin() {
+    return const EdgeInsets.all(15.0);
+  }
+
   static getInputStyle(String labelTextInput) {
     return InputDecoration(
       labelStyle: TextStyle(color: Colors.white),
