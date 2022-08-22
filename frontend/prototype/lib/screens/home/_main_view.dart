@@ -46,7 +46,6 @@ class _DashboardState extends State<Dashboard> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            projectMessage(),
             InputSearch(
                 onSearchTermChange: (List list) => {
                       setState(() {
@@ -61,6 +60,7 @@ class _DashboardState extends State<Dashboard> {
               },
             ),
             ProjectList(allProjects, activateList),
+            projectMessage(),
             AddProjectButton()
           ],
         ),
