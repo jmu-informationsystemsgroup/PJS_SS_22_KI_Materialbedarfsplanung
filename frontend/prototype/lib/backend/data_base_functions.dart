@@ -86,26 +86,21 @@ class DataBase {
   /// ####################################################################################################################################
 
   /// gibt eine Liste aller aktiven Projekte zurück
-  /// SPÄTER: NACH NÄCHSTEM FÄLLIGKEITSDATUM ORDNEN
+  /// @Params: term = Suchfilter, orderParameter = Begriff nach welchem geordnet wird
   static Future<List<dynamic>> getAllActiveProjects(
-      [String orderByParamter = "id"]) async {
+      [String term = "", String orderByParamter = "id"]) async {
     final db = await DataBase.getDataBase();
 
     return db.query('projects',
-        orderBy: "$orderByParamter COLLATE NOCASE", where: "statusActive = 1");
+        orderBy: "$orderByParamter COLLATE NOCASE",
+        where:
+            "(statusActive = 1) AND (projectName LIKE '%$term%' OR client LIKE '%$term%')");
   }
 
   /// gibt eine Liste der archivierten Projekte zurück
   static Future<List<dynamic>> getAllArchivedProjects() async {
     final db = await DataBase.getDataBase();
     return db.query('projects', orderBy: "id", where: "statusActive = 0");
-  }
-
-  static Future<List<dynamic>> searchProject(String term) async {
-    final db = await DataBase.getDataBase();
-
-    return db.rawQuery(
-        "SELECT * FROM projects WHERE projectName LIKE '%$term%' OR client LIKE '%$term%';");
   }
 
   /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück

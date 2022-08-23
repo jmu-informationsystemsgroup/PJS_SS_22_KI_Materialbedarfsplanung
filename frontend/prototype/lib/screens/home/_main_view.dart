@@ -21,9 +21,10 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   List<String> _projects = [];
   static List<dynamic> allProjects = [];
+  String searchTerm = "";
 
   activateList() async {
-    DataBase.getAllActiveProjects().then((loadedContent) {
+    DataBase.getAllActiveProjects(searchTerm).then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -47,12 +48,14 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             InputSearch(
-                onSearchTermChange: (List list) => {
+                onSearchTermChange: (String term, List list) => {
                       setState(() {
+                        searchTerm = term;
                         allProjects = list;
                       })
                     }),
             ButtonsOrderBy(
+              searchTerm: searchTerm,
               orderChanged: (List list) => {
                 setState(() {
                   allProjects = list;

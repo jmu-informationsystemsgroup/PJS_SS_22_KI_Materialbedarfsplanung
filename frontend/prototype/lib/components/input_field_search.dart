@@ -4,7 +4,7 @@ import 'package:prototype/backend/data_base_functions.dart';
 import '../../styles/container.dart';
 
 class InputSearch extends StatefulWidget {
-  final Function(List) onSearchTermChange;
+  final Function(String, List) onSearchTermChange;
 
   InputSearch({required this.onSearchTermChange});
 
@@ -23,9 +23,10 @@ class _InputSearchState extends State<InputSearch> {
       margin: ContainerStyles.getMargin(),
       child: TextField(
         controller: nameController,
-        onChanged: (text) async {
-          var searchedProjects = await DataBase.searchProject(text);
-          widget.onSearchTermChange(searchedProjects);
+        onChanged: (searchTerm) async {
+          var searchedProjects =
+              await DataBase.getAllActiveProjects(searchTerm);
+          widget.onSearchTermChange(searchTerm, searchedProjects);
           //   Dashboard.list = searchedProjects;
         },
         decoration: InputDecoration(
