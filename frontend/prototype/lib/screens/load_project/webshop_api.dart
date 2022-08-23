@@ -29,8 +29,8 @@ class Webshop extends StatelessWidget {
         ),
         ElevatedButton(
           child: Text('Kontakt zu Spachtelprofi'),
-          onPressed: () async {
-            await _launchUrl(
+          onPressed: () {
+            _launchUrl(
                 "mailto:nicolas.wild@googlemail.com?subject=$subject&body=$body");
           },
         )

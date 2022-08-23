@@ -8,7 +8,7 @@ import 'package:prototype/backend/data_base_functions.dart';
 
 import '../../backend/helper_objects.dart';
 import '../load_project/_main_view.dart';
-import 'input_field.dart';
+import '../../components/input_field.dart';
 import 'mvp_checklist.dart';
 import 'mvp_walls.dart';
 import 'button_add_photo.dart';
@@ -82,10 +82,16 @@ class _NewProjectState extends State<NewProject> {
           child: Form(
             child: Column(
               children: <Widget>[
-                InputField(type: InputType.projectName),
+                InputField(
+                  saveTo: (text) => {NewProject.cash.projectName = text},
+                  labelText: "Name",
+                ),
                 //  NewAddress(),
                 AddPhotoButton(),
-                InputField(type: InputType.client),
+                InputField(
+                  saveTo: (text) => {NewProject.cash.client = text},
+                  labelText: "Auftraggeber",
+                ),
                 InputDate(),
                 MVPWalls(),
                 MVPChecklist(),

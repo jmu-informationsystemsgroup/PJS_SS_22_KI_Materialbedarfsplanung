@@ -66,6 +66,17 @@ class DataBase {
       """);
   }
 
+  static Future<void> createUserTable(sql.Database database) async {
+    await database.execute("""CREATE TABLE user_data(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        firstName TEXT,
+        lastName TEXT,
+        customerId INTEGER,
+        address TEXT
+      )
+      """);
+  }
+
   /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
   static Future<sql.Database> getDataBase() async {
     String? tempPath = await getFilePath;
@@ -101,6 +112,11 @@ class DataBase {
   static Future<List<dynamic>> getAllArchivedProjects() async {
     final db = await DataBase.getDataBase();
     return db.query('projects', orderBy: "id", where: "statusActive = 0");
+  }
+
+  static Future<List<dynamic>> getUserData() async {
+    final db = await DataBase.getDataBase();
+    return db.query('user_data', orderBy: "id");
   }
 
   /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück
@@ -257,6 +273,19 @@ class DataBase {
       final id = await db.insert('walls', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
     });
+  }
+
+  static createUserData(User data) async {
+    final db = await DataBase.getDataBase();
+
+    final dbData = {
+      'firstName': data.firstName,
+      'lastName': data.lastName,
+      'customerId': data.customerId,
+      'address': data.address
+    };
+    final id = await db.insert('user_data', dbData,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
   }
 
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird

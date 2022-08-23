@@ -51,6 +51,13 @@ class Content {
   }
 }
 
+class User {
+  late String firstName;
+  late String lastName;
+  late int customerId;
+  late String address;
+}
+
 /// erzeugt eine MVP Wand, standardmäßig mit den Werten 0.0 * 0.0
 class Wall {
   double width = 0.0;
