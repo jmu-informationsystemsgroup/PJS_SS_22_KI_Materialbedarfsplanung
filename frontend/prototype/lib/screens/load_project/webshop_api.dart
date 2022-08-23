@@ -5,6 +5,13 @@ class Webshop extends StatelessWidget {
   double aiValue;
   Webshop({required this.aiValue});
 
+  Future<void> _launchUrl(urlString) async {
+    Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String subject = "Interesse an Spachtelmasse";
@@ -16,15 +23,15 @@ class Webshop extends StatelessWidget {
       children: [
         ElevatedButton(
           child: Text('zum Shop von Spachtelprofi'),
-          onPressed: () async {
-            await launchUrl(Uri.parse("https://spachtelprofi.com/shop/"));
+          onPressed: () {
+            _launchUrl("https://spachtelprofi.com/shop/");
           },
         ),
         ElevatedButton(
           child: Text('Kontakt zu Spachtelprofi'),
           onPressed: () async {
-            await launchUrl(Uri.parse(
-                "mailto:nicolas.wild@googlemail.com?subject=$subject&body=$body"));
+            await _launchUrl(
+                "mailto:nicolas.wild@googlemail.com?subject=$subject&body=$body");
           },
         )
       ],
