@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
 import 'package:prototype/screens/load_project/projectMap.dart';
+import 'package:prototype/screens/load_project/webshop_api.dart';
 
 import '../../backend/value_calculator.dart';
 
@@ -57,6 +58,9 @@ class _ProjectViewState extends State<ProjectView> {
         ),
         Text("Datum: " + content["date"]),
         Gallery(content["id"].toString()),
+        Webshop(
+          aiValue: calculatedOutcome["aiOutcome"],
+        )
       ]),
       bottomNavigationBar: NavBar(4),
     );

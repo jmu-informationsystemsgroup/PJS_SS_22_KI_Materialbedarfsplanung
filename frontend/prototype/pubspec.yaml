@@ -48,6 +48,9 @@ dependencies:
   # adding camera component
   camera: any
 
+  # embedding webstore features
+  url_launcher: any
+
   # adding georgraphic map component
   flutter_map: any
   geocoder: any
