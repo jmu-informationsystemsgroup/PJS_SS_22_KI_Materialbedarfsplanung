@@ -21,7 +21,6 @@ class _GalleryState extends State<Gallery> {
     galleryList = getImages();
   }
 
-  /// befüllt die Liste "galleryList" mit den Bildern aus dem angegbenen Ordner
   getImages() {
     int projectID = int.parse(widget.src);
 

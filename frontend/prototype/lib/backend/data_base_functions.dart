@@ -92,7 +92,7 @@ class DataBase {
     final db = await DataBase.getDataBase();
 
     return db.query('projects',
-        orderBy: orderByParamter, where: "statusActive = 1");
+        orderBy: "$orderByParamter COLLATE NOCASE", where: "statusActive = 1");
   }
 
   /// gibt eine Liste der archivierten Projekte zurück
