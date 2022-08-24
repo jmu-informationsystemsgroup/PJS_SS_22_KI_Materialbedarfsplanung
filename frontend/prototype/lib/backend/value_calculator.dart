@@ -10,11 +10,13 @@ class ValueCalculator {
     double aiOutcome = await getAIOutcome(content["id"]);
     double totalSquareMeters = await getSquareMeter(content["id"]);
     double totalPrice = getPrice(content["material"], totalSquareMeters);
+    double totalAiPrice = getAiPrice(content["material"], aiOutcome);
 
     return {
       "aiOutcome": aiOutcome,
       "totalSquareMeters": totalSquareMeters,
-      "totalPrice": totalPrice
+      "totalPrice": totalPrice,
+      "totalAiPrice": totalAiPrice
     };
   }
 
@@ -52,6 +54,14 @@ class ValueCalculator {
     double totalPrice = 0.0;
     Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
     totalPrice = totalSquareMeters * valueInterpreter[material]!;
+
+    return totalPrice;
+  }
+
+  static double getAiPrice(String material, double aiOutcome) {
+    double totalPrice = 0.0;
+    Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
+    totalPrice = aiOutcome * valueInterpreter[material]!;
 
     return totalPrice;
   }

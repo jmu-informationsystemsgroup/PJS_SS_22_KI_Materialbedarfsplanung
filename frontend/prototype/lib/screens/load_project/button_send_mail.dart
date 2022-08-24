@@ -22,11 +22,11 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
 
   String createEmailContent(var user) {
     String body =
-        "Sehr geehrte Damen und Herren, \n \n Ihre App hat ergeben, dass der optimale Spachtelmassenbedarf für mein anstehendes Bauprojekt " +
+        "Hallo Matthias von Spachtelprofi, \n \n Deine App hat ergeben, dass der optimale Spachtelmassenbedarf für mein anstehendes Bauprojekt " +
             widget.aiValue.toString() +
-            " Liter betragen würde. Gerne würde ich in einem Gespräch mit Ihnen genaueres darüber aushandeln. Anbei meine Kundendaten: \n \n Kundennummer: " +
+            " Liter betragen würde. Gerne würde ich in einem Gespräch mit dir genaueres darüber aushandeln. Anbei meine Kundendaten: \n \n Kundennummer: " +
             user["customerId"].toString() +
-            " Adresse: " +
+            "\n Adresse: " +
             user["address"].toString() +
             " \n \n Mit freundlichen Grüßen \n \n" +
             user["firstName"].toString() +

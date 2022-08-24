@@ -53,6 +53,7 @@ class _ProjectViewState extends State<ProjectView> {
               calculatedOutcome["totalSquareMeters"].toString()),
           Text("Preis: " + calculatedOutcome["totalPrice"].toString()),
           Text("KI-Ergebnis: " + calculatedOutcome["aiOutcome"].toString()),
+          Text("KI-Preis: " + calculatedOutcome["totalAiPrice"].toString()),
           Container(
             margin: const EdgeInsets.all(10.0),
             //    child: Text("Adresse: " + element + "straße"),

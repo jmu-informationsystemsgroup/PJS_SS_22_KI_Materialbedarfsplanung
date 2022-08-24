@@ -23,7 +23,7 @@ class _MVPChecklist extends State<MVPChecklist> {
     return Colors.red;
   }
 
-  bool isCheckedQ2 = false;
+  bool isCheckedQ2 = true;
   bool isCheckedQ3 = false;
   bool isCheckedQ4 = false;
 
@@ -42,7 +42,7 @@ class _MVPChecklist extends State<MVPChecklist> {
           Row(
             children: <Widget>[
               Text(
-                "Standard",
+                "\$ (Standard)",
                 style: ContainerStyles.getTextStyle(),
               ),
               Checkbox(
@@ -52,6 +52,8 @@ class _MVPChecklist extends State<MVPChecklist> {
                 onChanged: (bool? value) {
                   setState(() {
                     isCheckedQ2 = value!;
+                    isCheckedQ3 = false;
+                    isCheckedQ4 = false;
                     NewProject.cash.material = "Q2";
                   });
                 },
@@ -61,7 +63,7 @@ class _MVPChecklist extends State<MVPChecklist> {
           Row(
             children: <Widget>[
               Text(
-                "gehobene optische Ansprüche",
+                "\$\$ (gehobene optische Ansprüche)",
                 style: ContainerStyles.getTextStyle(),
               ),
               Checkbox(
@@ -71,6 +73,8 @@ class _MVPChecklist extends State<MVPChecklist> {
                 onChanged: (bool? value) {
                   setState(() {
                     isCheckedQ3 = value!;
+                    isCheckedQ2 = false;
+                    isCheckedQ4 = false;
                     NewProject.cash.material = "Q3";
                   });
                 },
@@ -80,7 +84,7 @@ class _MVPChecklist extends State<MVPChecklist> {
           Row(
             children: <Widget>[
               Text(
-                "höchste optische Ansprüche",
+                "\$\$\$ (höchste optische Ansprüche)",
                 style: ContainerStyles.getTextStyle(),
               ),
               Checkbox(
@@ -90,6 +94,8 @@ class _MVPChecklist extends State<MVPChecklist> {
                 onChanged: (bool? value) {
                   setState(() {
                     isCheckedQ4 = value!;
+                    isCheckedQ2 = false;
+                    isCheckedQ3 = false;
                     NewProject.cash.material = "Q4";
                   });
                 },

@@ -93,7 +93,7 @@ class _NewProjectState extends State<NewProject> {
                   labelText: "Auftraggeber",
                 ),
                 InputDate(),
-                MVPWalls(),
+                // MVPWalls(),
                 MVPChecklist(),
                 //    preview(),
                 Align(

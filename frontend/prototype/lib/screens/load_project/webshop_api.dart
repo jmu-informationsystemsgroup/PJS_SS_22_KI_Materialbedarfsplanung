@@ -61,13 +61,13 @@ class _WebshopState extends State<Webshop> {
       var user = userData[0];
       column.children.add(
         Text(
-          "Bitte Daten kontrollieren: Name: " +
+          "Bitte Daten kontrollieren: \nName: " +
               user["firstName"].toString() +
               " " +
               user["lastName"].toString() +
-              ", Kundennummer: " +
+              "\nKundennummer: " +
               user["customerId"].toString() +
-              " Adresse: " +
+              "\nAdresse: " +
               user["address"].toString(),
         ),
       );
