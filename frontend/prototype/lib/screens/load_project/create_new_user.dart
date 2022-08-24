@@ -20,9 +20,15 @@ class _CreateUserState extends State<CreateUser> {
   User cash = User();
   bool userComplete = false;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    userComplete = false;
+  }
+
   Widget mailButtonIfComplete(bool status) {
     if (status) {
-      return ButtonSendMail(widget.aiValue, User.createMap(cash));
+      return ButtonSendMail(widget.aiValue, [User.createMap(cash)]);
     } else
       return Container();
   }
@@ -44,8 +50,8 @@ class _CreateUserState extends State<CreateUser> {
         ElevatedButton(
             onPressed: () async => {
                   //    await DataBase.createUserData(cash),
-                  print([cash].toString() +
-                      "-------------------------------------------"),
+                  print(User.createMap(cash).toString() +
+                      "----------------------------------------456782---"),
                   setState(() {
                     userComplete = true;
                   })
