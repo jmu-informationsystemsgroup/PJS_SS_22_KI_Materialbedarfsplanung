@@ -37,6 +37,7 @@ class _CreateUserState extends State<CreateUser> {
   Widget build(BuildContext context) {
     return Container(
       decoration: ContainerStyles.getBoxDecoration(),
+      margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Column(children: [
         InputField(
             saveTo: (text) => {cash.firstName = text}, labelText: "Vorname"),
@@ -49,9 +50,7 @@ class _CreateUserState extends State<CreateUser> {
             saveTo: (text) => {cash.address = text}, labelText: "Adresse"),
         ElevatedButton(
             onPressed: () async => {
-                  //    await DataBase.createUserData(cash),
-                  print(User.createMap(cash).toString() +
-                      "----------------------------------------456782---"),
+                  await DataBase.createUserData(cash),
                   setState(() {
                     userComplete = true;
                   })

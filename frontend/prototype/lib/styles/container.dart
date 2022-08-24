@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class ContainerStyles {
-  static BoxDecoration getBoxDecoration() {
+  static BoxDecoration getColoredBoxDecoration() {
     return const BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(20)),
       gradient: LinearGradient(
@@ -15,6 +15,16 @@ class ContainerStyles {
         ], // Gradient from https://learnui.design/tools/gradient-generator.html
         tileMode: TileMode.mirror,
       ),
+    );
+  }
+
+  static BoxDecoration getBoxDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+      border: Border.all(
+          color: Color.fromARGB(118, 0, 0, 0),
+          width: 1.0,
+          style: BorderStyle.solid),
     );
   }
 

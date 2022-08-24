@@ -31,7 +31,7 @@ class _MVPChecklist extends State<MVPChecklist> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(15, 3, 15, 7),
-      decoration: ContainerStyles.getBoxDecoration(),
+      decoration: ContainerStyles.getColoredBoxDecoration(),
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 25),
       child: Column(
         children: <Widget>[

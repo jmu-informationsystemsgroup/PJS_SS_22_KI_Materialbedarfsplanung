@@ -53,7 +53,7 @@ class ProjectList extends StatelessWidget {
                   child: Container(
                     margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 25),
-                    decoration: ContainerStyles.getBoxDecoration(),
+                    decoration: ContainerStyles.getColoredBoxDecoration(),
                     child: Row(
                       children: <Widget>[
                         Container(

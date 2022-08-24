@@ -49,13 +49,13 @@ class _WebshopState extends State<Webshop> {
 
     if (userData.isEmpty) {
       column.children.add(
-        Text("Bitte gib einmalige Userdaten an"),
+        Text("Bitte gib einmalig deine Userdaten an"),
       );
       column.children.add(CreateUser(
+        aiValue: widget.aiValue,
         updateValues: () {
           activateList();
         },
-        aiValue: widget.aiValue,
       ));
     } else {
       var user = userData[0];

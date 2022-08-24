@@ -25,7 +25,7 @@ class _MVPWalls extends State<MVPWalls> {
 
     Container container = Container(
       margin: const EdgeInsets.fromLTRB(15, 3, 15, 7),
-      decoration: ContainerStyles.getBoxDecoration(),
+      decoration: ContainerStyles.getColoredBoxDecoration(),
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 25),
       child: Wrap(
         spacing: 20, // to apply margin in the main axis of the wrap
