@@ -44,24 +44,26 @@ class _ProjectViewState extends State<ProjectView> {
           content["projectName"],
         ),
       ),
-      body: Column(children: [
-        // test to check if Project view is able to load data, which had been entered before
-        Center(child: ProjectMap()),
-        Text("Auftraggeber: " + content["client"]),
-        Text("Quadratmeter: " +
-            calculatedOutcome["totalSquareMeters"].toString()),
-        Text("Preis: " + calculatedOutcome["totalPrice"].toString()),
-        Text("KI-Ergebnis: " + calculatedOutcome["aiOutcome"].toString()),
-        Container(
-          margin: const EdgeInsets.all(10.0),
-          //    child: Text("Adresse: " + element + "straße"),
-        ),
-        Text("Datum: " + content["date"]),
-        Gallery(content["id"].toString()),
-        Webshop(
-          aiValue: calculatedOutcome["aiOutcome"],
-        )
-      ]),
+      body: SingleChildScrollView(
+        child: Column(children: [
+          // test to check if Project view is able to load data, which had been entered before
+          Center(child: ProjectMap()),
+          Text("Auftraggeber: " + content["client"]),
+          Text("Quadratmeter: " +
+              calculatedOutcome["totalSquareMeters"].toString()),
+          Text("Preis: " + calculatedOutcome["totalPrice"].toString()),
+          Text("KI-Ergebnis: " + calculatedOutcome["aiOutcome"].toString()),
+          Container(
+            margin: const EdgeInsets.all(10.0),
+            //    child: Text("Adresse: " + element + "straße"),
+          ),
+          Text("Datum: " + content["date"]),
+          Gallery(content["id"].toString()),
+          Webshop(
+            aiValue: calculatedOutcome["aiOutcome"],
+          )
+        ]),
+      ),
       bottomNavigationBar: NavBar(4),
     );
   }

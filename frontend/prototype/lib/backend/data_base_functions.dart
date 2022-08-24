@@ -88,6 +88,7 @@ class DataBase {
         await createProjectTable(database);
         await createWallTable(database);
         await createImageTable(database);
+        await createUserTable(database);
       },
     );
   }

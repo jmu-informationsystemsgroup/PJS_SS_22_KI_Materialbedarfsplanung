@@ -56,6 +56,17 @@ class User {
   late String lastName;
   late int customerId;
   late String address;
+
+  static Map<String, dynamic> createMap(User user) {
+    Map<String, dynamic> content = {
+      'firstName': user.firstName,
+      'lastName': user.lastName,
+      'customerId': user.customerId,
+      'address': user.address
+    };
+
+    return content;
+  }
 }
 
 /// erzeugt eine MVP Wand, standardmäßig mit den Werten 0.0 * 0.0
