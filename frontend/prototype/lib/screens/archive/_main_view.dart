@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/navBar.dart';
 
 import 'package:prototype/screens/home/button_new_project.dart';
@@ -16,8 +17,13 @@ class Archieve extends StatefulWidget {
 }
 
 class _ArchieveState extends State<Archieve> {
-  List<String> _projects = [];
-  static List<dynamic> allProjects = [];
+  static List<Content> allProjects = [];
+
+  @override
+  void initState() {
+    super.initState();
+    activateList();
+  }
 
   activateList() async {
     DataBase.getAllArchivedProjects().then((loadedContent) {
@@ -29,7 +35,6 @@ class _ArchieveState extends State<Archieve> {
 
   @override
   Widget build(BuildContext context) {
-    activateList();
     return Scaffold(
       appBar: AppBar(
         title: const Text(

@@ -7,33 +7,33 @@ import 'package:prototype/components/input_field_date.dart';
 import '../create_new_project/_main_view.dart';
 
 class EditorWidget extends StatelessWidget {
-  Map<String, dynamic> input;
+  Content input;
   Function(Content) route;
   EditorWidget({required this.input, required this.route});
 
   @override
   Widget build(BuildContext context) {
-    Content data = Content.mapToContent(input);
+    Content data = input;
     return Column(
       children: [
         InputField(
           saveTo: (text) => {data.projectName = text},
           labelText: "Name",
-          value: input["projectName"],
+          value: input.projectName,
         ),
         InputField(
           saveTo: (text) => {data.client = text},
           labelText: "Auftraggeber",
-          value: input["client"],
+          value: input.client,
         ),
         InputDate(
           saveTo: (text) => {data.date = text},
-          value: input["date"],
+          value: input.date,
         ),
         ElevatedButton(
             onPressed: () {
               route(data);
-              DataBase.updateContent(input["id"], data);
+              DataBase.updateContent(input.id, data);
             },
             child: Icon(Icons.save))
       ],

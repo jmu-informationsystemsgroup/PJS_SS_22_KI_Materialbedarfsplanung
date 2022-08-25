@@ -11,7 +11,7 @@ import 'package:prototype/screens/load_project/webshop_api.dart';
 import '../../backend/value_calculator.dart';
 
 class ProjectView extends StatefulWidget {
-  Map<String, dynamic> content;
+  Content content;
   ProjectView(this.content);
 
   static String src = "";
@@ -25,7 +25,7 @@ class _ProjectViewState extends State<ProjectView> {
   Map<String, dynamic> calculatedOutcome = {};
   bool editorVisiblity = false;
   bool textVisiblity = true;
-  Map<String, dynamic> content = {};
+  Content content = Content();
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _ProjectViewState extends State<ProjectView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          content["projectName"],
+          content.projectName,
         ),
       ),
       body: SingleChildScrollView(
@@ -79,8 +79,8 @@ class _ProjectViewState extends State<ProjectView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Auftraggeber: " + content["client"]),
-                      Text("Datum: " + content["date"]),
+                      Text("Auftraggeber: " + content.client),
+                      Text("Datum: " + content.date),
                     ],
                   ),
                 ),
@@ -99,7 +99,7 @@ class _ProjectViewState extends State<ProjectView> {
                     input: content,
                     route: ((data) {
                       setState(() {
-                        content = Content.contentToMap(data);
+                        content = data;
                         editorVisiblity = changeBool(editorVisiblity);
                         textVisiblity = changeBool(textVisiblity);
                       });
@@ -130,7 +130,7 @@ class _ProjectViewState extends State<ProjectView> {
             margin: const EdgeInsets.all(10.0),
             //    child: Text("Adresse: " + element + "straße"),
           ),
-          Gallery(content["id"].toString()),
+          Gallery(pictures: content.pictures),
           Webshop(
             aiValue: calculatedOutcome["aiOutcome"],
           )

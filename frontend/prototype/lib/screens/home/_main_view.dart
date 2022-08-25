@@ -5,6 +5,7 @@ import 'package:prototype/components/navBar.dart';
 
 import 'package:prototype/screens/home/button_new_project.dart';
 import '../../backend/data_base_functions.dart';
+import '../../backend/helper_objects.dart';
 import '../../components/project_list.dart';
 
 class Dashboard extends StatefulWidget {
@@ -18,8 +19,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<String> _projects = [];
-  static List<dynamic> allProjects = [];
+  static List<Content> allProjects = [];
   String searchTerm = "";
 
   activateList() async {
@@ -30,10 +30,15 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  wait() async {
+    await Future.delayed(Duration(seconds: 2));
+  }
+
   @override
   void initState() {
     super.initState();
     activateList();
+    wait();
   }
 
   @override
@@ -47,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             InputSearch(
-                onSearchTermChange: (String term, List list) => {
+                onSearchTermChange: (String term, List<Content> list) => {
                       setState(() {
                         searchTerm = term;
                         allProjects = list;
@@ -55,7 +60,7 @@ class _DashboardState extends State<Dashboard> {
                     }),
             ButtonsOrderBy(
               searchTerm: searchTerm,
-              orderChanged: (List list) => {
+              orderChanged: (List<Content> list) => {
                 setState(() {
                   allProjects = list;
                 })

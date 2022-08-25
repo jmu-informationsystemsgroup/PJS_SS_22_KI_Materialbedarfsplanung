@@ -49,13 +49,29 @@ class Content {
     return map;
   }
 
+/*
+  static Future<List<XFile?>> getImagesOnly(int id) async {
+    List<XFile?> listOfImages = [];
+    await DataBase.getImages(id).then(
+      (list) => {
+        list.forEach((element) {
+          listOfImages.add(XFile(element["image"].path));
+        })
+      },
+    );
+    return listOfImages;
+  }
+  */
+
   static Content mapToContent(Map<String, dynamic> map) {
     Content content = Content();
     content.id = map["id"];
     content.projectName = map["projectName"];
     content.client = map["client"];
     content.date = map["date"];
+    content.pictures = [];
     content.material = map["material"];
+    content.statusActive = map["statusActive"];
     return content;
   }
 

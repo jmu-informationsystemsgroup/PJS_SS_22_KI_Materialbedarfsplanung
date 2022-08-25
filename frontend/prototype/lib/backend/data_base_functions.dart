@@ -99,20 +99,50 @@ class DataBase {
 
   /// gibt eine Liste aller aktiven Projekte zurück
   /// @Params: term = Suchfilter, orderParameter = Begriff nach welchem geordnet wird
-  static Future<List<dynamic>> getAllActiveProjects(
+  static Future<List<Content>> getAllActiveProjects(
       [String term = "", String orderByParamter = "id"]) async {
     final db = await DataBase.getDataBase();
 
-    return db.query('projects',
+    List listOfMaps = await db.query('projects',
         orderBy: "$orderByParamter COLLATE NOCASE",
         where:
             "(statusActive = 1) AND (projectName LIKE '%$term%' OR client LIKE '%$term%')");
+
+    List allImages = await getAllImages();
+
+    print(allImages.toList().toString());
+
+    List<Content> contentList = [];
+    Content contentElement;
+    listOfMaps.forEach(
+      (element) => {
+        contentElement = Content.mapToContent(element),
+        allImages.forEach(
+          (pictureObject) {
+            if (pictureObject["projectId"] == contentElement.id) {
+              contentElement.pictures.add(pictureObject["image"]);
+            }
+          },
+        ),
+        contentList.add(contentElement),
+      },
+    );
+    return contentList;
   }
 
   /// gibt eine Liste der archivierten Projekte zurück
-  static Future<List<dynamic>> getAllArchivedProjects() async {
+  static Future<List<Content>> getAllArchivedProjects() async {
     final db = await DataBase.getDataBase();
-    return db.query('projects', orderBy: "id", where: "statusActive = 0");
+    List listOfMaps =
+        await db.query('projects', orderBy: "id", where: "statusActive = 0");
+
+    List<Content> contentList = [];
+    listOfMaps.forEach(
+      (element) async => {
+        contentList.add(await Content.mapToContent(element)),
+      },
+    );
+    return contentList;
   }
 
   static Future<List<dynamic>> getUserData() async {
@@ -128,11 +158,42 @@ class DataBase {
         .query('walls', orderBy: "id", where: "projectId = ?", whereArgs: [id]);
   }
 
-  static getSpecificProject(int id) async {
+  static Future<List<Content>> getSpecificProject(int id) async {
     final db = await DataBase.getDataBase();
 
-    return db
+    List listOfMaps = await db
         .query('projects', orderBy: "id", where: "id = ?", whereArgs: [id]);
+
+    List<Content> contentList = [];
+    listOfMaps.forEach(
+      (element) async => {
+        contentList.add(await Content.mapToContent(element)),
+      },
+    );
+    return contentList;
+  }
+
+  static Future<List> getAllImages() async {
+    final db = await DataBase.getDataBase();
+
+    var path = await getFilePath;
+
+    var list = [];
+
+    var images = await db.query('images', orderBy: "id");
+
+    for (var element in images) {
+      var imageId = element["id"];
+
+      var imageObject = {
+        "image": XFile('$path/material_images/$imageId.jpg'),
+        "projectId": element["projectId"]
+      };
+
+      list.add(imageObject);
+    }
+
+    return list;
   }
 
   static Future<List> getImages(int projectId) async {

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 
 import '../../styles/container.dart';
+import '../backend/helper_objects.dart';
 
 class ButtonsOrderBy extends StatefulWidget {
-  final Function(List) orderChanged;
+  final Function(List<Content>) orderChanged;
   String searchTerm;
   ButtonsOrderBy({required this.orderChanged, required this.searchTerm});
   @override
@@ -34,7 +35,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
           child: Text("Client"),
           style: ElevatedButton.styleFrom(primary: currentOrderColor(0)),
           onPressed: () async {
-            List newOrderList = await DataBase.getAllActiveProjects(
+            List<Content> newOrderList = await DataBase.getAllActiveProjects(
                 widget.searchTerm, "client");
             widget.orderChanged(newOrderList);
             setState(() {
@@ -46,7 +47,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
           child: Text("Name"),
           style: ElevatedButton.styleFrom(primary: currentOrderColor(1)),
           onPressed: () async {
-            List newOrderList = await DataBase.getAllActiveProjects(
+            List<Content> newOrderList = await DataBase.getAllActiveProjects(
                 widget.searchTerm, "projectName");
             widget.orderChanged(newOrderList);
             setState(() {
@@ -58,7 +59,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
           child: Text("Datum"),
           style: ElevatedButton.styleFrom(primary: currentOrderColor(2)),
           onPressed: () async {
-            List newOrderList =
+            List<Content> newOrderList =
                 await DataBase.getAllActiveProjects(widget.searchTerm, "date");
             widget.orderChanged(newOrderList);
             setState(() {

@@ -5,12 +5,11 @@ class ValueCalculator {
   /// erzeugt ein Objekt das alle Ergebnisse beinhaltet
   /// die Methode "getPrice" hängt von den totalSquareMeters ab und kann daher nicht eigenständig
   /// aufgerufen werden, daher diese Umgehung mit dem "Ergebnis-Objekt"
-  static Future<Map<String, dynamic>> getOutcomeObject(
-      Map<String, dynamic> content) async {
-    double aiOutcome = await getAIOutcome(content["id"]);
-    double totalSquareMeters = await getSquareMeter(content["id"]);
-    double totalPrice = getPrice(content["material"], totalSquareMeters);
-    double totalAiPrice = getAiPrice(content["material"], aiOutcome);
+  static Future<Map<String, dynamic>> getOutcomeObject(Content content) async {
+    double aiOutcome = await getAIOutcome(content.id);
+    double totalSquareMeters = await getSquareMeter(content.id);
+    double totalPrice = getPrice(content.material, totalSquareMeters);
+    double totalAiPrice = getAiPrice(content.material, aiOutcome);
 
     return {
       "aiOutcome": aiOutcome,
