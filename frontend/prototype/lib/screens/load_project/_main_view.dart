@@ -97,7 +97,11 @@ class _ProjectViewState extends State<ProjectView> {
                   child: EditorWidget(
                     input: content,
                     route: ((data) {
-                      content = Content.createMap(data);
+                      setState(() {
+                        content = Content.contentToMap(data);
+                        editorVisiblity = changeBool(editorVisiblity);
+                        textVisiblity = changeBool(textVisiblity);
+                      });
                     }),
                   ),
                 ),

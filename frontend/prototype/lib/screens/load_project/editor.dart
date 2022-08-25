@@ -7,13 +7,13 @@ import 'package:prototype/components/input_field_date.dart';
 import '../create_new_project/_main_view.dart';
 
 class EditorWidget extends StatelessWidget {
-  var input;
+  Map<String, dynamic> input;
   Function(Content) route;
   EditorWidget({required this.input, required this.route});
-  Content data = Content();
 
   @override
   Widget build(BuildContext context) {
+    Content data = Content.mapToContent(input);
     return Column(
       children: [
         InputField(
