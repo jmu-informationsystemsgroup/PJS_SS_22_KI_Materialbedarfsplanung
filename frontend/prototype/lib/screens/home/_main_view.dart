@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:prototype/components/buttons_order_by.dart';
 import 'package:prototype/components/input_field_search.dart';
 import 'package:prototype/components/navBar.dart';

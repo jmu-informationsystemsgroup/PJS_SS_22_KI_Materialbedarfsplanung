@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'dart:io';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
+import 'package:prototype/components/custom_container_white.dart';
 
 class Gallery extends StatefulWidget {
   String src;
@@ -43,10 +45,17 @@ class _GalleryState extends State<Gallery> {
     for (int i = 0; i < galleryList.length; i++) {
       if (i == widget.length) break;
       var element = galleryList[i];
-      row.children.add(Image.file(
-        File(element["image"].path),
-        width: 50,
-      ));
+      row.children.add(
+        FullScreenWidget(
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+            child: Image.file(
+              File(element["image"].path),
+              width: 50,
+            ),
+          ),
+        ),
+      );
     }
 
     return row;
@@ -55,6 +64,6 @@ class _GalleryState extends State<Gallery> {
   @override
   Widget build(BuildContext context) {
     //  getList();
-    return renderGallery();
+    return CustomContainerWhite(child: renderGallery());
   }
 }

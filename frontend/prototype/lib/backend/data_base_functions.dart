@@ -236,6 +236,19 @@ class DataBase {
     return result;
   }
 
+  static updateContent(int id, Content content) async {
+    final db = await DataBase.getDataBase();
+    final data = {
+      'projectName': content.projectName,
+      'client': content.client,
+      'date': content.date,
+    };
+
+    final result =
+        await db.update('projects', data, where: "id = ?", whereArgs: [id]);
+    return result;
+  }
+
   /// ####################################################################################################################################
   /// ############## Daten anlegen
   /// ####################################################################################################################################

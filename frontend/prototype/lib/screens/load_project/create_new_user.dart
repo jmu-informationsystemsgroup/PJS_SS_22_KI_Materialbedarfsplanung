@@ -6,6 +6,8 @@ import 'package:prototype/screens/load_project/button_send_mail.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../components/custom_container_white.dart';
+
 class CreateUser extends StatefulWidget {
   final Function() updateValues;
   var aiValue;
@@ -35,9 +37,7 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: ContainerStyles.getBoxDecoration(),
-      margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+    return CustomContainerWhite(
       child: Column(children: [
         InputField(
             saveTo: (text) => {cash.firstName = text}, labelText: "Vorname"),

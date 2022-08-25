@@ -20,12 +20,22 @@ class ContainerStyles {
 
   static BoxDecoration getBoxDecoration() {
     return BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 3,
+            blurRadius: 5,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ]
+        /*
       border: Border.all(
           color: Color.fromARGB(118, 0, 0, 0),
           width: 1.0,
-          style: BorderStyle.solid),
-    );
+          style: BorderStyle.solid),*/
+        );
   }
 
   static TextStyle getTextStyle() {

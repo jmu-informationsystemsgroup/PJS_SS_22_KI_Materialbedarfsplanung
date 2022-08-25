@@ -11,7 +11,8 @@ import '../styles/container.dart';
 class InputField extends StatefulWidget {
   Function(String) saveTo;
   String labelText;
-  InputField({required this.saveTo, required this.labelText});
+  String value;
+  InputField({required this.saveTo, required this.labelText, this.value = ""});
 
   @override
   _InputFieldState createState() {
@@ -21,6 +22,12 @@ class InputField extends StatefulWidget {
 
 class _InputFieldState extends State<InputField> {
   final TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.value;
+  }
 
   @override
   Widget build(BuildContext context) {

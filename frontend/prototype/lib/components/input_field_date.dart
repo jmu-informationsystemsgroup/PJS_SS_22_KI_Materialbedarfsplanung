@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 
-import '../../styles/container.dart';
+import '../styles/container.dart';
 
 class InputDate extends StatefulWidget {
+  String value;
+  Function(String) saveTo;
+  InputDate({required this.saveTo, this.value = ""});
   @override
   _InpuDateState createState() {
     // TODO: implement createState
@@ -18,6 +21,7 @@ class _InpuDateState extends State<InputDate> {
   void initState() {
     dateinput.text = ""; //set the initial value of text field
     super.initState();
+    dateinput.text = widget.value;
   }
 
   @override
@@ -40,7 +44,7 @@ class _InpuDateState extends State<InputDate> {
             setState(() {
               dateinput.text =
                   formattedDate; //set output date to TextField value.
-              NewProject.cash.date = formattedDate;
+              widget.saveTo(formattedDate);
             });
           }
         },

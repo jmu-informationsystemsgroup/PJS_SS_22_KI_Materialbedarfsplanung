@@ -38,7 +38,7 @@ dependencies:
   permission_handler: any
   downloads_path_provider_28: any
 
-  # Datenbank
+  # for database
   sqflite: ^2.0.2+1
 
   # The following adds the Cupertino Icons font to your application.
@@ -47,6 +47,9 @@ dependencies:
 
   # adding camera component
   camera: any
+
+  # for image galery
+  full_screen_image_null_safe: any
 
   # embedding webstore features
   url_launcher: any

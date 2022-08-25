@@ -57,9 +57,9 @@ class ProjectList extends StatelessWidget {
                     child: Row(
                       children: <Widget>[
                         Container(
-                          padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                          //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                           child: Gallery(element["id"].toString(), 2),
-                          width: 150,
+                          width: 160,
                         ),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

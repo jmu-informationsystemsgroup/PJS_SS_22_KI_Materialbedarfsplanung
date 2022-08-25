@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:prototype/components/navBar.dart';
-import 'package:prototype/screens/create_new_project/input_field_date.dart';
+import 'package:prototype/components/input_field_date.dart';
 import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 
@@ -17,6 +17,17 @@ class NewProject extends StatefulWidget {
   String title = "Neues Projekt";
   // instanzieeren eines Contentobjekts, in dem sämtliche EIngabeinformationen zwischengespeichert werden
   static var cash = Content();
+
+  static goToProjectView(int id, context) async {
+    await Future.delayed(Duration(seconds: 1));
+    var projects = await DataBase.getSpecificProject(id);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => ProjectView(projects[0])),
+      (Route<dynamic> route) => false,
+    );
+  }
+
   @override
   State<StatefulWidget> createState() {
     return _NewProjectState();
@@ -48,16 +59,6 @@ class _NewProjectState extends State<NewProject> {
   }
   
   */
-
-  goToProjectView(int id) async {
-    await Future.delayed(Duration(seconds: 1));
-    var projects = await DataBase.getSpecificProject(id);
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => ProjectView(projects[0])),
-      (Route<dynamic> route) => false,
-    );
-  }
 
   goBack() async {
     await Future.delayed(Duration(seconds: 1));
@@ -92,7 +93,9 @@ class _NewProjectState extends State<NewProject> {
                   saveTo: (text) => {NewProject.cash.client = text},
                   labelText: "Auftraggeber",
                 ),
-                InputDate(),
+                InputDate(
+                  saveTo: (text) => {NewProject.cash.date = text},
+                ),
                 // MVPWalls(),
                 MVPChecklist(),
                 //    preview(),
@@ -106,7 +109,7 @@ class _NewProjectState extends State<NewProject> {
                         projectId =
                             await DataBase.createNewProject(NewProject.cash);
                         NewProject.cash = Content(); //reset
-                        goToProjectView(projectId);
+                        NewProject.goToProjectView(projectId, context);
                       });
 
                       // goBack();
