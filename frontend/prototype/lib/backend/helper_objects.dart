@@ -38,11 +38,12 @@ class Content {
 
   static Map<String, dynamic> contentToMap(Content content) {
     Map<String, dynamic> map = {
+      'id': content.id,
       'projectName': content.projectName,
       'client': content.client,
-      'squareMeters': content.squareMeters,
+      'date': content.date,
       'material': content.material,
-      'statusActive': content.statusActive
+      'aiValue': content.aiValue
     };
 
     return map;

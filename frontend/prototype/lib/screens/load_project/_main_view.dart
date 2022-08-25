@@ -77,6 +77,7 @@ class _ProjectViewState extends State<ProjectView> {
                 Visibility(
                   visible: textVisiblity,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("Auftraggeber: " + content["client"]),
                       Text("Datum: " + content["date"]),
