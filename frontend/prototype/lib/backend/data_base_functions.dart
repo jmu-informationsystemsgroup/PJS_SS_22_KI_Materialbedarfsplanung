@@ -110,8 +110,6 @@ class DataBase {
 
     List allImages = await getAllImages();
 
-    print(allImages.toList().toString());
-
     List<Content> contentList = [];
     Content contentElement;
     listOfMaps.forEach(
@@ -136,10 +134,21 @@ class DataBase {
     List listOfMaps =
         await db.query('projects', orderBy: "id", where: "statusActive = 0");
 
+    List allImages = await getAllImages();
+
     List<Content> contentList = [];
+    Content contentElement;
     listOfMaps.forEach(
-      (element) async => {
-        contentList.add(await Content.mapToContent(element)),
+      (element) => {
+        contentElement = Content.mapToContent(element),
+        allImages.forEach(
+          (pictureObject) {
+            if (pictureObject["projectId"] == contentElement.id) {
+              contentElement.pictures.add(pictureObject["image"]);
+            }
+          },
+        ),
+        contentList.add(contentElement),
       },
     );
     return contentList;
@@ -158,19 +167,25 @@ class DataBase {
         .query('walls', orderBy: "id", where: "projectId = ?", whereArgs: [id]);
   }
 
-  static Future<List<Content>> getSpecificProject(int id) async {
+  static Future<Content> getSpecificProject(int id) async {
     final db = await DataBase.getDataBase();
 
     List listOfMaps = await db
         .query('projects', orderBy: "id", where: "id = ?", whereArgs: [id]);
 
+    List allImages = await getImages(id);
+
     List<Content> contentList = [];
-    listOfMaps.forEach(
-      (element) async => {
-        contentList.add(await Content.mapToContent(element)),
+    Content contentElement;
+
+    contentElement = Content.mapToContent(listOfMaps[0]);
+    allImages.forEach(
+      (pictureObject) {
+        contentElement.pictures.add(pictureObject["image"]);
       },
     );
-    return contentList;
+
+    return contentElement;
   }
 
   static Future<List> getAllImages() async {
@@ -210,7 +225,7 @@ class DataBase {
       var imageId = element["id"];
 
       var imageObject = {
-        "image": File('$path/material_images/$imageId.jpg'),
+        "image": XFile('$path/material_images/$imageId.jpg'),
         "aiValue": element["aiValue"]
       };
 

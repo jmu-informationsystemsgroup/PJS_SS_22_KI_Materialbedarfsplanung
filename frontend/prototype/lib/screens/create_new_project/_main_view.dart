@@ -20,10 +20,10 @@ class NewProject extends StatefulWidget {
 
   static goToProjectView(int id, context) async {
     await Future.delayed(Duration(seconds: 1));
-    var projects = await DataBase.getSpecificProject(id);
+    Content link = await DataBase.getSpecificProject(id);
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => ProjectView(projects[0])),
+      MaterialPageRoute(builder: (context) => ProjectView(link)),
       (Route<dynamic> route) => false,
     );
   }
