@@ -8,7 +8,7 @@ import '../create_new_project/_main_view.dart';
 
 class EditorWidget extends StatelessWidget {
   var input;
-  Function() route;
+  Function(Content) route;
   EditorWidget({required this.input, required this.route});
   Content data = Content();
 
@@ -32,7 +32,7 @@ class EditorWidget extends StatelessWidget {
         ),
         ElevatedButton(
             onPressed: () {
-              route();
+              route(data);
               DataBase.updateContent(input["id"], data);
             },
             child: Icon(Icons.save))

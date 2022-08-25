@@ -36,8 +36,20 @@ class Content {
         'statusActive': statusActive
       };
 
+  static Map<String, dynamic> createMap(Content content) {
+    Map<String, dynamic> map = {
+      'projectName': content.projectName,
+      'client': content.client,
+      'squareMeters': content.squareMeters,
+      'material': content.material,
+      'statusActive': content.statusActive
+    };
+
+    return map;
+  }
+
   /// erzeugt ein leeres Porjekt, in welches später geladen JSON Daten eingesetzt werden können
-  static Map<String, dynamic> createMap() {
+  static Map<String, dynamic> emptyMap() {
     Map<String, dynamic> content = {
       'id': '',
       'projectName': "",

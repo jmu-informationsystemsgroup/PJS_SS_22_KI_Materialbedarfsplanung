@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/screens/load_project/editor.dart';
@@ -12,6 +13,7 @@ import '../../backend/value_calculator.dart';
 class ProjectView extends StatefulWidget {
   Map<String, dynamic> content;
   ProjectView(this.content);
+
   static String src = "";
   @override
   _ProjectViewState createState() {
@@ -23,12 +25,14 @@ class _ProjectViewState extends State<ProjectView> {
   Map<String, dynamic> calculatedOutcome = {};
   bool editorVisiblity = false;
   bool textVisiblity = true;
+  Map<String, dynamic> content = {};
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getOutcome();
+    content = widget.content;
   }
 
   getOutcome() {
@@ -56,7 +60,6 @@ class _ProjectViewState extends State<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> content = widget.content;
     // getJsonValues();
     return Scaffold(
       appBar: AppBar(
@@ -93,7 +96,9 @@ class _ProjectViewState extends State<ProjectView> {
                   visible: editorVisiblity,
                   child: EditorWidget(
                     input: content,
-                    route: (() {}),
+                    route: ((data) {
+                      content = Content.createMap(data);
+                    }),
                   ),
                 ),
               ],
