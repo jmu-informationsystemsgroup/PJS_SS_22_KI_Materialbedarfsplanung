@@ -24,13 +24,14 @@ class CreateUser extends StatefulWidget {
 
 class _CreateUserState extends State<CreateUser> {
   User cash = User();
-  bool userComplete = false;
+  static bool preNameComplete = false;
+  static bool familyNameComplete = false;
+  static bool addressComplete = false;
 
   @override
   void initState() {
     // TODO: implement initState
     cash = User.mapToUser(widget.editUser);
-    userComplete = false;
   }
 
   Widget mailButtonIfComplete(bool status) {
@@ -48,11 +49,17 @@ class _CreateUserState extends State<CreateUser> {
           saveTo: (text) => {cash.firstName = text},
           labelText: "Vorname",
           value: cash.firstName,
+          formComplete: (formCompleteController) =>
+              {preNameComplete = formCompleteController},
+          mandatory: true,
         ),
         InputField(
           saveTo: (text) => {cash.lastName = text},
           labelText: "Nachname",
           value: cash.lastName,
+          formComplete: (formCompleteController) =>
+              {familyNameComplete = formCompleteController},
+          mandatory: true,
         ),
         InputField(
           saveTo: (text) => {cash.customerId = int.parse(text)},
@@ -63,21 +70,26 @@ class _CreateUserState extends State<CreateUser> {
           saveTo: (text) => {cash.address = text},
           labelText: "Adresse",
           value: cash.address,
+          formComplete: (formCompleteController) =>
+              {addressComplete = formCompleteController},
+          mandatory: true,
         ),
         ElevatedButton(
             onPressed: () async => {
-                  widget.updateValues([User.userToMap(cash)]),
-                  if (widget.editUser == User.emptyUser)
+                  if (preNameComplete && familyNameComplete && addressComplete)
                     {
-                      //   await DataBase.createUserData(cash),
+                      widget.updateValues([User.userToMap(cash)]),
+                      if (widget.editUser == User.emptyUser)
+                        {
+                          await DataBase.createUserData(cash),
+                        }
+                      else
+                        {
+                          await DataBase.updateUser(cash),
+                        },
                     }
-                  else
-                    {
-                      await DataBase.updateUser(cash),
-                    },
                 },
             child: Text("Userdaten speichern")),
-        mailButtonIfComplete(userComplete)
       ]),
     );
   }

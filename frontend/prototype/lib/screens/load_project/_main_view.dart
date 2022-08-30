@@ -43,7 +43,7 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   bool changeBool(bool input) {
-    if (input == true) {
+    if (input == false) {
       return true;
     } else {
       return false;
@@ -52,9 +52,9 @@ class _ProjectViewState extends State<ProjectView> {
 
   Icon getIcon() {
     if (editorVisablity) {
-      return Icon(Icons.edit);
-    } else
       return Icon(Icons.close);
+    } else
+      return Icon(Icons.edit);
   }
 
   @override

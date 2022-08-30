@@ -156,12 +156,12 @@ class _WebshopState extends State<Webshop> {
                           editUser: userDataNullCheckSafe(),
                         ),
                         visible: editorVisiblity,
-                      )
+                      ),
+                      ButtonSendMail(widget.aiValue, userData),
                     ],
                   ),
                 ),
               ),
-              ButtonSendMail(widget.aiValue, userData),
             ],
           ),
         )
