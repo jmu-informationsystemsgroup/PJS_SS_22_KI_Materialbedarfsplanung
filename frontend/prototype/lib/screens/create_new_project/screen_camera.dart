@@ -110,7 +110,7 @@ class _CameraPageState extends State<CameraPage> {
               onPressed: () async {
                 Navigator.of(context).pop();
                 setState(() {
-                  NewProject.cash.pictures = images;
+                  NewProject.cash.pictures.addAll(images);
                 });
               },
               child: Text("Kameransicht verlassen"),

@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
 import 'package:prototype/components/input_field_date.dart';
 import 'package:prototype/screens/home/_main_view.dart';
@@ -17,6 +19,7 @@ class NewProject extends StatefulWidget {
   String title = "Neues Projekt";
   // instanzieeren eines Contentobjekts, in dem sämtliche EIngabeinformationen zwischengespeichert werden
   static var cash = Content();
+  static List<XFile?> images = [];
 
   static goToProjectView(int id, context) async {
     await Future.delayed(Duration(seconds: 1));
@@ -89,6 +92,7 @@ class _NewProjectState extends State<NewProject> {
                 ),
                 //  NewAddress(),
                 AddPhotoButton(),
+                Gallery(pictures: NewProject.cash.pictures),
                 InputField(
                   saveTo: (text) => {NewProject.cash.client = text},
                   labelText: "Auftraggeber",

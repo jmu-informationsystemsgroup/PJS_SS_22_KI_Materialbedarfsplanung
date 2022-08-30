@@ -325,6 +325,21 @@ class DataBase {
     return result;
   }
 
+  static updateUser(User data) async {
+    final db = await DataBase.getDataBase();
+    int id = 1;
+
+    final dbData = {
+      'firstName': data.firstName,
+      'lastName': data.lastName,
+      'customerId': data.customerId,
+      'address': data.address
+    };
+    final result =
+        await db.update('user_data', dbData, where: "id = ?", whereArgs: [id]);
+    return result;
+  }
+
   /// ####################################################################################################################################
   /// ############## Daten anlegen
   /// ####################################################################################################################################

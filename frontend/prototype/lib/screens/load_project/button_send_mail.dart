@@ -38,8 +38,11 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
   @override
   Widget build(BuildContext context) {
     String subject = "Interesse an Spachtelmasse";
-    var user = widget.userData[0];
-    String body = createEmailContent(user);
+    String body = "";
+    if (widget.userData.isNotEmpty) {
+      var user = widget.userData[0];
+      body = createEmailContent(user);
+    }
 
     return ElevatedButton(
       child: Text('E-mail senden'),

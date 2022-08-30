@@ -96,7 +96,14 @@ class User {
   late int customerId;
   late String address;
 
-  static Map<String, dynamic> createMap(User user) {
+  static const Map<String, dynamic> emptyUser = {
+    'firstName': "",
+    'lastName': "",
+    'customerId': 0,
+    'address': ""
+  };
+
+  static Map<String, dynamic> userToMap(User user) {
     Map<String, dynamic> content = {
       'firstName': user.firstName,
       'lastName': user.lastName,
@@ -105,6 +112,17 @@ class User {
     };
 
     return content;
+  }
+
+  static User mapToUser(Map map) {
+    User user = User();
+
+    user.firstName = map["firstName"];
+    user.lastName = map['lastName'];
+    user.customerId = map['customerId'];
+    user.address = map['address'];
+
+    return user;
   }
 }
 

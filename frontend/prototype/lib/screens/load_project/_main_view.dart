@@ -23,8 +23,7 @@ class ProjectView extends StatefulWidget {
 
 class _ProjectViewState extends State<ProjectView> {
   Map<String, dynamic> calculatedOutcome = {};
-  bool editorVisiblity = false;
-  bool textVisiblity = true;
+  bool editorVisablity = false;
   Content content = Content();
 
   @override
@@ -45,14 +44,14 @@ class _ProjectViewState extends State<ProjectView> {
 
   bool changeBool(bool input) {
     if (input == true) {
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
 
   Icon getIcon() {
-    if (textVisiblity) {
+    if (editorVisablity) {
       return Icon(Icons.edit);
     } else
       return Icon(Icons.close);
@@ -75,7 +74,7 @@ class _ProjectViewState extends State<ProjectView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Visibility(
-                  visible: textVisiblity,
+                  visible: !editorVisablity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -88,20 +87,18 @@ class _ProjectViewState extends State<ProjectView> {
                   child: getIcon(),
                   onPressed: () {
                     setState(() {
-                      editorVisiblity = changeBool(editorVisiblity);
-                      textVisiblity = changeBool(textVisiblity);
+                      editorVisablity = changeBool(editorVisablity);
                     });
                   },
                 ),
                 Visibility(
-                  visible: editorVisiblity,
+                  visible: editorVisablity,
                   child: EditorWidget(
                     input: content,
                     route: ((data) {
                       setState(() {
                         content = data;
-                        editorVisiblity = changeBool(editorVisiblity);
-                        textVisiblity = changeBool(textVisiblity);
+                        editorVisablity = false;
                       });
                     }),
                   ),
