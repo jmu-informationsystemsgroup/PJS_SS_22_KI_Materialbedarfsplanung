@@ -89,7 +89,7 @@ class _CreateUserState extends State<CreateUser> {
                         },
                     }
                 },
-            child: Text("Userdaten speichern")),
+            child: Icon(Icons.save)),
       ]),
     );
   }

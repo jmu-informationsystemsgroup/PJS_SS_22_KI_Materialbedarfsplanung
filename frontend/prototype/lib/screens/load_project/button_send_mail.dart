@@ -45,7 +45,7 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
     }
 
     return ElevatedButton(
-      child: Text('E-mail senden'),
+      child: Icon(Icons.mail),
       onPressed: () {
         _launchUrl(
             "mailto:nicolas.wild@googlemail.com?subject=$subject&body=$body");
