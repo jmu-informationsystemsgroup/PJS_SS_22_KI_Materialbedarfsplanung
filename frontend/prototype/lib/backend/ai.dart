@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite/tflite.dart';
+import 'dart:convert';
 
 class AI {
   var input = [
@@ -46,11 +47,15 @@ class AI {
 
     Uint8List uintEightLIst = await imageFile.readAsBytes();
 
+    Uint32List uint32list = Uint32List.fromList(await imageFile.readAsBytes());
+
     List<int> intList = [];
     uintEightLIst.forEach((element) {
       intList.add(element);
     });
 
+    print(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${imageFile} ${uint32list.length} ${uintEightLIst.length} ${intList.length}");
     img.Image image = img.Image.fromBytes(300, 400, intList);
 
     List outcomeList = [];

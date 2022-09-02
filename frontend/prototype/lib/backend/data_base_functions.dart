@@ -247,7 +247,8 @@ class DataBase {
 
   static Future<FileSystemEntity> loadImageFromHardcodedPath() async {
     var path = await getFilePath;
-    var file = File('$path/material_images/1/IMG_2098.JPG');
+    // var file = File('$path/material_images/1/IMG_2098.JPG');
+    var file = File('$path/material_images/1/ai_training_image.JPG');
 
     return file;
   }
