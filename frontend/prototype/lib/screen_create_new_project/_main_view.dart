@@ -27,6 +27,14 @@ class NewProject extends StatefulWidget {
 class _NewProjectState extends State<NewProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var visability = false;
+  String aiValue = "";
+
+  @override
+  void initState() {
+    super.initState();
+    AI.loadModelNency();
+    aiValue = "noch nicht ermittelt";
+  }
 
 /*
   Widget preview() {
@@ -95,10 +103,14 @@ class _NewProjectState extends State<NewProject> {
                   child: ElevatedButton(
                     child: const Text('AI Test'),
                     onPressed: () {
-                      AI.applyModelOnImage();
+                      setState(() {
+                        AI.applyOnImageNency();
+                      });
+                      //  AI.applyOnImageNencyVector();
                     },
                   ),
                 ),
+                Text(aiValue),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(

@@ -27,6 +27,16 @@ class DataBase {
     return tempPath;
   }
 
+  static Future<File> get getJsonFile async {
+    final path = await getFilePath;
+    return File('$path/Array.json');
+  }
+
+  static Future<File> get getTextFile async {
+    final path = await getFilePath;
+    return File('$path/Array.json');
+  }
+
   /// wird aktuell noch für Fotos benötigt, kann entfernt werden, soblald komplett auf
   /// Datenbanken umgezogen wurde
   static Future<File> get getIdFile async {
