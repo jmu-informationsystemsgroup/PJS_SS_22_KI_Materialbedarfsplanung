@@ -109,13 +109,13 @@ class _NewProjectState extends State<NewProject> {
                     child: const Text('AI Test'),
                     onPressed: () {
                       setState(() {
-                        AI.applyOnImageNency();
+                        //    AI.applyOnImageNency();
                       });
                       //  AI.applyOnImageNencyVector();
                     },
                   ),
                 ),
-                Text(aiValue),
+                //  Text(aiValue),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(

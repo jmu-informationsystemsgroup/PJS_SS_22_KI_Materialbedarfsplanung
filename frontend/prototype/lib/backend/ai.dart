@@ -138,15 +138,6 @@ class AI {
 
     var input = outcomeList;
 
-    File textFile = await DataBase.getTextFile;
-    File jsonFile = await DataBase.getJsonFile;
-
-    String textSring =
-        "new---------------------------------------------------------------------------------------------------------------------------" +
-            outcomeList.toString();
-    textFile.writeAsString(textSring);
-    jsonFile.writeAsString(input.toString());
-
     var output = List.filled(1, 0).reshape([1, 1]);
 
     interpreter.run(input, output);
