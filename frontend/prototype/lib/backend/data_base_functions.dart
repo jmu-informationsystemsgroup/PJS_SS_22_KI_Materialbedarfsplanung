@@ -37,7 +37,8 @@ class DataBase {
         client TEXT,
         material TEXT,
         statusActive INTEGER,
-        date TEXT
+        date TEXT,
+        comment TEXT
       )
       """);
   }
@@ -318,6 +319,7 @@ class DataBase {
       'projectName': content.projectName,
       'client': content.client,
       'date': content.date,
+      'comment': content.comment
     };
 
     final result =
@@ -351,7 +353,8 @@ class DataBase {
       'client': data.client,
       'material': data.material,
       'statusActive': data.statusActive,
-      'date': data.date
+      'date': data.date,
+      'comment': data.comment
     };
 
     final db = await DataBase.getDataBase();

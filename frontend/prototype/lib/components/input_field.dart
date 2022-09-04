@@ -14,10 +14,12 @@ class InputField extends StatefulWidget {
   String labelText;
   String value;
   bool mandatory;
+  double maxLines;
   Function(bool)? formComplete;
   InputField(
       {required this.saveTo,
       required this.labelText,
+      this.maxLines = 2.5,
       this.mandatory = false,
       this.formComplete,
       this.value = ""});
@@ -63,8 +65,10 @@ class _InputFieldState extends State<InputField> {
         ),
         Container(
           margin: ContainerStyles.getMargin(),
+          height: widget.maxLines * 25.0,
           child: TextField(
             controller: nameController,
+            maxLines: widget.maxLines.toInt(),
             onChanged: (text) {
               setState(() {
                 widget.saveTo(text);

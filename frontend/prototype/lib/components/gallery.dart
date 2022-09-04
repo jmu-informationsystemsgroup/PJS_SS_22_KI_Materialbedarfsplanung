@@ -28,10 +28,6 @@ class Gallery extends StatelessWidget {
   /// geht in einer Schleife durch die galleryList und erzeugt jedesmal ein Imagewidget.
   /// Fügt das Imagewidget in ein Row Widget ein. Dieses wird am Ende zurückgegeben
   Widget renderGallery() {
-    pictures.forEach((element) {
-      print(element.toString());
-    });
-
     Row row = Row(
       children: [],
     );
@@ -59,7 +55,12 @@ class Gallery extends StatelessWidget {
   Widget build(BuildContext context) {
     //  getList();
     if (pictures.isNotEmpty) {
-      return CustomContainerWhite(child: renderGallery());
+      return CustomContainerWhite(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: renderGallery(),
+        ),
+      );
     } else {
       return Container();
     }

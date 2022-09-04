@@ -80,6 +80,7 @@ class _ProjectViewState extends State<ProjectView> {
                     children: [
                       Text("Auftraggeber: " + content.client),
                       Text("Datum: " + content.date),
+                      Text("Kommentar: " + content.comment)
                     ],
                   ),
                 ),

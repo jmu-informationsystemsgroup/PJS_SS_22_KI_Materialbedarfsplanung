@@ -9,7 +9,8 @@ import '_main_view.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
-  CameraPage({this.cameras, Key? key}) : super(key: key);
+  final Function(List<XFile?>)? updateGallery;
+  CameraPage({this.cameras, Key? key, this.updateGallery}) : super(key: key);
   @override
   _CameraPageState createState() => _CameraPageState();
 }
@@ -109,9 +110,10 @@ class _CameraPageState extends State<CameraPage> {
             child: ElevatedButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                setState(() {
-                  NewProject.cash.pictures.addAll(images);
-                });
+
+                NewProject.cash.pictures.addAll(images);
+
+                widget.updateGallery!(NewProject.cash.pictures);
               },
               child: Text("Kameransicht verlassen"),
             ),

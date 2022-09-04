@@ -8,6 +8,8 @@ import 'package:prototype/components/input_field_date.dart';
 import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 
+import 'screen_camera.dart';
+
 import '../../backend/helper_objects.dart';
 import '../load_project/_main_view.dart';
 import '../../components/input_field.dart';
@@ -41,6 +43,14 @@ class _NewProjectState extends State<NewProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var visability = false;
   int projectId = 0;
+  List<XFile?> galleryPictures = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    galleryPictures = NewProject.cash.pictures;
+  }
 
 /*
   Widget preview() {
@@ -91,8 +101,26 @@ class _NewProjectState extends State<NewProject> {
                   labelText: "Name",
                 ),
                 //  NewAddress(),
-                AddPhotoButton(),
-                Gallery(pictures: NewProject.cash.pictures),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await availableCameras().then((value) => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CameraPage(
+                                      cameras: value,
+                                      updateGallery: (value) {
+                                        setState(() {
+                                          galleryPictures = value;
+                                        });
+                                      },
+                                    )),
+                          ));
+                    },
+                    child: const Text('Photo hinzufügen'),
+                  ),
+                ),
+                Gallery(pictures: galleryPictures),
                 InputField(
                   saveTo: (text) => {NewProject.cash.client = text},
                   labelText: "Auftraggeber",
@@ -100,15 +128,22 @@ class _NewProjectState extends State<NewProject> {
                 InputDate(
                   saveTo: (text) => {NewProject.cash.date = text},
                 ),
+                InputField(
+                  saveTo: (text) => {NewProject.cash.comment = text},
+                  labelText: "Kommentar",
+                  maxLines: 6,
+                ),
                 // MVPWalls(),
                 MVPChecklist(),
                 //    preview(),
+
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     child: const Text('AI Test'),
                     onPressed: () {
                       setState(() {
+                        print("${galleryPictures} ${NewProject.cash.pictures}");
                         //    AI.applyOnImageNency();
                       });
                       //  AI.applyOnImageNencyVector();
@@ -116,6 +151,7 @@ class _NewProjectState extends State<NewProject> {
                   ),
                 ),
                 //  Text(aiValue),
+
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(

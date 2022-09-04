@@ -10,6 +10,7 @@ class Content {
   String projectName = "Default";
   String client = "Default";
   String date = "Default";
+  String comment = "";
   Map<int, Wall> squareMeters = {};
   List<XFile?> pictures = [];
   String material = "Q2";
@@ -43,7 +44,8 @@ class Content {
       'client': content.client,
       'date': content.date,
       'material': content.material,
-      'aiValue': content.aiValue
+      'aiValue': content.aiValue,
+      'comment': content.comment
     };
 
     return map;
@@ -72,6 +74,7 @@ class Content {
     content.pictures = [];
     content.material = map["material"];
     content.statusActive = map["statusActive"];
+    content.comment = map["comment"];
     return content;
   }
 

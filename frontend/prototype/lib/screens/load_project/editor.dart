@@ -14,6 +14,7 @@ class EditorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Content data = input;
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${data.comment}");
     return Column(
       children: [
         InputField(
@@ -29,6 +30,12 @@ class EditorWidget extends StatelessWidget {
         InputDate(
           saveTo: (text) => {data.date = text},
           value: input.date,
+        ),
+        InputField(
+          saveTo: (text) => {data.comment = text},
+          labelText: "Kommentar",
+          value: input.comment,
+          maxLines: 6,
         ),
         ElevatedButton(
             onPressed: () {
