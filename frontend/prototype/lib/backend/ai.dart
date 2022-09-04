@@ -144,8 +144,7 @@ class AI {
 
     print(output.toString() +
         bytes.length.toString() +
-        (300 * 400 * 3).toString() +
-        "-------.+.+.++..++.+.+.+.+.+.+..+.++.+.+.+.---------------------");
+        (300 * 400 * 3).toString());
 
     return output.toString();
   }
