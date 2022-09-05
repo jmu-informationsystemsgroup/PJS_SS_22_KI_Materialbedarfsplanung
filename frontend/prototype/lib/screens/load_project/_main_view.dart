@@ -8,6 +8,7 @@ import 'package:prototype/components/navBar.dart';
 import 'package:prototype/screens/load_project/projectMap.dart';
 import 'package:prototype/screens/load_project/webshop_api.dart';
 import 'package:camera/camera.dart';
+import 'package:prototype/styles/container.dart';
 import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
@@ -74,7 +75,7 @@ class _ProjectViewState extends State<ProjectView> {
       ),
       body: SingleChildScrollView(
         child: Column(children: [
-          Center(child: ProjectMap()),
+          //      Center(child: ProjectMap()),
           CustomContainerWhite(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,10 +135,14 @@ class _ProjectViewState extends State<ProjectView> {
             margin: const EdgeInsets.all(10.0),
             //    child: Text("Adresse: " + element + "straße"),
           ),
+
           Gallery(pictures: galleryPictures),
-          Center(
-            child: ElevatedButton(
-              onPressed: () async {
+          Container(
+            width: 70,
+            decoration: ContainerStyles.roundetCorners(),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+            child: GestureDetector(
+              onTap: () async {
                 await availableCameras().then((value) => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -153,9 +158,22 @@ class _ProjectViewState extends State<ProjectView> {
                               )),
                     ));
               },
-              child: const Text('Photo hinzufügen'),
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    Icon(
+                      Icons.image,
+                      color: Colors.white,
+                    ),
+                  ]),
             ),
           ),
+
           Visibility(
             visible: safeNewPicturesButton,
             child: ElevatedButton(

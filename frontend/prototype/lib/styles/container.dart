@@ -18,6 +18,13 @@ class ContainerStyles {
     );
   }
 
+  static BoxDecoration roundetCorners() {
+    return const BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      color: Colors.lightBlue,
+    );
+  }
+
   static BoxDecoration getBoxDecoration() {
     return BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
