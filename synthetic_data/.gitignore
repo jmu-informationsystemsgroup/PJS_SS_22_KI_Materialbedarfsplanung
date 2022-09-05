@@ -1,0 +1,3 @@
+# ai-models
+*.tflite
+*.h5
