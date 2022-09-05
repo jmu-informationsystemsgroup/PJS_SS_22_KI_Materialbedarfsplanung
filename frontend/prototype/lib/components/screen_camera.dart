@@ -10,7 +10,13 @@ import '../screens/create_new_project/_main_view.dart';
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
   final Function(List<XFile?>)? updateGallery;
-  CameraPage({this.cameras, Key? key, this.updateGallery}) : super(key: key);
+  List<XFile?> originalGallery;
+  CameraPage(
+      {this.cameras,
+      Key? key,
+      this.updateGallery,
+      this.originalGallery = const []})
+      : super(key: key);
   @override
   _CameraPageState createState() => _CameraPageState();
 }
@@ -20,7 +26,7 @@ class _CameraPageState extends State<CameraPage> {
   XFile? pictureFile;
   List<XFile?> images = [];
 
-  Widget getLibrary() {
+  Widget preview() {
     Row row = Row(
       children: [],
     );
@@ -49,6 +55,7 @@ class _CameraPageState extends State<CameraPage> {
       }
       setState(() {});
     });
+    images.addAll(widget.originalGallery);
   }
 
   @override
@@ -119,7 +126,10 @@ class _CameraPageState extends State<CameraPage> {
         ),
         Expanded(
           flex: 1,
-          child: getLibrary(),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: preview(),
+          ),
         )
       ],
     );

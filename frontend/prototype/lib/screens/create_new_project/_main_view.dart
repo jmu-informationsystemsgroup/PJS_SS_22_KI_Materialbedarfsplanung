@@ -108,6 +108,7 @@ class _NewProjectState extends State<NewProject> {
                             MaterialPageRoute(
                                 builder: (context) => CameraPage(
                                       cameras: value,
+                                      originalGallery: galleryPictures,
                                       updateGallery: (images) {
                                         setState(() {
                                           NewProject.cash.pictures

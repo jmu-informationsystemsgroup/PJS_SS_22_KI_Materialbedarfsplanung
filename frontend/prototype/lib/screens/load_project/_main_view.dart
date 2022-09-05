@@ -148,6 +148,7 @@ class _ProjectViewState extends State<ProjectView> {
                       MaterialPageRoute(
                           builder: (context) => CameraPage(
                                 cameras: value,
+                                originalGallery: galleryPictures,
                                 updateGallery: (images) {
                                   setState(() {
                                     galleryPictures.addAll(images);
