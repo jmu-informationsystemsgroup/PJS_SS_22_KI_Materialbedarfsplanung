@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/screens/load_project/button_send_mail.dart';
-import 'package:prototype/screens/load_project/create_new_user.dart';
+import 'package:prototype/screens/load_project/user_form.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/helper_objects.dart';
@@ -123,7 +123,7 @@ class _WebshopState extends State<Webshop> {
                 child: Column(
                   children: [
                     Text("Bitte gib einmalig deine Userdaten an"),
-                    CreateUser(
+                    UserForm(
                       updateValues: (data) {
                         setState(() {
                           userData = data;
@@ -165,7 +165,7 @@ class _WebshopState extends State<Webshop> {
                         child: getIcon(),
                       ),
                       Visibility(
-                        child: CreateUser(
+                        child: UserForm(
                           updateValues: (data) {
                             setState(() {
                               userData = data;

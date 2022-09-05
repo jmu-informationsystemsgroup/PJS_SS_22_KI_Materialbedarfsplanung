@@ -8,25 +8,29 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/custom_container_white.dart';
 
-class CreateUser extends StatefulWidget {
+class UserForm extends StatefulWidget {
   final Function(List list) updateValues;
   var aiValue;
   Map<String, dynamic> editUser;
-  CreateUser(
+  UserForm(
       {required this.updateValues,
       required this.aiValue,
       this.editUser = User.emptyUser});
   @override
-  _CreateUserState createState() {
-    return _CreateUserState();
+  _UserFormState createState() {
+    return _UserFormState();
   }
 }
 
-class _CreateUserState extends State<CreateUser> {
+class _UserFormState extends State<UserForm> {
   User cash = User();
   static bool preNameComplete = false;
   static bool familyNameComplete = false;
   static bool addressComplete = false;
+  static bool idComplete = false;
+
+  static bool formComplete =
+      preNameComplete && familyNameComplete && addressComplete && idComplete;
 
   @override
   void initState() {
@@ -39,6 +43,17 @@ class _CreateUserState extends State<CreateUser> {
       return ButtonSendMail(widget.aiValue, [User.userToMap(cash)]);
     } else
       return Container();
+  }
+
+  String _idValue() {
+    String idValue = "";
+    if (cash.customerId == 0) {
+      return idValue;
+    } else {
+      idValue = cash.customerId.toString();
+    }
+
+    return idValue;
   }
 
   @override
@@ -64,7 +79,10 @@ class _CreateUserState extends State<CreateUser> {
         InputField(
           saveTo: (text) => {cash.customerId = int.parse(text)},
           labelText: "Kundennummer",
-          value: cash.customerId.toString(),
+          formComplete: (formCompleteController) =>
+              {idComplete = formCompleteController},
+          value: _idValue(),
+          mandatory: true,
         ),
         InputField(
           saveTo: (text) => {cash.address = text},
@@ -76,7 +94,7 @@ class _CreateUserState extends State<CreateUser> {
         ),
         ElevatedButton(
             onPressed: () async => {
-                  if (preNameComplete && familyNameComplete && addressComplete)
+                  if (formComplete)
                     {
                       widget.updateValues([User.userToMap(cash)]),
                       if (widget.editUser == User.emptyUser)

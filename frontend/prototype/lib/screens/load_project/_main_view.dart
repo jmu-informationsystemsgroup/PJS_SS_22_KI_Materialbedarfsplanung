@@ -32,6 +32,7 @@ class _ProjectViewState extends State<ProjectView> {
   List<XFile?> galleryPictures = [];
   List<XFile?> addedPictures = [];
   bool safeNewPicturesButton = false;
+  bool imagesSaved = false;
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _ProjectViewState extends State<ProjectView> {
     getOutcome();
     content = widget.content;
     galleryPictures = content.pictures;
+    imagesSaved = false;
   }
 
   getOutcome() {
@@ -136,49 +138,41 @@ class _ProjectViewState extends State<ProjectView> {
             margin: const EdgeInsets.all(10.0),
             //    child: Text("Adresse: " + element + "straße"),
           ),
-
           Gallery(pictures: galleryPictures),
-          Container(
-            width: 70,
-            decoration: ContainerStyles.roundetCorners(),
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-            child: GestureDetector(
-              onTap: () async {
-                await availableCameras().then((value) => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CameraPage(
-                                cameras: value,
-                                originalGallery: galleryPictures,
-                                updateGallery: (images) {
-                                  setState(() {
-                                    galleryPictures.addAll(images);
-                                    addedPictures.addAll(images);
-                                    safeNewPicturesButton = true;
-                                  });
-                                },
-                              )),
-                    ));
-              },
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                    Icon(
-                      Icons.image,
-                      color: Colors.white,
-                    ),
-                  ]),
-            ),
+
+          CustomButton(
+            children: const [
+              Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.image,
+                color: Colors.white,
+              ),
+            ],
+            onPressed: () async {
+              await availableCameras().then((value) => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CameraPage(
+                              cameras: value,
+                              originalGallery: galleryPictures,
+                              updateGallery: (images) {
+                                setState(() {
+                                  galleryPictures.addAll(images);
+                                  addedPictures.addAll(images);
+                                  safeNewPicturesButton = true;
+                                });
+                              },
+                            )),
+                  ));
+            },
           ),
           Visibility(
             visible: safeNewPicturesButton,
             child: CustomButton(
-              children: [
+              children: const [
                 Icon(
                   Icons.image,
                   color: Colors.white,
@@ -189,10 +183,20 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
               ],
               onPressed: () async {
-                DataBase.saveImages(addedPictures, content.id);
+                setState(() async {
+                  safeNewPicturesButton = false;
+                  imagesSaved =
+                      await DataBase.saveImages(addedPictures, content.id);
+                  addedPictures = [];
+                });
               },
             ),
           ),
+          Visibility(
+            visible: imagesSaved,
+            child: Text("Speichern erfolgreich"),
+          ),
+
           Webshop(
             aiValue: calculatedOutcome["aiOutcome"],
           )

@@ -398,7 +398,7 @@ class DataBase {
 
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
   /// Bild id = Dateiname
-  static void saveImages(List<XFile?> pictures, int projectId) async {
+  static Future<bool> saveImages(List<XFile?> pictures, int projectId) async {
     final db = await DataBase.getDataBase();
 
     final path = await getFilePath;
@@ -415,6 +415,8 @@ class DataBase {
 
       await picture?.saveTo('$fileloc/$id.jpg');
     }
+
+    return true;
   }
 
   static Future<FileSystemEntity> loadImageFromHardcodedPath() async {

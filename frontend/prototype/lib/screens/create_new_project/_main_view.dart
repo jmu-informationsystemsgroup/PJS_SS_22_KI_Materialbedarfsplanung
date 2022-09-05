@@ -143,21 +143,6 @@ class _NewProjectState extends State<NewProject> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
-                    child: const Text('AI Test'),
-                    onPressed: () {
-                      setState(() {
-                        print("${galleryPictures} ${NewProject.cash.pictures}");
-                        //    AI.applyOnImageNency();
-                      });
-                      //  AI.applyOnImageNencyVector();
-                    },
-                  ),
-                ),
-                //  Text(aiValue),
-
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
                     child: const Text('Projekt speichern und berechnen'),
                     onPressed: () {
                       //    Content.reset(NewProject.cash);

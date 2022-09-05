@@ -4,7 +4,7 @@ import '../styles/container.dart';
 
 class CustomButton extends StatelessWidget {
   List<Widget> children;
-  final Function() onPressed;
+  Function() onPressed;
   CustomButton({required this.children, required this.onPressed});
 
   @override
