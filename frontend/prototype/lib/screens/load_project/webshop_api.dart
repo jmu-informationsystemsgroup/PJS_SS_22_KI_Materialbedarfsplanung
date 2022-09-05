@@ -5,6 +5,7 @@ import 'package:prototype/screens/load_project/create_new_user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/helper_objects.dart';
+import '../../components/button_multiple_icons.dart';
 import '../../components/custom_container_white.dart';
 
 class Webshop extends StatefulWidget {
@@ -79,14 +80,34 @@ class _WebshopState extends State<Webshop> {
     }
     return Column(
       children: [
-        ElevatedButton(
-          child: Text('zum Shop von Spachtelprofi'),
+        CustomButton(
+          children: [
+            Icon(
+              Icons.shopping_cart,
+              color: Colors.white,
+            ),
+            Text(
+              "online",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            )
+          ],
           onPressed: () {
             _launchUrl("https://spachtelprofi.com/shop/");
           },
         ),
-        ElevatedButton(
-          child: Text('Kontakt zu Spachtelprofi'),
+        CustomButton(
+          children: [
+            Icon(
+              Icons.shopping_cart,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.mail,
+              color: Colors.white,
+            )
+          ],
           onPressed: () {
             setState(() {
               mailVisability = true;

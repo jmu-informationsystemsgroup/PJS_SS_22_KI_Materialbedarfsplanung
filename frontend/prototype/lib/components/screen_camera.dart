@@ -120,7 +120,7 @@ class _CameraPageState extends State<CameraPage> {
 
                 widget.updateGallery!(images);
               },
-              child: Text("Kameransicht verlassen"),
+              child: Icon(Icons.close),
             ),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/helper_objects.dart';
+import 'package:prototype/components/button_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/screens/load_project/editor.dart';
@@ -174,14 +175,22 @@ class _ProjectViewState extends State<ProjectView> {
                   ]),
             ),
           ),
-
           Visibility(
             visible: safeNewPicturesButton,
-            child: ElevatedButton(
+            child: CustomButton(
+              children: [
+                Icon(
+                  Icons.image,
+                  color: Colors.white,
+                ),
+                Icon(
+                  Icons.save,
+                  color: Colors.white,
+                ),
+              ],
               onPressed: () async {
                 DataBase.saveImages(addedPictures, content.id);
               },
-              child: const Text('Neue Photos speichern'),
             ),
           ),
           Webshop(
