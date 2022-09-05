@@ -24,15 +24,16 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   late CameraController controller;
   XFile? pictureFile;
-  List<XFile?> images = [];
+  List<XFile?> previewImages = [];
+  List<XFile?> newImages = [];
 
   Widget preview() {
     Row row = Row(
       children: [],
     );
 
-    if (images.isNotEmpty) {
-      for (var picture in images) {
+    if (previewImages.isNotEmpty) {
+      for (var picture in previewImages) {
         row.children.add(Image.file(
           File(picture!.path),
           width: 50,
@@ -55,7 +56,7 @@ class _CameraPageState extends State<CameraPage> {
       }
       setState(() {});
     });
-    images.addAll(widget.originalGallery);
+    previewImages.addAll(widget.originalGallery);
   }
 
   @override
@@ -96,7 +97,8 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                     onPressed: () async {
                       pictureFile = await controller.takePicture();
-                      images.add(pictureFile!);
+                      previewImages.add(pictureFile!);
+                      newImages.add(pictureFile!);
                       setState(() {});
                     },
                     child: const Icon(
@@ -118,7 +120,7 @@ class _CameraPageState extends State<CameraPage> {
               onPressed: () async {
                 Navigator.of(context).pop();
 
-                widget.updateGallery!(images);
+                widget.updateGallery!(newImages);
               },
               child: Icon(Icons.close),
             ),

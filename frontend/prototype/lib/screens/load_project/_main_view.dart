@@ -41,7 +41,6 @@ class _ProjectViewState extends State<ProjectView> {
     getOutcome();
     content = widget.content;
     galleryPictures = content.pictures;
-    imagesSaved = false;
   }
 
   getOutcome() {
