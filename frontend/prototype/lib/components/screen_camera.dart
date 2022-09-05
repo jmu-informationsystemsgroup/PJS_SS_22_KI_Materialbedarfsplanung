@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 
-import '_main_view.dart';
+import '../screens/create_new_project/_main_view.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
@@ -111,9 +111,7 @@ class _CameraPageState extends State<CameraPage> {
               onPressed: () async {
                 Navigator.of(context).pop();
 
-                NewProject.cash.pictures.addAll(images);
-
-                widget.updateGallery!(NewProject.cash.pictures);
+                widget.updateGallery!(images);
               },
               child: Text("Kameransicht verlassen"),
             ),

@@ -8,14 +8,13 @@ import 'package:prototype/components/input_field_date.dart';
 import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 
-import 'screen_camera.dart';
+import '../../components/screen_camera.dart';
 
 import '../../backend/helper_objects.dart';
 import '../load_project/_main_view.dart';
 import '../../components/input_field.dart';
 import 'mvp_checklist.dart';
 import 'mvp_walls.dart';
-import 'button_add_photo.dart';
 
 class NewProject extends StatefulWidget {
   String title = "Neues Projekt";
@@ -109,9 +108,12 @@ class _NewProjectState extends State<NewProject> {
                             MaterialPageRoute(
                                 builder: (context) => CameraPage(
                                       cameras: value,
-                                      updateGallery: (value) {
+                                      updateGallery: (images) {
                                         setState(() {
-                                          galleryPictures = value;
+                                          NewProject.cash.pictures
+                                              .addAll(images);
+                                          galleryPictures =
+                                              NewProject.cash.pictures;
                                         });
                                       },
                                     )),

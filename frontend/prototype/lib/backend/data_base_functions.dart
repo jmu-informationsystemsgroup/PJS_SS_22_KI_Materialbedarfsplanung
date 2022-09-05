@@ -362,7 +362,7 @@ class DataBase {
     final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     createWallsForProject(data, id);
-    saveImages(data, id);
+    saveImages(data.pictures, id);
     return id;
   }
 
@@ -398,9 +398,7 @@ class DataBase {
 
   /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
   /// Bild id = Dateiname
-  static void saveImages(Content data, int projectId) async {
-    List<XFile?> pictures = data.pictures;
-
+  static void saveImages(List<XFile?> pictures, int projectId) async {
     final db = await DataBase.getDataBase();
 
     final path = await getFilePath;
@@ -410,7 +408,7 @@ class DataBase {
     var fileloc = dir.path;
 
     for (var picture in pictures) {
-      final dbData = {'projectId': projectId, 'aiValue': data.aiValue};
+      final dbData = {'projectId': projectId, 'aiValue': 41.0};
 
       final id = await db.insert('images', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);

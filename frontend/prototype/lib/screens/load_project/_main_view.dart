@@ -7,8 +7,10 @@ import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
 import 'package:prototype/screens/load_project/projectMap.dart';
 import 'package:prototype/screens/load_project/webshop_api.dart';
-
+import 'package:camera/camera.dart';
+import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
+import 'package:prototype/backend/data_base_functions.dart';
 
 class ProjectView extends StatefulWidget {
   Content content;
@@ -25,6 +27,9 @@ class _ProjectViewState extends State<ProjectView> {
   Map<String, dynamic> calculatedOutcome = {};
   bool editorVisablity = false;
   Content content = Content();
+  List<XFile?> galleryPictures = [];
+  List<XFile?> addedPictures = [];
+  bool safeNewPicturesButton = false;
 
   @override
   void initState() {
@@ -32,6 +37,7 @@ class _ProjectViewState extends State<ProjectView> {
     super.initState();
     getOutcome();
     content = widget.content;
+    galleryPictures = content.pictures;
   }
 
   getOutcome() {
@@ -128,7 +134,37 @@ class _ProjectViewState extends State<ProjectView> {
             margin: const EdgeInsets.all(10.0),
             //    child: Text("Adresse: " + element + "straße"),
           ),
-          Gallery(pictures: content.pictures),
+          Gallery(pictures: galleryPictures),
+          Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                await availableCameras().then((value) => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CameraPage(
+                                cameras: value,
+                                updateGallery: (images) {
+                                  setState(() {
+                                    galleryPictures.addAll(images);
+                                    addedPictures.addAll(images);
+                                    safeNewPicturesButton = true;
+                                  });
+                                },
+                              )),
+                    ));
+              },
+              child: const Text('Photo hinzufügen'),
+            ),
+          ),
+          Visibility(
+            visible: safeNewPicturesButton,
+            child: ElevatedButton(
+              onPressed: () async {
+                DataBase.saveImages(addedPictures, content.id);
+              },
+              child: const Text('Neue Photos speichern'),
+            ),
+          ),
           Webshop(
             aiValue: calculatedOutcome["aiOutcome"],
           )
