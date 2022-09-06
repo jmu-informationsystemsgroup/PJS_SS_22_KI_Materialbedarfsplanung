@@ -3,6 +3,7 @@ import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/input_field.dart';
 import 'package:prototype/components/input_field_date.dart';
+import 'package:prototype/screens/create_new_project/input_field_address.dart';
 
 import '../create_new_project/_main_view.dart';
 
@@ -30,6 +31,19 @@ class EditorWidget extends StatelessWidget {
         InputDate(
           saveTo: (text) => {data.date = text},
           value: input.date,
+        ),
+        AddressInput(
+          adress: Adress(
+              street: data.street,
+              houseNumber: data.houseNumber,
+              zip: data.zip,
+              city: data.city),
+          updateAddress: (street, houseNumber, zip, city) {
+            data.street = street;
+            data.houseNumber = houseNumber;
+            data.zip = zip;
+            data.city = city;
+          },
         ),
         InputField(
           saveTo: (text) => {data.comment = text},

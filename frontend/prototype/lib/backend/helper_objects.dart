@@ -17,6 +17,11 @@ class Content {
   int statusActive = 1;
   double aiValue = 41.0;
 
+  String street = "";
+  String houseNumber = "";
+  String zip = "";
+  String city = "";
+
   /// übersetzt Objekt aus Json Format
   set fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -45,7 +50,11 @@ class Content {
       'date': content.date,
       'material': content.material,
       'aiValue': content.aiValue,
-      'comment': content.comment
+      'comment': content.comment,
+      'street': content.street,
+      'houseNumber': content.houseNumber,
+      'zip': content.zip,
+      'city': content.city
     };
 
     return map;
@@ -75,6 +84,10 @@ class Content {
     content.material = map["material"];
     content.statusActive = map["statusActive"];
     content.comment = map["comment"];
+    content.street = map["street"];
+    content.houseNumber = map["houseNumber"];
+    content.zip = map["zip"];
+    content.city = map["city"];
     return content;
   }
 

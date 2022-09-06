@@ -55,11 +55,9 @@ class Gallery extends StatelessWidget {
   Widget build(BuildContext context) {
     //  getList();
     if (pictures.isNotEmpty) {
-      return CustomContainerWhite(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: renderGallery(),
-        ),
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: renderGallery(),
       );
     } else {
       return Container();

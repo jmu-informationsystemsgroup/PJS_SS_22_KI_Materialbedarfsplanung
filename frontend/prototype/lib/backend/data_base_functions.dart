@@ -42,7 +42,11 @@ class DataBase {
         material TEXT,
         statusActive INTEGER,
         date TEXT,
-        comment TEXT
+        comment TEXT,
+        street TEXT,
+        houseNumber TEXT,
+        zip TEXT,
+        city TEXT
       )
       """);
   }
@@ -323,7 +327,11 @@ class DataBase {
       'projectName': content.projectName,
       'client': content.client,
       'date': content.date,
-      'comment': content.comment
+      'comment': content.comment,
+      'street': content.street,
+      'houseNumber': content.houseNumber,
+      'zip': content.zip,
+      'city': content.city
     };
 
     final result =
@@ -358,7 +366,11 @@ class DataBase {
       'material': data.material,
       'statusActive': data.statusActive,
       'date': data.date,
-      'comment': data.comment
+      'comment': data.comment,
+      'street': data.street,
+      'houseNumber': data.houseNumber,
+      'zip': data.zip,
+      'city': data.city
     };
 
     final db = await DataBase.getDataBase();

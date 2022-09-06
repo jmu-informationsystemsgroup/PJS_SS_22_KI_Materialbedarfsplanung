@@ -138,7 +138,9 @@ class _ProjectViewState extends State<ProjectView> {
                     children: [
                       Text("Auftraggeber: " + content.client),
                       Text("Datum: " + content.date),
-                      Text("Kommentar: " + content.comment)
+                      Text(
+                          "Adresse: ${content.street} ${content.houseNumber}, ${content.zip} ${content.city}"),
+                      Text("Kommentar: " + content.comment),
                     ],
                   ),
                 ),
@@ -186,37 +188,49 @@ class _ProjectViewState extends State<ProjectView> {
             margin: const EdgeInsets.all(10.0),
             //    child: Text("Adresse: " + element + "straße"),
           ),
-          Gallery(pictures: galleryPictures),
-
-          CustomButton(
-            children: const [
-              Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              Icon(
-                Icons.image,
-                color: Colors.white,
-              ),
-            ],
-            onPressed: () async {
-              await availableCameras().then((value) => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CameraPage(
-                              cameras: value,
-                              originalGallery: galleryPictures,
-                              updateGallery: (images) {
-                                setState(() {
-                                  galleryPictures.addAll(images);
-                                  addedPictures.addAll(images);
-                                  safeNewPicturesButton = true;
-                                });
-                              },
-                            )),
-                  ));
-            },
+          CustomContainerWhite(
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 8,
+                  child: Gallery(pictures: galleryPictures),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: CustomButton(
+                    children: const [
+                      Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      Icon(
+                        Icons.image,
+                        color: Colors.white,
+                      ),
+                    ],
+                    onPressed: () async {
+                      await availableCameras().then((value) => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CameraPage(
+                                      cameras: value,
+                                      originalGallery: galleryPictures,
+                                      updateGallery: (images) {
+                                        setState(() {
+                                          galleryPictures.addAll(images);
+                                          addedPictures.addAll(images);
+                                          safeNewPicturesButton = true;
+                                        });
+                                      },
+                                    )),
+                          ));
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
+
           CustomButton(
             children: const [
               Icon(

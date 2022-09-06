@@ -1,7 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/components/input_field.dart';
+import 'package:prototype/screens/create_new_project/_main_view.dart';
 
-class NewAddress extends StatelessWidget {
-  String title = "Archiv";
+class AddressInput extends StatefulWidget {
+  Function(String, String, String, String) updateAddress;
+  Adress adress;
+  AddressInput(
+      {required this.updateAddress,
+      this.adress =
+          const Adress(street: "", houseNumber: "", zip: "", city: "")});
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return AddressInputState();
+  }
+}
+
+class AddressInputState extends State<AddressInput> {
+  String street = "";
+  String houseNumber = "";
+  String city = "";
+  String zip = "";
 
   @override
   Widget build(BuildContext context) {
@@ -18,48 +38,67 @@ class NewAddress extends StatelessWidget {
           Text("Adresse"),
           Row(
             children: <Widget>[
-              Flexible(
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Straße',
-                  ),
+              Expanded(
+                flex: 7,
+                child: InputField(
+                  value: widget.adress.street,
+                  saveTo: (value) {
+                    street = value;
+                    widget.updateAddress(street, houseNumber, city, zip);
+                  },
+                  labelText: "Straße",
                 ),
               ),
-              SizedBox(width: 5),
-              Flexible(
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Hausnummer',
-                  ),
-                ),
-              )
+              Expanded(
+                flex: 3,
+                child: InputField(
+                    value: widget.adress.houseNumber,
+                    saveTo: (value) {
+                      houseNumber = value;
+                      widget.updateAddress(street, houseNumber, city, zip);
+                    },
+                    labelText: "Nr."),
+              ),
             ],
           ),
           Row(
             children: <Widget>[
-              Flexible(
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Stadt',
-                  ),
-                ),
+              Expanded(
+                flex: 5,
+                child: InputField(
+                    value: widget.adress.zip,
+                    saveTo: (value) {
+                      zip = value;
+                      widget.updateAddress(street, houseNumber, city, zip);
+                    },
+                    labelText: "Postleitzahl"),
               ),
-              SizedBox(width: 5),
-              Flexible(
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Postleitzahl',
-                  ),
-                ),
-              )
+              Expanded(
+                flex: 5,
+                child: InputField(
+                    value: widget.adress.city,
+                    saveTo: (value) {
+                      city = value;
+                      widget.updateAddress(street, houseNumber, city, zip);
+                    },
+                    labelText: "Stadt"),
+              ),
             ],
           ),
         ],
       ),
     );
   }
+}
+
+class Adress {
+  final String street;
+  final String houseNumber;
+  final String city;
+  final String zip;
+  const Adress(
+      {required this.street,
+      required this.houseNumber,
+      required this.zip,
+      required this.city});
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:prototype/backend/data_base_functions.dart';
+import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/screens/load_project/_main_view.dart';
 
@@ -46,59 +47,66 @@ class ProjectList extends StatelessWidget {
           .map(
             (element) => Card(
               child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProjectView(element)),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 25),
-                    decoration: ContainerStyles.getColoredBoxDecoration(),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProjectView(element)),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 25),
+                  decoration: ContainerStyles.getColoredBoxDecoration(),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 3,
+                        child: CustomContainerWhite(
                           //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                           child: Gallery(
                             pictures: element.pictures,
                             length: 2,
                           ),
-                          width: 160,
                         ),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text("Name: " + element.projectName,
-                                  style: ContainerStyles.getTextStyle()),
-                              Text("Auftraggeber: " + element.client,
-                                  style: ContainerStyles.getTextStyle()),
-                              //  Text("Fälligkeitsdatum: 15.05.2022"),
-                              Row(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.all(5.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        DataBase.deleteProject(element.id);
-                                        listHasChanged();
-                                      },
-                                      child: Icon(Icons.delete),
-                                      style: ElevatedButton.styleFrom(
-                                          primary: Colors.red),
-                                    ),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("Name: " + element.projectName,
+                                style: ContainerStyles.getTextStyle()),
+                            Text("Auftraggeber: " + element.client,
+                                style: ContainerStyles.getTextStyle()),
+                            //  Text("Fälligkeitsdatum: 15.05.2022"),
+                            Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(5.0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      DataBase.deleteProject(element.id);
+                                      listHasChanged();
+                                    },
+                                    child: Icon(Icons.delete),
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.red),
                                   ),
-                                  Container(
-                                    margin: const EdgeInsets.all(5.0),
-                                    child: renderArchiveButton(element.id),
-                                  ),
-                                ],
-                              )
-                            ])
-                      ],
-                    ),
-                  )),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.all(5.0),
+                                  child: renderArchiveButton(element.id),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           )
           .toList(),

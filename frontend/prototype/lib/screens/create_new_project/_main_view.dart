@@ -16,6 +16,7 @@ import '../../components/screen_camera.dart';
 import '../../backend/helper_objects.dart';
 import '../load_project/_main_view.dart';
 import '../../components/input_field.dart';
+import 'input_field_address.dart';
 import 'mvp_checklist.dart';
 import 'mvp_walls.dart';
 
@@ -146,7 +147,7 @@ class _NewProjectState extends State<NewProject> {
                   saveTo: (text) => {NewProject.cash.projectName = text},
                   labelText: "Name",
                 ),
-                //  NewAddress(),
+
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
@@ -212,6 +213,14 @@ class _NewProjectState extends State<NewProject> {
                 ),
                 InputDate(
                   saveTo: (text) => {NewProject.cash.date = text},
+                ),
+                AddressInput(
+                  updateAddress: (street, houseNumber, zip, city) {
+                    NewProject.cash.street = street;
+                    NewProject.cash.houseNumber = houseNumber;
+                    NewProject.cash.zip = zip;
+                    NewProject.cash.city = city;
+                  },
                 ),
                 InputField(
                   saveTo: (text) => {NewProject.cash.comment = text},
