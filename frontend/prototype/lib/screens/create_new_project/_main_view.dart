@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:prototype/components/button_multiple_icons.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
 import 'package:prototype/components/input_field_date.dart';
@@ -166,32 +167,44 @@ class _NewProjectState extends State<NewProject> {
                                     )),
                           ));
                     },
-                    child: const Text('Photo hinzufügen'),
+                    child: Icon(Icons.camera_alt),
                   ),
                 ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final ImagePicker _picker = ImagePicker();
-                      var dialog = await _showMyDialog();
-                      // Pick an image
 
-                      final XFile? image = await _picker.pickImage(
-                          source: ImageSource.camera,
-                          maxWidth: 400,
-                          maxHeight: 300);
-                      if (image != null) {
-                        setState(
-                          () {
-                            NewProject.cash.pictures.add(image);
-                            galleryPictures = NewProject.cash.pictures;
-                          },
-                        );
-                      }
-                    },
-                    child: const Text('Photo hinzufügen - Imagepicker'),
-                  ),
-                ),
+                Center(
+                    child: CustomButton(
+                  children: [
+                    Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      "Picker",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                  onPressed: () async {
+                    final ImagePicker _picker = ImagePicker();
+                    var dialog = await _showMyDialog();
+                    // Pick an image
+
+                    final XFile? image = await _picker.pickImage(
+                        source: ImageSource.camera,
+                        maxWidth: 400,
+                        maxHeight: 300);
+                    if (image != null) {
+                      setState(
+                        () {
+                          NewProject.cash.pictures.add(image);
+                          galleryPictures = NewProject.cash.pictures;
+                        },
+                      );
+                    }
+                  },
+                )),
+
                 Gallery(pictures: galleryPictures),
                 InputField(
                   saveTo: (text) => {NewProject.cash.client = text},
