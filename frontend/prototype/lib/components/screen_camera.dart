@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
-
+import 'package:flutter/services.dart';
 import '../screens/create_new_project/_main_view.dart';
 
 class CameraPage extends StatefulWidget {
@@ -28,24 +28,28 @@ class _CameraPageState extends State<CameraPage> {
   List<XFile?> newImages = [];
 
   Widget preview() {
-    Row row = Row(
+    Column column = Column(
       children: [],
     );
 
     if (previewImages.isNotEmpty) {
       for (var picture in previewImages) {
-        row.children.add(Image.file(
+        column.children.add(Image.file(
           File(picture!.path),
           width: 50,
         ));
       }
     }
-    return row;
+    return column;
   }
 
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
     controller = CameraController(
       widget.cameras!.first,
       ResolutionPreset.medium,
@@ -63,6 +67,10 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void dispose() {
     controller.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     super.dispose();
   }
 
@@ -75,7 +83,7 @@ class _CameraPageState extends State<CameraPage> {
         ),
       );
     }
-    return Column(
+    return Row(
       children: [
         Expanded(
           flex: 8,
@@ -89,7 +97,7 @@ class _CameraPageState extends State<CameraPage> {
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
                 child: Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.centerLeft,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
@@ -110,9 +118,52 @@ class _CameraPageState extends State<CameraPage> {
                   ),
                 ),
               ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(17),
+                      primary: Colors.white,
+                    ),
+                    onPressed: () async {
+                      pictureFile = await controller.takePicture();
+                      previewImages.add(pictureFile!);
+                      newImages.add(pictureFile!);
+                      setState(() {});
+                    },
+                    child: const Icon(
+                      Icons.camera,
+                      color: Color.fromARGB(80, 0, 0, 0),
+                      size: 45,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 25, 0, 25),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(10),
+                      primary: Colors.red,
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+
+                      widget.updateGallery!(newImages);
+                    },
+                    child: Icon(Icons.close),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
+        /*
         Expanded(
           flex: 1,
           child: Container(
@@ -127,10 +178,11 @@ class _CameraPageState extends State<CameraPage> {
             ),
           ),
         ),
+        */
         Expanded(
           flex: 1,
           child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+            scrollDirection: Axis.vertical,
             child: preview(),
           ),
         )

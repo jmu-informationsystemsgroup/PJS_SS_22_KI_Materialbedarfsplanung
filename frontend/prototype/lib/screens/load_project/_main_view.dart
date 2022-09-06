@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/button_multiple_icons.dart';
@@ -39,6 +40,10 @@ class _ProjectViewState extends State<ProjectView> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     getOutcome();
     content = widget.content;
     galleryPictures = content.pictures;
