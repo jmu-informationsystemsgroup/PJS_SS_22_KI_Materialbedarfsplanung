@@ -54,8 +54,14 @@ class _ProjectViewState extends State<ProjectView> {
             title: const Text('Kamera eisntellen'),
             content: SingleChildScrollView(
               child: ListBody(
-                children: const <Widget>[
-                  Text('Bitte Kamera quer halten'),
+                children: <Widget>[
+                  Row(
+                    children: [
+                      Icon(Icons.stay_current_portrait),
+                      Icon(Icons.screen_rotation),
+                      Icon(Icons.stay_current_landscape),
+                    ],
+                  ),
                   Text('Kameraeinstellung auf 4:3'),
                 ],
               ),

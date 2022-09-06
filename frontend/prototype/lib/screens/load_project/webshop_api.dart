@@ -86,12 +86,10 @@ class _WebshopState extends State<Webshop> {
               Icons.shopping_cart,
               color: Colors.white,
             ),
-            Text(
-              "online",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            )
+            Icon(
+              Icons.public,
+              color: Colors.white,
+            ),
           ],
           onPressed: () {
             _launchUrl("https://spachtelprofi.com/shop/");
