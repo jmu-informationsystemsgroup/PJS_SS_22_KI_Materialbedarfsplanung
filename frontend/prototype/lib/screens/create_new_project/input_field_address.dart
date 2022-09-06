@@ -3,7 +3,7 @@ import 'package:prototype/components/input_field.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 
 class AddressInput extends StatefulWidget {
-  Function(String, String, String, String) updateAddress;
+  Function(Adress) updateAddress;
   Adress adress;
   AddressInput(
       {required this.updateAddress,
@@ -22,6 +22,15 @@ class AddressInputState extends State<AddressInput> {
   String houseNumber = "";
   String city = "";
   String zip = "";
+
+  @override
+  void initState() {
+    super.initState();
+    street = widget.adress.street;
+    houseNumber = widget.adress.houseNumber;
+    city = widget.adress.city;
+    zip = widget.adress.zip;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +53,11 @@ class AddressInputState extends State<AddressInput> {
                   value: widget.adress.street,
                   saveTo: (value) {
                     street = value;
-                    widget.updateAddress(street, houseNumber, city, zip);
+                    widget.updateAddress(Adress(
+                        street: street,
+                        houseNumber: houseNumber,
+                        zip: zip,
+                        city: city));
                   },
                   labelText: "Straße",
                 ),
@@ -55,7 +68,11 @@ class AddressInputState extends State<AddressInput> {
                     value: widget.adress.houseNumber,
                     saveTo: (value) {
                       houseNumber = value;
-                      widget.updateAddress(street, houseNumber, city, zip);
+                      widget.updateAddress(Adress(
+                          street: street,
+                          houseNumber: houseNumber,
+                          zip: zip,
+                          city: city));
                     },
                     labelText: "Nr."),
               ),
@@ -69,7 +86,11 @@ class AddressInputState extends State<AddressInput> {
                     value: widget.adress.zip,
                     saveTo: (value) {
                       zip = value;
-                      widget.updateAddress(street, houseNumber, city, zip);
+                      widget.updateAddress(Adress(
+                          street: street,
+                          houseNumber: houseNumber,
+                          zip: zip,
+                          city: city));
                     },
                     labelText: "Postleitzahl"),
               ),
@@ -79,7 +100,11 @@ class AddressInputState extends State<AddressInput> {
                     value: widget.adress.city,
                     saveTo: (value) {
                       city = value;
-                      widget.updateAddress(street, houseNumber, city, zip);
+                      widget.updateAddress(Adress(
+                          street: street,
+                          houseNumber: houseNumber,
+                          zip: zip,
+                          city: city));
                     },
                     labelText: "Stadt"),
               ),

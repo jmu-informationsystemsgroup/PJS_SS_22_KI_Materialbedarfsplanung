@@ -12,6 +12,7 @@ import 'package:prototype/screens/load_project/projectMap.dart';
 import 'package:prototype/screens/load_project/webshop_api.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/styles/container.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
@@ -115,6 +116,15 @@ class _ProjectViewState extends State<ProjectView> {
       return Icon(Icons.edit);
   }
 
+  Future<void> _launchUrl() async {
+    String urlString =
+        "https://www.google.com/maps/place/${content.street}+${content.houseNumber},+${content.zip}+${content.city}";
+    Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // getJsonValues();
@@ -140,6 +150,14 @@ class _ProjectViewState extends State<ProjectView> {
                       Text("Datum: " + content.date),
                       Text(
                           "Adresse: ${content.street} ${content.houseNumber}, ${content.zip} ${content.city}"),
+                      ElevatedButton(
+                        child: Icon(Icons.map),
+                        onPressed: () {
+                          setState(() {
+                            _launchUrl();
+                          });
+                        },
+                      ),
                       Text("Kommentar: " + content.comment),
                     ],
                   ),

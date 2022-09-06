@@ -38,11 +38,11 @@ class EditorWidget extends StatelessWidget {
               houseNumber: data.houseNumber,
               zip: data.zip,
               city: data.city),
-          updateAddress: (street, houseNumber, zip, city) {
-            data.street = street;
-            data.houseNumber = houseNumber;
-            data.zip = zip;
-            data.city = city;
+          updateAddress: (value) {
+            data.street = value.street;
+            data.houseNumber = value.houseNumber;
+            data.zip = value.zip;
+            data.city = value.city;
           },
         ),
         InputField(

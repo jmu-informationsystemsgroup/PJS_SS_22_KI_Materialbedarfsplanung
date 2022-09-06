@@ -115,7 +115,7 @@ class DataBase {
     List listOfMaps = await db.query('projects',
         orderBy: "$orderByParamter COLLATE NOCASE",
         where:
-            "(statusActive = 1) AND (projectName LIKE '%$term%' OR client LIKE '%$term%')");
+            "(statusActive = 1) AND (projectName LIKE '%$term%' OR client LIKE '%$term%' OR street LIKE '%$term%' OR city LIKE '%$term%' OR zip LIKE '%$term%' OR comment LIKE '%$term%')");
 
     List allImages = await getAllImages();
 

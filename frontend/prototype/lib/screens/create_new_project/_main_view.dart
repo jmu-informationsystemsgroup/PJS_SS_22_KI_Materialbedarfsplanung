@@ -215,11 +215,11 @@ class _NewProjectState extends State<NewProject> {
                   saveTo: (text) => {NewProject.cash.date = text},
                 ),
                 AddressInput(
-                  updateAddress: (street, houseNumber, zip, city) {
-                    NewProject.cash.street = street;
-                    NewProject.cash.houseNumber = houseNumber;
-                    NewProject.cash.zip = zip;
-                    NewProject.cash.city = city;
+                  updateAddress: (value) {
+                    NewProject.cash.street = value.street;
+                    NewProject.cash.houseNumber = value.houseNumber;
+                    NewProject.cash.zip = value.zip;
+                    NewProject.cash.city = value.city;
                   },
                 ),
                 InputField(
