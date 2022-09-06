@@ -47,16 +47,12 @@ class AI {
 
     Uint8List uintEightLIst = await imageFile.readAsBytes();
 
-    Uint32List uint32list = Uint32List.fromList(await imageFile.readAsBytes());
-
     List<int> intList = [];
     uintEightLIst.forEach((element) {
       intList.add(element);
     });
 
-    print(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${imageFile} ${uint32list.length} ${uintEightLIst.length} ${intList.length}");
-    img.Image image = img.Image.fromBytes(300, 400, intList);
+    img.Image image = img.Image.fromBytes(400, 300, intList);
 
     List outcomeList = [];
     List widthList = [];
@@ -68,22 +64,12 @@ class AI {
         rgbList.add(img.getRed(pixel).toDouble());
         rgbList.add(img.getGreen(pixel).toDouble());
         rgbList.add(img.getBlue(pixel).toDouble());
-/*
-        print(
-            "$i $j ${pixel.toString()} ${img.getRed(pixel)} ${img.getGreen(pixel)} ${img.getBlue(pixel)}");
-*/
+
         heightList.add(rgbList);
       }
       widthList.add(heightList);
     }
     outcomeList.add(widthList);
-    /*
-    print(
-        '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> uint8${convertedBytes.buffer.asUint8List()}');
-        
-    print(
-        '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${convertedBytes.buffer.asFloat32List()}');
-        */
 
     var input = outcomeList;
 
@@ -94,9 +80,6 @@ class AI {
     var lastElementOutcome = outcomeList[outcomeList.length - 1];
     List lastElementWidth = widthList[widthList.length - 1];
     var lastElementHeight = lastElementWidth[lastElementWidth.length - 1];
-
-    print(
-        "----------------- ${output.toString()}----------------------------------------------------------------------------");
   }
 
   static Future<String> applyOnImageNencyVector() async {

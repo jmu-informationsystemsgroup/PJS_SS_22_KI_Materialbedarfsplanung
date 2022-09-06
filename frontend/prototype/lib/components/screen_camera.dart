@@ -74,6 +74,33 @@ class _CameraPageState extends State<CameraPage> {
     super.dispose();
   }
 
+  Widget getPhotoButton(Alignment alignment) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
+      child: Align(
+        alignment: alignment,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            padding: EdgeInsets.all(17),
+            primary: Colors.white,
+          ),
+          onPressed: () async {
+            pictureFile = await controller.takePicture();
+            previewImages.add(pictureFile!);
+            newImages.add(pictureFile!);
+            setState(() {});
+          },
+          child: const Icon(
+            Icons.camera,
+            color: Color.fromARGB(80, 0, 0, 0),
+            size: 45,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
@@ -94,54 +121,8 @@ class _CameraPageState extends State<CameraPage> {
                   child: CameraPreview(controller),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(17),
-                      primary: Colors.white,
-                    ),
-                    onPressed: () async {
-                      pictureFile = await controller.takePicture();
-                      previewImages.add(pictureFile!);
-                      newImages.add(pictureFile!);
-                      setState(() {});
-                    },
-                    child: const Icon(
-                      Icons.camera,
-                      color: Color.fromARGB(80, 0, 0, 0),
-                      size: 45,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(17),
-                      primary: Colors.white,
-                    ),
-                    onPressed: () async {
-                      pictureFile = await controller.takePicture();
-                      previewImages.add(pictureFile!);
-                      newImages.add(pictureFile!);
-                      setState(() {});
-                    },
-                    child: const Icon(
-                      Icons.camera,
-                      color: Color.fromARGB(80, 0, 0, 0),
-                      size: 45,
-                    ),
-                  ),
-                ),
-              ),
+              getPhotoButton(Alignment.centerLeft),
+              getPhotoButton(Alignment.centerRight),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 25, 0, 25),
                 child: Align(
