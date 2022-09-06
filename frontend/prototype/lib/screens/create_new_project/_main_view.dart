@@ -22,6 +22,7 @@ class NewProject extends StatefulWidget {
   // instanzieeren eines Contentobjekts, in dem sämtliche EIngabeinformationen zwischengespeichert werden
   static var cash = Content();
   static List<XFile?> images = [];
+  static bool askAgain = true;
 
   static goToProjectView(int id, context) async {
     await Future.delayed(Duration(seconds: 1));
@@ -50,6 +51,39 @@ class _NewProjectState extends State<NewProject> {
     // TODO: implement initState
     super.initState();
     galleryPictures = NewProject.cash.pictures;
+  }
+
+  Future<void> _showMyDialog() async {
+    if (NewProject.askAgain) {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Kamera eisntellen'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('Bitte Kamera quer halten'),
+                  Text('Kameraeinstellung auf 4:3'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Approve'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    NewProject.askAgain = false;
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
 /*
@@ -84,6 +118,8 @@ class _NewProjectState extends State<NewProject> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><${NewProject.askAgain}");
     // TODO: implement build
     return SafeArea(
       child: Scaffold(
@@ -128,9 +164,13 @@ class _NewProjectState extends State<NewProject> {
                   child: ElevatedButton(
                     onPressed: () async {
                       final ImagePicker _picker = ImagePicker();
+                      var dialog = await _showMyDialog();
                       // Pick an image
-                      final XFile? image =
-                          await _picker.pickImage(source: ImageSource.camera);
+
+                      final XFile? image = await _picker.pickImage(
+                          source: ImageSource.camera,
+                          maxWidth: 400,
+                          maxHeight: 300);
                       if (image != null) {
                         setState(
                           () {

@@ -18,8 +18,8 @@ import 'package:prototype/backend/data_base_functions.dart';
 class ProjectView extends StatefulWidget {
   Content content;
   ProjectView(this.content);
+  static bool askAgain = true;
 
-  static String src = "";
   @override
   _ProjectViewState createState() {
     return _ProjectViewState();
@@ -42,6 +42,39 @@ class _ProjectViewState extends State<ProjectView> {
     getOutcome();
     content = widget.content;
     galleryPictures = content.pictures;
+  }
+
+  Future<void> _showMyDialog() async {
+    if (ProjectView.askAgain) {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Kamera eisntellen'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('Bitte Kamera quer halten'),
+                  Text('Kameraeinstellung auf 4:3'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Approve'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    ProjectView.askAgain = false;
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   getOutcome() {
@@ -192,7 +225,9 @@ class _ProjectViewState extends State<ProjectView> {
             ],
             onPressed: () async {
               final ImagePicker _picker = ImagePicker();
+              var dialog = await _showMyDialog();
               // Pick an image
+
               final XFile? image = await _picker.pickImage(
                   source: ImageSource.camera, maxWidth: 400, maxHeight: 300);
               if (image != null) {
