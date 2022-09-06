@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
+import 'package:image/image.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
@@ -362,7 +366,6 @@ class DataBase {
     final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     createWallsForProject(data, id);
-    saveImages(data.pictures, id);
     return id;
   }
 
@@ -414,6 +417,23 @@ class DataBase {
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
       await picture?.saveTo('$fileloc/$id.jpg');
+      /*
+      Uint8List prefine = await picture!.readAsBytes();
+      List<int> byteList = [];
+      for (var element in prefine) {
+        byteList.add(element);
+      }
+
+      img.Image? image = decodeImage(byteList);
+
+      img.Image resizedImage = copyResize(image!, width: 400, height: 300);
+
+      File file = await File('$fileloc/$id.jpg').create();
+
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${file}");
+
+      file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
+      */
     }
 
     return true;

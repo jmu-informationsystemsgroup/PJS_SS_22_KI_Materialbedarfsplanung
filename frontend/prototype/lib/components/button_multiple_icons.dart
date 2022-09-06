@@ -11,7 +11,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: ContainerStyles.getMargin(),
-      width: 100,
+      width: children.length * 55,
       decoration: ContainerStyles.roundetCorners(),
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: GestureDetector(

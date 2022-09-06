@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/button_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
@@ -49,6 +50,10 @@ class _ProjectViewState extends State<ProjectView> {
             calculatedOutcome = value;
           })
         });
+  }
+
+  successMessage() async {
+    imagesSaved = await DataBase.saveImages(addedPictures, content.id);
   }
 
   bool changeBool(bool input) {
@@ -168,6 +173,39 @@ class _ProjectViewState extends State<ProjectView> {
                   ));
             },
           ),
+          CustomButton(
+            children: const [
+              Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              Icon(
+                Icons.image,
+                color: Colors.white,
+              ),
+              Text(
+                "Imagepicker",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ],
+            onPressed: () async {
+              final ImagePicker _picker = ImagePicker();
+              // Pick an image
+              final XFile? image = await _picker.pickImage(
+                  source: ImageSource.camera, maxWidth: 400, maxHeight: 300);
+              if (image != null) {
+                setState(
+                  () {
+                    addedPictures.add(image);
+                    galleryPictures.add(image);
+                    safeNewPicturesButton = true;
+                  },
+                );
+              }
+            },
+          ),
           Visibility(
             visible: safeNewPicturesButton,
             child: CustomButton(
@@ -181,11 +219,11 @@ class _ProjectViewState extends State<ProjectView> {
                   color: Colors.white,
                 ),
               ],
-              onPressed: () async {
-                setState(() async {
+              onPressed: () {
+                setState(() {
                   safeNewPicturesButton = false;
-                  imagesSaved =
-                      await DataBase.saveImages(addedPictures, content.id);
+                  successMessage();
+                  imagesSaved = true;
                   addedPictures = [];
                 });
               },

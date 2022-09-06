@@ -48,7 +48,7 @@ class _CameraPageState extends State<CameraPage> {
     super.initState();
     controller = CameraController(
       widget.cameras!.first,
-      ResolutionPreset.max,
+      ResolutionPreset.medium,
     );
     controller.initialize().then((_) {
       if (!mounted) {
@@ -57,6 +57,7 @@ class _CameraPageState extends State<CameraPage> {
       setState(() {});
     });
     previewImages.addAll(widget.originalGallery);
+    print(">>>>>>>>>>>>>>>>>>>>>>${widget.cameras}");
   }
 
   @override
