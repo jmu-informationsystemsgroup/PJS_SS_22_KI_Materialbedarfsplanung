@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:prototype/backend/ai.dart';
 import 'package:prototype/components/button_multiple_icons.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
@@ -207,6 +208,11 @@ class _NewProjectState extends State<NewProject> {
                 )),
 
                 Gallery(pictures: galleryPictures),
+                ElevatedButton(
+                    onPressed: () {
+                      AI.runWithChoby();
+                    },
+                    child: Text("AI-Test")),
                 InputField(
                   saveTo: (text) => {NewProject.cash.client = text},
                   labelText: "Auftraggeber",

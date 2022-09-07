@@ -297,11 +297,12 @@ class _ProjectViewState extends State<ProjectView> {
                   color: Colors.white,
                 ),
               ],
-              onPressed: () {
+              onPressed: () async {
+                bool sth = await DataBase.saveImages(addedPictures, content.id);
                 setState(() {
+                  imagesSaved = sth;
                   safeNewPicturesButton = false;
-                  successMessage();
-                  imagesSaved = true;
+
                   addedPictures = [];
                 });
               },

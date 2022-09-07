@@ -54,6 +54,7 @@ dependencies:
   tflite: any
   meta: any
   tflite_flutter: any
+  chaquopy: ^0.0.19
 
   # for image galery
   full_screen_image_null_safe: any
@@ -73,6 +74,8 @@ dependencies:
   vector_math: ^2.0.0
   proj4dart: ^2.0.0
   collection: ^1.14.0
+  starflut: ^0.9.5
+  
 
 dev_dependencies:
   flutter_test:
@@ -107,6 +110,7 @@ flutter:
    - assets/bathRoom2.jpg
    - assets/bathRoom3.jpg
    - assets/material_model.tflite
+   - assets/starfiles/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

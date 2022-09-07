@@ -8,6 +8,8 @@ import 'package:prototype/backend/data_base_functions.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite/tflite.dart';
 import 'dart:convert';
+// import 'package:starflut/starflut.dart';
+import 'package:chaquopy/chaquopy.dart';
 
 class AI {
   var input = [
@@ -159,5 +161,20 @@ class AI {
 
     return output[0][0];
     */
+  }
+
+/*
+  pythonAi() async {
+    StarSrvGroupClass SrvGroup = await Service["_ServiceGroup"];
+    var Result = await SrvGroup.loadRawModule("python", "",
+        resPath + "/flutter_assets/starfiles/" + "testpy.py", false);
+  }
+  */
+
+  static runWithChoby() async {
+    String code = " ";
+
+    var result = await Chaquopy.executeCode("import sqlite3");
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${result}");
   }
 }
