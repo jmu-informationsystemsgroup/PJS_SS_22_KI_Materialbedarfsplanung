@@ -23,6 +23,7 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   late CameraController controller;
+  bool fotoFeedBack = false;
   XFile? pictureFile;
   List<XFile?> previewImages = [];
   List<XFile?> newImages = [];
@@ -74,6 +75,24 @@ class _CameraPageState extends State<CameraPage> {
     super.dispose();
   }
 
+  Widget addBlackBox() {
+    return Container(
+      width: 80,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(color: Colors.black),
+    );
+  }
+
+  Widget addCameraFeedback() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        color: Color.fromARGB(137, 255, 255, 255),
+      ),
+    );
+  }
+
   Widget getPhotoButton(Alignment alignment) {
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
@@ -89,7 +108,13 @@ class _CameraPageState extends State<CameraPage> {
             pictureFile = await controller.takePicture();
             previewImages.add(pictureFile!);
             newImages.add(pictureFile!);
-            setState(() {});
+            setState(() {
+              fotoFeedBack = true;
+            });
+            var bla = await Future.delayed(Duration(milliseconds: 30));
+            setState(() {
+              fotoFeedBack = false;
+            });
           },
           child: const Icon(
             Icons.camera,
@@ -118,7 +143,20 @@ class _CameraPageState extends State<CameraPage> {
             children: [
               Center(
                 child: SizedBox(
+                  width: 720,
+                  height: 480,
+                  child: addBlackBox(),
+                ),
+              ),
+              Center(
+                child: SizedBox(
                   child: CameraPreview(controller),
+                ),
+              ),
+              Center(
+                child: Visibility(
+                  visible: fotoFeedBack,
+                  child: addCameraFeedback(),
                 ),
               ),
               getPhotoButton(Alignment.centerLeft),
