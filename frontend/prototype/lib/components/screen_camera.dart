@@ -75,11 +75,12 @@ class _CameraPageState extends State<CameraPage> {
     super.dispose();
   }
 
+  /// TODO
   Widget addBlackBox() {
     return Container(
       width: 80,
       height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(color: Colors.black),
+      decoration: BoxDecoration(color: Color.fromARGB(69, 0, 0, 0)),
     );
   }
 
@@ -139,47 +140,47 @@ class _CameraPageState extends State<CameraPage> {
       children: [
         Expanded(
           flex: 8,
-          child: Stack(
-            children: [
-              Center(
-                child: SizedBox(
-                  width: 720,
-                  height: 480,
-                  child: addBlackBox(),
-                ),
-              ),
-              Center(
-                child: SizedBox(
-                  child: CameraPreview(controller),
-                ),
-              ),
-              Center(
-                child: Visibility(
-                  visible: fotoFeedBack,
-                  child: addCameraFeedback(),
-                ),
-              ),
-              getPhotoButton(Alignment.centerLeft),
-              getPhotoButton(Alignment.centerRight),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 25, 0, 25),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(10),
-                      primary: Colors.red,
-                    ),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-
-                      widget.updateGallery!(newImages);
-                    },
-                    child: Icon(Icons.close),
+          child: Center(
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: SizedBox(
+                    child: CameraPreview(controller),
                   ),
                 ),
-              ),
-            ],
+                Align(
+                  child: addBlackBox(),
+                  alignment: Alignment.centerRight,
+                ),
+                Center(
+                  child: Visibility(
+                    visible: fotoFeedBack,
+                    child: addCameraFeedback(),
+                  ),
+                ),
+                getPhotoButton(Alignment.centerLeft),
+                getPhotoButton(Alignment.centerRight),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 25, 0, 25),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        primary: Colors.red,
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+
+                        widget.updateGallery!(newImages);
+                      },
+                      child: Icon(Icons.close),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         /*
