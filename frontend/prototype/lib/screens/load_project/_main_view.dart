@@ -238,6 +238,7 @@ class _ProjectViewState extends State<ProjectView> {
                                           galleryPictures.addAll(images);
                                           addedPictures.addAll(images);
                                           safeNewPicturesButton = true;
+                                          imagesSaved = false;
                                         });
                                       },
                                     )),
@@ -297,11 +298,12 @@ class _ProjectViewState extends State<ProjectView> {
                   color: Colors.white,
                 ),
               ],
-              onPressed: () {
+              onPressed: () async {
+                bool sth = await DataBase.saveImages(addedPictures, content.id);
                 setState(() {
                   safeNewPicturesButton = false;
-                  successMessage();
-                  imagesSaved = true;
+
+                  imagesSaved = sth;
                   addedPictures = [];
                 });
               },
