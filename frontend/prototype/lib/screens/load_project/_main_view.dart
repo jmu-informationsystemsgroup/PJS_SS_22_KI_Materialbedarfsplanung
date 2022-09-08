@@ -5,6 +5,7 @@ import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/button_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
+import 'package:prototype/screens/create_new_project/input_field_address.dart';
 import 'package:prototype/screens/load_project/editor.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
@@ -13,6 +14,7 @@ import 'package:prototype/screens/load_project/webshop_api.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../backend/server_requester.dart';
 import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
@@ -136,7 +138,15 @@ class _ProjectViewState extends State<ProjectView> {
       ),
       body: SingleChildScrollView(
         child: Column(children: [
-          //      Center(child: ProjectMap()),
+          Center(
+            child: ProjectMap(
+              adress: Adress(
+                  street: content.street,
+                  houseNumber: content.houseNumber,
+                  city: content.city,
+                  zip: content.zip),
+            ),
+          ),
           CustomContainerWhite(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,6 +196,14 @@ class _ProjectViewState extends State<ProjectView> {
             ),
           ),
           // test to check if Project view is able to load data, which had been entered before
+          ElevatedButton(
+            onPressed: () {
+              if (galleryPictures.isNotEmpty) {
+                AI_Server.uploadFile(galleryPictures[0]!, 1);
+              }
+            },
+            child: Text("Servertest"),
+          ),
           CustomContainerWhite(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
