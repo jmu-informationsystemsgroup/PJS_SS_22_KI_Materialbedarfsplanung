@@ -33,7 +33,7 @@ def preprocess_image(img):
 
 app = Flask(__name__)
 
-
+# Resource 
 @app.route('/predict', methods=['POST'] )
 def predict():
     if request.method == 'POST':
