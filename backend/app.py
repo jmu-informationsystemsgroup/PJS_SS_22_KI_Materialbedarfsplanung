@@ -18,7 +18,7 @@ def model_load():
     print('material_model geladen')
 
 
-def preproces_image(img):
+def preprocess_image(img):
     """
     Hilfsfunktion um die Bilder vorzubearbeiten
     """
