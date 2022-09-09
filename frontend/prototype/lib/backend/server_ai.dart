@@ -1,19 +1,26 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:path/path.dart';
 
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/backend/data_base_functions.dart';
+import 'package:prototype/backend/helper_objects.dart';
 
 /// toilett: http://ptsv2.com/t/gkeu3-1662648870 Body can't be larger than 1,500 bytes
 
 class ServerAI {
-  static uploadFile(XFile file, int id) async {
+  static sendImages(List<CustomCameraImage> images) async {
+    for (var element in images) {
+      uploadFile(element.image, element.projectId, element.id);
+    }
+  }
+
+  static uploadFile(XFile file, int projectId, int id) async {
     var client = http.Client();
     // var bitlist = await uploadFIle.readAsBytes();
     try {
-      print(">>>>>>>>>>>>>>>>>>>>>>>>>i was activated");
 /*
       var response2 = await client
           .post(Uri.http('ptsv2.com', '/t/gkeu3-1662648870'), body: "test1");
