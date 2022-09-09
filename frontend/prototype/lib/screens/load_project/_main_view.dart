@@ -136,7 +136,30 @@ class _ProjectViewState extends State<ProjectView> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Um den Bedarf zu ermitteln synchronisiere deine Bilddaten")
+          Text("Um den Bedarf zu ermitteln synchronisiere deine Bilddaten"),
+          ElevatedButton(
+            onPressed: () async {
+              setState(() {
+                calculatedOutcome.aiOutcome = -10.0;
+              });
+              List<CustomCameraImage> replaceList = [];
+              if (galleryPictures.isNotEmpty) {
+                replaceList = await ServerAI.getAiValuesFromServer(
+                    imageObjectList, (value) {
+                  setState(() {
+                    state = value;
+                  });
+                });
+              }
+              CalculatorOutcome val = await ValueCalculator.getOutcomeObject(
+                  content, imageObjectList);
+              setState(() {
+                imageObjectList = replaceList;
+                calculatedOutcome = val;
+              });
+            },
+            child: Text("Bilder synchronisieren"),
+          ),
         ],
       );
     } else if (calculatedOutcome.aiOutcome == -10.0) {
@@ -223,36 +246,9 @@ class _ProjectViewState extends State<ProjectView> {
           // test to check if Project view is able to load data, which had been entered before
 
           CustomContainerWhite(
-            child: Column(
-              children: [
-                displayData(),
-                ElevatedButton(
-                  onPressed: () async {
-                    setState(() {
-                      calculatedOutcome.aiOutcome = -10.0;
-                    });
-                    List<CustomCameraImage> replaceList = [];
-                    if (galleryPictures.isNotEmpty) {
-                      replaceList = await ServerAI.getAiValuesFromServer(
-                          imageObjectList, (value) {
-                        setState(() {
-                          state = value;
-                        });
-                      });
-                    }
-                    CalculatorOutcome val =
-                        await ValueCalculator.getOutcomeObject(
-                            content, imageObjectList);
-                    setState(() {
-                      imageObjectList = replaceList;
-                      calculatedOutcome = val;
-                    });
-                  },
-                  child: Text("Bilder synchronisieren"),
-                ),
-              ],
-            ),
+            child: displayData(),
           ),
+
           /*
             Text("Quadratmeter: " +
                     calculatedOutcome["totalSquareMeters"].toString()),
