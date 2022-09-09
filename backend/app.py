@@ -1,10 +1,22 @@
 from flask import Flask, request
 import os
+import tensorflow as tf
 import cv2
 import warnings
 
 
+
 warnings.simplefilter("ignore")
+
+def model_load():
+    """
+    Hilfsfunktion um das Modell beim Start von FLask zu laden
+    """
+    global model
+    # Lädt das Modell aus dem Dateipfad
+    model = tf.keras.models.load_model("D:/Git-Repo-PJS/PJS_SS_22_KI_Materialbedarfsplanung/backend/model_files/material_model_final.h5")
+    print('material_model geladen')
+
 
 
 app = Flask(__name__)
@@ -13,6 +25,8 @@ app = Flask(__name__)
 @app.route('/predict', methods=['POST'] )
 def predict():
     if request.method == 'POST':
+
+        print(request.headers)
         
         # Liest die übermittelte Datei
         file = request.files['file']
@@ -35,5 +49,6 @@ def predict():
 
 
 if __name__ == '__main__':
+    model_load() 
     app.debug = False 
     app.run(host = "0.0.0.0", port=5000)
