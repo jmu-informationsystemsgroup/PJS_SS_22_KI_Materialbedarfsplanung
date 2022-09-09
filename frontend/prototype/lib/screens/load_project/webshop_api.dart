@@ -11,7 +11,7 @@ import '../../components/custom_container_white.dart';
 class Webshop extends StatefulWidget {
   /// dies sollte ein double value sein, allerdings kann es zu ladeverzögerungen und damit
   /// zusammenhängenden Fehlermeldungen kommen
-  var aiValue;
+  double aiValue;
   Webshop({required this.aiValue});
 
   @override
