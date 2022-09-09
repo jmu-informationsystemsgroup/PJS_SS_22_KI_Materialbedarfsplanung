@@ -40,6 +40,7 @@ class _ProjectViewState extends State<ProjectView> {
   bool safeNewPicturesButton = false;
   bool imagesSaved = false;
   List<Widget> outcomeWidgetList = [];
+  int state = 0;
 
   @override
   void initState() {
@@ -138,6 +139,8 @@ class _ProjectViewState extends State<ProjectView> {
           Text("Um den Bedarf zu ermitteln synchronisiere deine Bilddaten")
         ],
       );
+    } else if (calculatedOutcome.aiOutcome == -10.0) {
+      return Text("Status: $state%");
     } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,10 +228,17 @@ class _ProjectViewState extends State<ProjectView> {
                 displayData(),
                 ElevatedButton(
                   onPressed: () async {
+                    setState(() {
+                      calculatedOutcome.aiOutcome = -10.0;
+                    });
                     List<CustomCameraImage> replaceList = [];
                     if (galleryPictures.isNotEmpty) {
-                      replaceList =
-                          await ServerAI.getAiValuesFromServer(imageObjectList);
+                      replaceList = await ServerAI.getAiValuesFromServer(
+                          imageObjectList, (value) {
+                        setState(() {
+                          state = value;
+                        });
+                      });
                     }
                     CalculatorOutcome val =
                         await ValueCalculator.getOutcomeObject(

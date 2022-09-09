@@ -9,7 +9,10 @@ import 'package:prototype/backend/helper_objects.dart';
 
 class ServerAI {
   static Future<List<CustomCameraImage>> getAiValuesFromServer(
-      List<CustomCameraImage> images) async {
+      List<CustomCameraImage> images, Function(int) stateUpdate) async {
+    double currentState = 0.0;
+    double finishedState = images.length.toDouble();
+    double step = 100.0 / finishedState;
     for (var element in images) {
       XFile file = element.image;
       int projectId = element.projectId;
@@ -51,6 +54,8 @@ class ServerAI {
         await DataBase.updateImagesAiValue(aiValue, id, projectId);
         print("Server Status $statusCode: ai-outcome: $aiValue");
         element.aiValue = aiValue;
+        currentState = currentState + step;
+        stateUpdate(currentState.toInt());
       } catch (e) {}
     }
     return images;
