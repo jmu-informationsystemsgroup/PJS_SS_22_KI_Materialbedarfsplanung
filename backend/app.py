@@ -18,6 +18,18 @@ def model_load():
     print('material_model geladen')
 
 
+def preproces_image(img):
+    """
+    Hilfsfunktion um die Bilder vorzubearbeiten
+    """
+    # Die Auflösung des Bildes wird an die richtige Größe angepasst
+    img = cv2.resize(img, (400, 300), interpolation = cv2.INTER_AREA)
+    #  Fügt eine vierte Dimension (Batch) für die Vorhersage des Modells hinzu
+    img = tf.expand_dims(img,axis=0)
+    # Gibt das angepasste Bild zurück
+    return img
+
+
 
 app = Flask(__name__)
 
@@ -26,7 +38,6 @@ app = Flask(__name__)
 def predict():
     if request.method == 'POST':
 
-        print(request.headers)
         
         # Liest die übermittelte Datei
         file = request.files['file']
