@@ -366,14 +366,14 @@ class DataBase {
     return result;
   }
 
-  static updateImagesAiValue(double aiValue, int id) async {
+  static updateImagesAiValue(double aiValue, int id, int projectId) async {
     final db = await DataBase.getDataBase();
 
     final dbData = {
       'aiValue': aiValue,
     };
-    final result =
-        await db.update('images', dbData, where: "id = ?", whereArgs: [id]);
+    final result = await db.update('images', dbData,
+        where: "id = ${id} AND projectId = ${projectId}");
     return result;
   }
 

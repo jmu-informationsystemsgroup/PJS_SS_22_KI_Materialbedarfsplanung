@@ -31,10 +31,10 @@ class ProjectView extends StatefulWidget {
 }
 
 class _ProjectViewState extends State<ProjectView> {
-  ValueCalculator calculatedOutcome = ValueCalculator();
+  CalculatorOutcome calculatedOutcome = CalculatorOutcome();
   bool editorVisablity = false;
   Content content = Content();
-  List<CustomCameraImage> projectImages = [];
+  List<CustomCameraImage> imageObjectList = [];
   List<XFile?> galleryPictures = [];
   List<XFile?> addedPictures = [];
   bool safeNewPicturesButton = false;
@@ -49,18 +49,22 @@ class _ProjectViewState extends State<ProjectView> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    getOutcome();
     content = widget.content;
     loadGalleryPictures();
-    // displayOutcome();
   }
 
   loadGalleryPictures() async {
-    projectImages = await DataBase.getImages(content.id);
-    for (var element in projectImages) {
-      galleryPictures.add(element.image);
-      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${element.image.path}");
+    imageObjectList = await DataBase.getImages(content.id);
+    CalculatorOutcome val =
+        await ValueCalculator.getOutcomeObject(content, imageObjectList);
+    List<XFile?> copyPictures = [];
+    for (var element in imageObjectList) {
+      copyPictures.add(element.image);
     }
+    setState(() {
+      galleryPictures = copyPictures;
+      calculatedOutcome = val;
+    });
   }
 
   Future<void> _showMyDialog() async {
@@ -102,15 +106,6 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
-  getOutcome() async {
-    calculatedOutcome = await ValueCalculator.getOutcomeObject(widget.content);
-  }
-
-  successMessage() async {
-    imagesSaved = await DataBase.saveImages(
-        addedPictures, content.id, projectImages.last.id + 1);
-  }
-
   bool changeBool(bool input) {
     if (input == false) {
       return true;
@@ -135,9 +130,28 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  Widget displayData() {
+    if (calculatedOutcome.aiOutcome == -1.0) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Um den Bedarf zu ermitteln synchronisiere deine Bilddaten")
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("KI-Ergebnis: " + calculatedOutcome.aiOutcome.toString()),
+          Text("KI-Preis: " + calculatedOutcome.totalAiPrice.toString()),
+        ],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // getJsonValues();
+    print("Schleifentest");
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -204,20 +218,28 @@ class _ProjectViewState extends State<ProjectView> {
             ),
           ),
           // test to check if Project view is able to load data, which had been entered before
-          ElevatedButton(
-            onPressed: () {
-              if (galleryPictures.isNotEmpty) {
-                ServerAI.sendImages(projectImages);
-              }
-            },
-            child: Text("Bilder synchronisieren"),
-          ),
+
           CustomContainerWhite(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("KI-Ergebnis: " + calculatedOutcome.aiOutcome.toString()),
-                Text("KI-Preis: " + calculatedOutcome.totalAiPrice.toString()),
+                displayData(),
+                ElevatedButton(
+                  onPressed: () async {
+                    List<CustomCameraImage> replaceList = [];
+                    if (galleryPictures.isNotEmpty) {
+                      replaceList =
+                          await ServerAI.getAiValuesFromServer(imageObjectList);
+                    }
+                    CalculatorOutcome val =
+                        await ValueCalculator.getOutcomeObject(
+                            content, imageObjectList);
+                    setState(() {
+                      imageObjectList = replaceList;
+                      calculatedOutcome = val;
+                    });
+                  },
+                  child: Text("Bilder synchronisieren"),
+                ),
               ],
             ),
           ),
@@ -228,7 +250,6 @@ class _ProjectViewState extends State<ProjectView> {
 */
           Container(
             margin: const EdgeInsets.all(10.0),
-            //    child: Text("Adresse: " + element + "straße"),
           ),
           CustomContainerWhite(
             child: Row(
@@ -251,22 +272,27 @@ class _ProjectViewState extends State<ProjectView> {
                       ),
                     ],
                     onPressed: () async {
-                      await availableCameras().then((value) => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CameraPage(
-                                      cameras: value,
-                                      originalGallery: galleryPictures,
-                                      updateGallery: (images) {
-                                        setState(() {
-                                          galleryPictures.addAll(images);
-                                          addedPictures.addAll(images);
-                                          safeNewPicturesButton = true;
-                                          imagesSaved = false;
-                                        });
-                                      },
-                                    )),
-                          ));
+                      await availableCameras().then(
+                        (value) => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CameraPage(
+                              cameras: value,
+                              originalGallery: galleryPictures,
+                              updateGallery: (images) {
+                                setState(
+                                  () {
+                                    galleryPictures.addAll(images);
+                                    addedPictures.addAll(images);
+                                    safeNewPicturesButton = true;
+                                    imagesSaved = false;
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -274,6 +300,7 @@ class _ProjectViewState extends State<ProjectView> {
             ),
           ),
 
+/*
           CustomButton(
             children: const [
               Icon(
@@ -309,6 +336,7 @@ class _ProjectViewState extends State<ProjectView> {
               }
             },
           ),
+          */
           Visibility(
             visible: safeNewPicturesButton,
             child: CustomButton(
@@ -323,12 +351,11 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
               ],
               onPressed: () async {
-                bool sth = await DataBase.saveImages(addedPictures, content.id);
-                var newOutcome =
-                    await ValueCalculator.getOutcomeObject(widget.content);
+                bool sth = await DataBase.saveImages(
+                    addedPictures, content.id, imageObjectList.last.id + 1);
+                loadGalleryPictures();
                 setState(() {
                   safeNewPicturesButton = false;
-                  calculatedOutcome = newOutcome;
                   imagesSaved = sth;
                   addedPictures = [];
                 });

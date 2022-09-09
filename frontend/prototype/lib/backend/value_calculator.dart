@@ -2,31 +2,22 @@ import 'data_base_functions.dart';
 import 'helper_objects.dart';
 
 class ValueCalculator {
-  double aiOutcome;
-  double totalSquareMeters;
-  double totalPrice;
-  double totalAiPrice;
-  ValueCalculator(
-      {this.aiOutcome = -1.0,
-      this.totalSquareMeters = 0.0,
-      this.totalPrice = 0.0,
-      this.totalAiPrice = 0.0});
-
   /// erzeugt ein Objekt das alle Ergebnisse beinhaltet
   /// die Methode "getPrice" hängt von den totalSquareMeters ab und kann daher nicht eigenständig
   /// aufgerufen werden, daher diese Umgehung mit dem "Ergebnis-Objekt"
-  static Future<ValueCalculator> getOutcomeObject(Content content) async {
-    double aiOutcome = await getAIOutcome(content.id);
+  static Future<CalculatorOutcome> getOutcomeObject(
+      Content content, List<CustomCameraImage> images) async {
+    double aiOutcome = await getAIOutcome(content.id, images);
     double totalSquareMeters = await getSquareMeter(content.id);
     double totalPrice = getPrice(content.material, totalSquareMeters);
     double totalAiPrice = getAiPrice(content.material, aiOutcome);
 
-    return ValueCalculator(aiOutcome: aiOutcome, totalAiPrice: totalAiPrice);
+    return CalculatorOutcome(aiOutcome: aiOutcome, totalAiPrice: totalAiPrice);
   }
 
-  static Future<double> getAIOutcome(int id) async {
+  static Future<double> getAIOutcome(
+      int id, List<CustomCameraImage> images) async {
     double aiOutcome = 0.0;
-    List<CustomCameraImage> images = await DataBase.getImages(id);
 
     for (CustomCameraImage element in images) {
       if (element.aiValue == -1.0) {
@@ -73,4 +64,16 @@ class ValueCalculator {
 
     return totalPrice;
   }
+}
+
+class CalculatorOutcome {
+  double aiOutcome;
+  double totalSquareMeters;
+  double totalPrice;
+  double totalAiPrice;
+  CalculatorOutcome(
+      {this.aiOutcome = -48.0,
+      this.totalSquareMeters = 0.0,
+      this.totalPrice = 0.0,
+      this.totalAiPrice = 0.0});
 }
