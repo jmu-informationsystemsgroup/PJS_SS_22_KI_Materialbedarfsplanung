@@ -354,6 +354,17 @@ class DataBase {
     return result;
   }
 
+  static updateImagesAiValue(double aiValue, int id) async {
+    final db = await DataBase.getDataBase();
+
+    final dbData = {
+      'aiValue': aiValue,
+    };
+    final result =
+        await db.update('images', dbData, where: "id = ?", whereArgs: [id]);
+    return result;
+  }
+
   /// ####################################################################################################################################
   /// ############## Daten anlegen
   /// ####################################################################################################################################
@@ -411,8 +422,7 @@ class DataBase {
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
   }
 
-  /// die Fotos werden in einem Ordner hinterlegt, der nach der id des Projekts benannt wird
-  /// Bild id = Dateiname
+  /// die Fotos werden im Ordner "material images hinterlegt"
   static Future<bool> saveImages(List<XFile?> pictures, int projectId) async {
     final db = await DataBase.getDataBase();
 
@@ -423,14 +433,15 @@ class DataBase {
     var fileloc = dir.path;
 
     for (var picture in pictures) {
-      final dbData = {'projectId': projectId, 'aiValue': 41.0};
+      final dbData = {'projectId': projectId, 'aiValue': -1.0};
 
       final id = await db.insert('images', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
       await picture?.saveTo('$fileloc/$id.jpg');
 
-      // TODO: die folgenden Zeilen wieder löschen sobald die Server Tests beendet sind
+      // die folgenden Zeilen wieder löschen sobald die Server Tests beendet sind
+      /*
       Uint8List prefine = await picture!.readAsBytes();
       List<int> byteList = [];
       for (var element in prefine) {
@@ -446,6 +457,7 @@ class DataBase {
       print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${file}");
 
       file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
+    */
     }
 
     return true;
