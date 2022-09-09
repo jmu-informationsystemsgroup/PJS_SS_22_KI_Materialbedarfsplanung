@@ -429,7 +429,8 @@ class DataBase {
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
       await picture?.saveTo('$fileloc/$id.jpg');
-      /*
+
+      // TODO: die folgenden Zeilen wieder löschen sobald die Server Tests beendet sind
       Uint8List prefine = await picture!.readAsBytes();
       List<int> byteList = [];
       for (var element in prefine) {
@@ -438,14 +439,13 @@ class DataBase {
 
       img.Image? image = decodeImage(byteList);
 
-      img.Image resizedImage = copyResize(image!, width: 400, height: 300);
+      img.Image resizedImage = copyResize(image!, width: 4, height: 3);
 
       File file = await File('$fileloc/$id.jpg').create();
 
       print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${file}");
 
       file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
-      */
     }
 
     return true;
