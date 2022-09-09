@@ -14,7 +14,7 @@ import 'package:prototype/screens/load_project/webshop_api.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../backend/server_requester.dart';
+import '../../backend/server_ai.dart';
 import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
@@ -159,7 +159,7 @@ class _ProjectViewState extends State<ProjectView> {
                       Text("Auftraggeber: " + content.client),
                       Text("Datum: " + content.date),
                       Text(
-                          "Adresse: ${content.street} ${content.houseNumber}, ${content.zip} ${content.city}"),
+                          "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}"),
                       ElevatedButton(
                         child: Icon(Icons.map),
                         onPressed: () {
@@ -199,7 +199,7 @@ class _ProjectViewState extends State<ProjectView> {
           ElevatedButton(
             onPressed: () {
               if (galleryPictures.isNotEmpty) {
-                AI_Server.uploadFile(galleryPictures[0]!, 1);
+                ServerAI.uploadFile(galleryPictures[0]!, 43);
               }
             },
             child: Text("Servertest"),
