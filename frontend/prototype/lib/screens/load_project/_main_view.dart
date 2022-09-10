@@ -140,6 +140,7 @@ class _ProjectViewState extends State<ProjectView> {
           ElevatedButton(
             onPressed: () async {
               setState(() {
+                state = 0;
                 calculatedOutcome.aiOutcome = -10.0;
               });
               List<CustomCameraImage> replaceList = [];

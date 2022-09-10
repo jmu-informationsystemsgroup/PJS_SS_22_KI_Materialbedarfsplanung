@@ -107,7 +107,7 @@ flutter:
    - assets/bathRoom12.jpg
    - assets/bathRoom2.jpg
    - assets/bathRoom3.jpg
-   - assets/material_model.tflite
+  # - assets/material_model.tflite
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
