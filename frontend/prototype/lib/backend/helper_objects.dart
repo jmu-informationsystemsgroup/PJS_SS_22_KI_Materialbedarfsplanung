@@ -12,7 +12,7 @@ class Content {
   String date = "Default";
   String comment = "";
   Map<int, Wall> squareMeters = {};
-  List<XFile?> pictures = [];
+  List<CustomCameraImage> pictures = [];
   String material = "Q2";
   int statusActive = 1;
   double aiValue = 41.0;
@@ -155,7 +155,7 @@ class CustomCameraImage {
   double aiValue;
   CustomCameraImage(
       {required this.id,
-      required this.projectId,
+      this.projectId = 0,
       required this.image,
-      required this.aiValue});
+      this.aiValue = 0.0});
 }

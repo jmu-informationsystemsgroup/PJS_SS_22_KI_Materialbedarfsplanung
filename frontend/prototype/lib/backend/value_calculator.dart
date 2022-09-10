@@ -5,9 +5,10 @@ class ValueCalculator {
   static CalculatorOutcome officalOutcome = CalculatorOutcome();
   static List<int> wrongImages = [];
 
-  /// erzeugt ein Objekt das alle Ergebnisse beinhaltet
+  /// erzeugt ein Antwort-Objekt das alle Ergebnisse beinhaltet
   /// die Methode "getPrice" hängt von den totalSquareMeters ab und kann daher nicht eigenständig
   /// aufgerufen werden, daher diese Umgehung mit dem "Ergebnis-Objekt"
+  /// außerdem kann das Objekt genutzt werden um Exceptions, sowie Exceptionnachrichten nachzuliefern
   static Future<CalculatorOutcome> getOutcomeObject(
       Content content, List<CustomCameraImage> images) async {
     resetOfficialOutcome();
@@ -37,6 +38,12 @@ class ValueCalculator {
     }
   }
 
+  /// zählt die KI-Ergebnisse aller Bilder zu einem Projekt zusammen. Wenn zu einem Bild noch kein Wert
+  /// ermittelt wurde (= 0.0), wird der Rechenprozess abgebrochen und der User wird gebeten eine
+  /// Internetverbindung herzustellen um die fehlenden Daten nachzualden.
+  /// Wenn zu einem Bild ein ungültiger KI Wert ermittelt wurde (< 0) wird das Bild aus der Berechnung
+  /// herausgenommen und der Nutzer wird aufgfordert, dieses nochmal nachzufotografieren. Der Rechenprozess
+  /// kann aber trotzdem weiter fortgesetzt werden
   static Future<double> getAIOutcome(
       int id, List<CustomCameraImage> images) async {
     double aiOutcome = 0.0;

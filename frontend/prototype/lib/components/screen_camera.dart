@@ -9,8 +9,8 @@ import '../screens/create_new_project/_main_view.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
-  final Function(List<XFile?>)? updateGallery;
-  List<XFile?> originalGallery;
+  final Function(List<CustomCameraImage>)? updateGallery;
+  List<CustomCameraImage> originalGallery;
   CameraPage(
       {this.cameras,
       Key? key,
@@ -26,7 +26,8 @@ class _CameraPageState extends State<CameraPage> {
   bool fotoFeedBack = false;
   XFile? pictureFile;
   List<XFile?> previewImages = [];
-  List<XFile?> newImages = [];
+  List<CustomCameraImage> newImages = [];
+  int id = 0;
 
   Widget preview() {
     Column column = Column(
@@ -47,6 +48,9 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.originalGallery.isNotEmpty) {
+      id = widget.originalGallery.last.id + 1;
+    }
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -61,7 +65,11 @@ class _CameraPageState extends State<CameraPage> {
       }
       setState(() {});
     });
-    previewImages.addAll(widget.originalGallery);
+
+    for (var element in widget.originalGallery) {
+      previewImages.add(element.image);
+    }
+
     print(">>>>>>>>>>>>>>>>>>>>>>${widget.cameras}");
   }
 
@@ -108,7 +116,12 @@ class _CameraPageState extends State<CameraPage> {
           onPressed: () async {
             pictureFile = await controller.takePicture();
             previewImages.add(pictureFile!);
-            newImages.add(pictureFile!);
+
+            newImages.add(
+              CustomCameraImage(id: id, image: pictureFile!),
+            );
+
+            id += 1;
             setState(() {
               fotoFeedBack = true;
             });

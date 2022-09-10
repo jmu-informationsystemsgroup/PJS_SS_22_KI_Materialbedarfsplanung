@@ -8,6 +8,9 @@ import 'package:prototype/backend/helper_objects.dart';
 /// toilett: http://ptsv2.com/t/gkeu3-1662648870 Body can't be larger than 1,500 bytes
 
 class ServerAI {
+  /// sendet eine Liste an Bildern an den Server auf dem sich KI befindet. Der Wert den die KI
+  /// pro Bild zurückgibt, wird auf der image Datentabelle an der passenden Stelle anhand der
+  /// projectId und Bild id eingetragen.
   static Future<List<CustomCameraImage>> getAiValuesFromServer(
       List<CustomCameraImage> images, Function(int) stateUpdate) async {
     double currentState = 0.0;

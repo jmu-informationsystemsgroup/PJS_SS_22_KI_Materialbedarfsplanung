@@ -9,7 +9,7 @@ import 'package:path/path.dart';
 import 'package:file_support/file_support.dart';
 
 class Gallery extends StatelessWidget {
-  List<XFile?> pictures;
+  List<CustomCameraImage> pictures;
   int length;
   bool creationMode;
   Gallery(
@@ -51,7 +51,7 @@ class Gallery extends StatelessWidget {
 
     for (int i = 0; i < pictures.length; i++) {
       if (i == length) break;
-      var element = pictures[i];
+      CustomCameraImage element = pictures[i];
       row.children.add(
         Container(
           decoration: BoxDecoration(
@@ -65,18 +65,14 @@ class Gallery extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                   child: Image.file(
-                    File(element!.path),
+                    File(element.image.path),
                     width: 80,
                   ),
                 ),
               ),
-              getImageName(
-                File(element.path),
-              ),
+              Text("${element.id}"),
               ElevatedButton(
-                  onPressed: () {
-                    //  DataBase.deleteImage(element.projectId, element.id);
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     primary: Color.fromARGB(20, 0, 0, 0),
                     shadowColor: Colors.transparent,

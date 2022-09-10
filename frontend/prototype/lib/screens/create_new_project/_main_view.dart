@@ -47,7 +47,7 @@ class _NewProjectState extends State<NewProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var showState = false;
   int projectId = 0;
-  List<XFile?> galleryPictures = [];
+  List<CustomCameraImage> galleryPictures = [];
   int state = 0;
 
   @override
@@ -199,7 +199,8 @@ class _NewProjectState extends State<NewProject> {
                     if (image != null) {
                       setState(
                         () {
-                          NewProject.cash.pictures.add(image);
+                          NewProject.cash.pictures.add(CustomCameraImage(
+                              id: galleryPictures.last.id + 1, image: image));
                           galleryPictures = NewProject.cash.pictures;
                         },
                       );
@@ -209,7 +210,7 @@ class _NewProjectState extends State<NewProject> {
 
                 Gallery(
                   pictures: galleryPictures,
-                  creationMode: true,
+                  //  creationMode: true,
                 ),
                 InputField(
                   saveTo: (text) => {NewProject.cash.client = text},
@@ -252,11 +253,13 @@ class _NewProjectState extends State<NewProject> {
                           await DataBase.createNewProject(NewProject.cash);
 
                       bool imagesComplete = await DataBase.saveImages(
-                          NewProject.cash.pictures, projectId, (value) {
-                        setState(() {
-                          state = value;
-                        });
-                      });
+                          pictures: NewProject.cash.pictures,
+                          projectId: projectId,
+                          updateState: (value) {
+                            setState(() {
+                              state = value;
+                            });
+                          });
                       NewProject.cash = Content(); //reset
                       NewProject.goToProjectView(projectId, context);
 

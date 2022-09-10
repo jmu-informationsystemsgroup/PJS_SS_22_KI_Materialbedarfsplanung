@@ -189,17 +189,13 @@ class DataBase {
     List listOfMaps = await db
         .query('projects', orderBy: "id", where: "id = ?", whereArgs: [id]);
 
-    List<CustomCameraImage> allImages = await getImages(id);
+    List<CustomCameraImage> allImages = await getImages(projectId: id);
 
     List<Content> contentList = [];
     Content contentElement;
 
     contentElement = Content.mapToContent(listOfMaps[0]);
-    allImages.forEach(
-      (pictureObject) {
-        contentElement.pictures.add(pictureObject.image);
-      },
-    );
+    contentElement.pictures = allImages;
 
     return contentElement;
   }
@@ -228,13 +224,16 @@ class DataBase {
     return list;
   }
 
-  static Future<List<CustomCameraImage>> getImages(int projectId,
-      [bool onlyNew = false]) async {
+  /// gibt alle Bilder zu einer projectId als CustomCameraImage Liste zurück, onlyNewImages wird für
+  /// die aufwändige KI Berechnung benutzt, indem hier nur Bilder nachgeladen werden, zu denen noch
+  /// kein KI Wert bestimmt wurde
+  static Future<List<CustomCameraImage>> getImages(
+      {required int projectId, bool onlyNewImages = false}) async {
     final db = await DataBase.getDataBase();
 
     String additionalCommand = "";
 
-    if (onlyNew) {
+    if (onlyNewImages) {
       additionalCommand = "AND aiValue <= 0";
     }
 
@@ -276,11 +275,11 @@ class DataBase {
       debugPrint("Something went wrong when deleting an item: $err");
     }
 
-    deleteImagesFromDirectory(id);
+    deleteImages(id);
     deleteWalls(id);
   }
 
-  static deleteImagesFromDirectory(int projectId) async {
+  static deleteImages(int projectId) async {
     final db = await DataBase.getDataBase();
 
     var images = await db.query('images',
@@ -300,13 +299,20 @@ class DataBase {
     }
   }
 
-  static deleteImageFromTable(int projectId, int id) async {
+  static deleteSingleImageFromTable(int projectId, int id) async {
     final db = await DataBase.getDataBase();
     try {
       await db.delete("images", where: "projectId = $projectId AND id = $id");
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }
+  }
+
+  static deleteSingleImageFromDirectory(int projectId, int imageId) async {
+    final path = await getFilePath;
+
+    var file = File('$path/material_images/${projectId}_$imageId.jpg');
+    file.delete();
   }
 
   static deleteWalls(int projectId) async {
@@ -452,8 +458,10 @@ class DataBase {
 
   /// die Fotos werden im Ordner "material images hinterlegt"
   static Future<bool> saveImages(
-      List<XFile?> pictures, int projectId, Function(int) updateState,
-      [int startId = 1]) async {
+      {required List<CustomCameraImage> pictures,
+      required int projectId,
+      required Function(int) updateState,
+      int startId = 1}) async {
     final db = await DataBase.getDataBase();
 
     final path = await getFilePath;
@@ -489,7 +497,7 @@ class DataBase {
             ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Bild erstellen war zu langsam");
       }
       */
-        Uint8List prefine = await picture!.readAsBytes();
+        Uint8List prefine = await picture.image.readAsBytes();
         List<int> byteList = [];
         for (var element in prefine) {
           byteList.add(element);
@@ -499,11 +507,13 @@ class DataBase {
 
         img.Image resizedImage = copyResize(image!, width: 450, height: 300);
 
+        //   resizedImage = copyCrop(resizedImage, int x, int y, int w, int h);
+
         File file = await File('$fileloc/${projectId}_$id.jpg').create();
 
         file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
       } catch (e) {
-        deleteImageFromTable(projectId, id);
+        deleteSingleImageFromTable(projectId, id);
         print("Bild $id wurde nicht gespeichert");
       }
 

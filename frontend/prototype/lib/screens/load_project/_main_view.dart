@@ -34,15 +34,22 @@ class _ProjectViewState extends State<ProjectView> {
   CalculatorOutcome calculatedOutcome = CalculatorOutcome();
   bool editorVisablity = false;
   Content content = Content();
-  List<CustomCameraImage> imageObjectListAll = [];
-  List<CustomCameraImage> imageObjectListNotYetCalculated = [];
-  List<XFile?> galleryPictures = [];
-  List<XFile?> addedPictures = [];
+
+  /// eine Liste sämtlicher Bildobjekte zu dem Projekt
+  List<CustomCameraImage> galleryImages = [];
+
+  /// eine Liste aller Bilder die der Nutzer nachträglich hinzugefügt hat und die noch
+  /// nicht abgespeichert wurden
+  List<CustomCameraImage> addedImages = [];
+
+  /// eine Liste aller Bilder zu denen noch kein KI Ergebnis vorliegt
+  List<CustomCameraImage> galleryImagesNotYetCalculated = [];
   bool safeNewPicturesButton = false;
   List<Widget> outcomeWidgetList = [];
   int state = 0;
   bool recalculate = false;
   bool safingImages = false;
+  int originalLastValue = 0;
 
   @override
   void initState() {
@@ -57,17 +64,17 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   loadGalleryPictures() async {
-    imageObjectListNotYetCalculated =
-        await DataBase.getImages(content.id, true);
-    imageObjectListAll = await DataBase.getImages(content.id);
+    galleryImagesNotYetCalculated =
+        await DataBase.getImages(projectId: content.id, onlyNewImages: true);
+    List<CustomCameraImage> saveState =
+        await DataBase.getImages(projectId: content.id);
     CalculatorOutcome val =
-        await ValueCalculator.getOutcomeObject(content, imageObjectListAll);
+        await ValueCalculator.getOutcomeObject(content, galleryImages);
     List<XFile?> copyPictures = [];
-    for (var element in imageObjectListAll) {
-      copyPictures.add(element.image);
-    }
+    originalLastValue = saveState.last.id;
+
     setState(() {
-      galleryPictures = copyPictures;
+      galleryImages = saveState;
       calculatedOutcome = val;
     });
   }
@@ -150,9 +157,9 @@ class _ProjectViewState extends State<ProjectView> {
                 recalculate = true;
               });
               List<CustomCameraImage> replaceList = [];
-              if (galleryPictures.isNotEmpty) {
+              if (galleryImagesNotYetCalculated.isNotEmpty) {
                 replaceList = await ServerAI.getAiValuesFromServer(
-                    imageObjectListNotYetCalculated, (value) {
+                    galleryImagesNotYetCalculated, (value) {
                   setState(() {
                     state = value;
                   });
@@ -194,6 +201,8 @@ class _ProjectViewState extends State<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>last value: $originalLastValue");
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -278,7 +287,9 @@ class _ProjectViewState extends State<ProjectView> {
               children: [
                 Expanded(
                   flex: 8,
-                  child: Gallery(pictures: galleryPictures),
+                  child: Gallery(
+                    pictures: galleryImages,
+                  ),
                 ),
                 Expanded(
                   flex: 4,
@@ -300,12 +311,12 @@ class _ProjectViewState extends State<ProjectView> {
                           MaterialPageRoute(
                             builder: (context) => CameraPage(
                               cameras: value,
-                              originalGallery: galleryPictures,
+                              originalGallery: galleryImages,
                               updateGallery: (images) {
                                 setState(
                                   () {
-                                    galleryPictures.addAll(images);
-                                    addedPictures.addAll(images);
+                                    galleryImages.addAll(images);
+                                    addedImages.addAll(images);
                                     safeNewPicturesButton = true;
                                   },
                                 );
@@ -372,19 +383,23 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
               ],
               onPressed: () async {
-                bool sth =
-                    await DataBase.saveImages(addedPictures, content.id, (val) {
-                  setState(() {
-                    safingImages = true;
-                    state = val;
-                  });
-                }, imageObjectListAll.last.id + 1);
+                bool sth = await DataBase.saveImages(
+                  pictures: addedImages,
+                  startId: originalLastValue + 1,
+                  projectId: content.id,
+                  updateState: (val) {
+                    setState(() {
+                      safingImages = true;
+                      state = val;
+                    });
+                  },
+                );
                 state = 0;
                 safingImages = false;
                 loadGalleryPictures();
                 setState(() {
                   safeNewPicturesButton = false;
-                  addedPictures = [];
+                  addedImages = [];
                 });
               },
             ),
