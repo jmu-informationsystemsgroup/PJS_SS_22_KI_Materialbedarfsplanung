@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/input_field.dart';
-import 'package:prototype/screens/create_new_project/_main_view.dart';
 
 class AddressInput extends StatefulWidget {
   Function(Adress) updateAddress;

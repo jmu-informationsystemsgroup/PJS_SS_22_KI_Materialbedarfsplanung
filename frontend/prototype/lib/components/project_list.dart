@@ -64,9 +64,10 @@ class ProjectList extends StatelessWidget {
                         flex: 3,
                         child: CustomContainerWhite(
                           //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
-                          child: Gallery(
-                            pictures: element.pictures,
-                            length: 2,
+                          child: Icon(
+                            Icons.house,
+                            color: Color.fromARGB(75, 0, 0, 0),
+                            size: 80,
                           ),
                         ),
                       ),

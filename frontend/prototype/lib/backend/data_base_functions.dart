@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:camera/camera.dart';
 
 import 'package:prototype/backend/helper_objects.dart';
+import 'package:prototype/backend/server_ai.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 /// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
@@ -68,9 +69,11 @@ class DataBase {
   /// der Fotoas abgelegt
   static Future<void> createImageTable(sql.Database database) async {
     await database.execute("""CREATE TABLE images(
-        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         projectId INTEGER,
-        aiValue REAL
+        id INTEGER NOT NULL,
+        aiValue REAL,
+        PRIMARY KEY (id, projectId),
+        FOREIGN KEY (projectId) REFERENCES projects (id)
       )
       """);
   }
@@ -109,21 +112,22 @@ class DataBase {
   /// gibt eine Liste aller aktiven Projekte zurück
   /// @Params: term = Suchfilter, orderParameter = Begriff nach welchem geordnet wird
   static Future<List<Content>> getAllActiveProjects(
-      [String term = "", String orderByParamter = "id"]) async {
+      [String searchTerm = "", String orderByParamter = "id"]) async {
     final db = await DataBase.getDataBase();
 
     List listOfMaps = await db.query('projects',
         orderBy: "$orderByParamter COLLATE NOCASE",
         where:
-            "(statusActive = 1) AND (projectName LIKE '%$term%' OR client LIKE '%$term%' OR street LIKE '%$term%' OR city LIKE '%$term%' OR zip LIKE '%$term%' OR comment LIKE '%$term%')");
+            "(statusActive = 1) AND (projectName LIKE '%$searchTerm%' OR client LIKE '%$searchTerm%' OR street LIKE '%$searchTerm%' OR city LIKE '%$searchTerm%' OR zip LIKE '%$searchTerm%' OR comment LIKE '%$searchTerm%')");
 
-    List allImages = await getAllImages();
+    // List allImages = await getAllImages();
 
     List<Content> contentList = [];
     Content contentElement;
     listOfMaps.forEach(
       (element) => {
         contentElement = Content.mapToContent(element),
+        /*
         allImages.forEach(
           (pictureObject) {
             if (pictureObject["projectId"] == contentElement.id) {
@@ -131,6 +135,7 @@ class DataBase {
             }
           },
         ),
+        */
         contentList.add(contentElement),
       },
     );
@@ -143,13 +148,14 @@ class DataBase {
     List listOfMaps =
         await db.query('projects', orderBy: "id", where: "statusActive = 0");
 
-    List allImages = await getAllImages();
+    //  List allImages = await getAllImages();
 
     List<Content> contentList = [];
     Content contentElement;
     listOfMaps.forEach(
       (element) => {
         contentElement = Content.mapToContent(element),
+        /*
         allImages.forEach(
           (pictureObject) {
             if (pictureObject["projectId"] == contentElement.id) {
@@ -157,6 +163,7 @@ class DataBase {
             }
           },
         ),
+        */
         contentList.add(contentElement),
       },
     );
@@ -182,7 +189,7 @@ class DataBase {
     List listOfMaps = await db
         .query('projects', orderBy: "id", where: "id = ?", whereArgs: [id]);
 
-    List allImages = await getImages(id);
+    List<CustomCameraImage> allImages = await getImages(id);
 
     List<Content> contentList = [];
     Content contentElement;
@@ -190,7 +197,7 @@ class DataBase {
     contentElement = Content.mapToContent(listOfMaps[0]);
     allImages.forEach(
       (pictureObject) {
-        contentElement.pictures.add(pictureObject["image"]);
+        contentElement.pictures.add(pictureObject.image);
       },
     );
 
@@ -210,7 +217,8 @@ class DataBase {
       var imageId = element["id"];
 
       var imageObject = {
-        "image": XFile('$path/material_images/$imageId.jpg'),
+        "image":
+            XFile('$path/material_images/${element["projectId"]}_$imageId.jpg'),
         "projectId": element["projectId"]
       };
 
@@ -220,23 +228,27 @@ class DataBase {
     return list;
   }
 
-  static Future<List> getImages(int projectId) async {
+  static Future<List<CustomCameraImage>> getImages(int projectId) async {
     final db = await DataBase.getDataBase();
 
     var path = await getFilePath;
 
-    var list = [];
+    List<CustomCameraImage> list = [];
 
     var images = await db.query('images',
         orderBy: "id", where: "projectId = ?", whereArgs: [projectId]);
 
     for (var element in images) {
-      var imageId = element["id"];
+      String imageId = element["id"].toString();
+      String aiValue = element["aiValue"].toString();
+      String projectId = element["projectId"].toString();
 
-      var imageObject = {
-        "image": XFile('$path/material_images/$imageId.jpg'),
-        "aiValue": element["aiValue"]
-      };
+      CustomCameraImage imageObject = CustomCameraImage(
+        id: int.parse(imageId),
+        image: XFile('$path/material_images/${projectId}_$imageId.jpg'),
+        aiValue: double.parse(aiValue),
+        projectId: int.parse(projectId),
+      );
 
       list.add(imageObject);
     }
@@ -257,11 +269,11 @@ class DataBase {
       debugPrint("Something went wrong when deleting an item: $err");
     }
 
-    deleteImages(id);
+    deleteImagesFromDirectory(id);
     deleteWalls(id);
   }
 
-  static deleteImages(int projectId) async {
+  static deleteImagesFromDirectory(int projectId) async {
     final db = await DataBase.getDataBase();
 
     var images = await db.query('images',
@@ -271,11 +283,20 @@ class DataBase {
 
     for (var element in images) {
       var imageId = element["id"];
-      var file = File('$path/material_images/$imageId.jpg');
+      var file = File('$path/material_images/${projectId}_$imageId.jpg');
       file.delete();
     }
     try {
       await db.delete("images", where: "projectId = ?", whereArgs: [projectId]);
+    } catch (err) {
+      debugPrint("Something went wrong when deleting an item: $err");
+    }
+  }
+
+  static deleteImage(int projectId, int id) async {
+    final db = await DataBase.getDataBase();
+    try {
+      await db.delete("images", where: "projectId = $projectId AND id = $id");
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }
@@ -354,14 +375,14 @@ class DataBase {
     return result;
   }
 
-  static updateImagesAiValue(double aiValue, int id) async {
+  static updateImagesAiValue(double aiValue, int id, int projectId) async {
     final db = await DataBase.getDataBase();
 
     final dbData = {
       'aiValue': aiValue,
     };
-    final result =
-        await db.update('images', dbData, where: "id = ?", whereArgs: [id]);
+    final result = await db.update('images', dbData,
+        where: "id = ${id} AND projectId = ${projectId}");
     return result;
   }
 
@@ -423,7 +444,8 @@ class DataBase {
   }
 
   /// die Fotos werden im Ordner "material images hinterlegt"
-  static Future<bool> saveImages(List<XFile?> pictures, int projectId) async {
+  static Future<bool> saveImages(List<XFile?> pictures, int projectId,
+      [int startId = 1]) async {
     final db = await DataBase.getDataBase();
 
     final path = await getFilePath;
@@ -432,14 +454,27 @@ class DataBase {
 
     var fileloc = dir.path;
 
+    int id = startId;
+    List<CustomCameraImage> uploadList = [];
     for (var picture in pictures) {
-      final dbData = {'projectId': projectId, 'aiValue': -1.0};
+      final dbData = {'projectId': projectId, 'id': id, 'aiValue': -1.0};
 
-      final id = await db.insert('images', dbData,
+      final id2 = await db.insert('images', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
-      await picture?.saveTo('$fileloc/$id.jpg');
-
+      await picture?.saveTo('$fileloc/${projectId}_$id.jpg');
+      /*
+      try {
+        uploadList.add(
+          CustomCameraImage(
+              id: id, projectId: projectId, image: picture!, aiValue: -1.0),
+        );
+      } catch (e) {
+        print(
+            ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Bild erstellen war zu langsam");
+      }
+      */
+      id = id + 1;
       // die folgenden Zeilen wieder löschen sobald die Server Tests beendet sind
       /*
       Uint8List prefine = await picture!.readAsBytes();
@@ -459,7 +494,9 @@ class DataBase {
       file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
     */
     }
-
+/*
+    ServerAI.sendImages(uploadList);
+*/
     return true;
   }
 

@@ -147,3 +147,15 @@ class Wall {
   double width = 0.0;
   double height = 0.0;
 }
+
+class CustomCameraImage {
+  int id;
+  int projectId;
+  XFile image;
+  double aiValue;
+  CustomCameraImage(
+      {required this.id,
+      required this.projectId,
+      required this.image,
+      required this.aiValue});
+}
