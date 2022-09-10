@@ -34,7 +34,8 @@ class _ProjectViewState extends State<ProjectView> {
   CalculatorOutcome calculatedOutcome = CalculatorOutcome();
   bool editorVisablity = false;
   Content content = Content();
-  List<CustomCameraImage> imageObjectList = [];
+  List<CustomCameraImage> imageObjectListAll = [];
+  List<CustomCameraImage> imageObjectListNotYetCalculated = [];
   List<XFile?> galleryPictures = [];
   List<XFile?> addedPictures = [];
   bool safeNewPicturesButton = false;
@@ -56,11 +57,13 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   loadGalleryPictures() async {
-    imageObjectList = await DataBase.getImages(content.id);
+    imageObjectListNotYetCalculated =
+        await DataBase.getImages(content.id, true);
+    imageObjectListAll = await DataBase.getImages(content.id);
     CalculatorOutcome val =
-        await ValueCalculator.getOutcomeObject(content, imageObjectList);
+        await ValueCalculator.getOutcomeObject(content, imageObjectListAll);
     List<XFile?> copyPictures = [];
-    for (var element in imageObjectList) {
+    for (var element in imageObjectListAll) {
       copyPictures.add(element.image);
     }
     setState(() {
@@ -149,7 +152,7 @@ class _ProjectViewState extends State<ProjectView> {
               List<CustomCameraImage> replaceList = [];
               if (galleryPictures.isNotEmpty) {
                 replaceList = await ServerAI.getAiValuesFromServer(
-                    imageObjectList, (value) {
+                    imageObjectListNotYetCalculated, (value) {
                   setState(() {
                     state = value;
                   });
@@ -158,12 +161,7 @@ class _ProjectViewState extends State<ProjectView> {
                   recalculate = false;
                 });
               }
-              CalculatorOutcome val = await ValueCalculator.getOutcomeObject(
-                  content, imageObjectList);
-              setState(() {
-                imageObjectList = replaceList;
-                calculatedOutcome = val;
-              });
+              loadGalleryPictures();
             },
             child: Text("Bilder synchronisieren"),
           ),
@@ -380,7 +378,7 @@ class _ProjectViewState extends State<ProjectView> {
                     safingImages = true;
                     state = val;
                   });
-                }, imageObjectList.last.id + 1);
+                }, imageObjectListAll.last.id + 1);
                 state = 0;
                 safingImages = false;
                 loadGalleryPictures();

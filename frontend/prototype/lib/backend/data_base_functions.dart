@@ -228,15 +228,22 @@ class DataBase {
     return list;
   }
 
-  static Future<List<CustomCameraImage>> getImages(int projectId) async {
+  static Future<List<CustomCameraImage>> getImages(int projectId,
+      [bool onlyNew = false]) async {
     final db = await DataBase.getDataBase();
+
+    String additionalCommand = "";
+
+    if (onlyNew) {
+      additionalCommand = "AND aiValue <= 0";
+    }
 
     var path = await getFilePath;
 
     List<CustomCameraImage> list = [];
 
     var images = await db.query('images',
-        orderBy: "id", where: "projectId = ?", whereArgs: [projectId]);
+        orderBy: "id", where: "projectId = $projectId $additionalCommand");
 
     for (var element in images) {
       String imageId = element["id"].toString();
