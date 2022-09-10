@@ -444,7 +444,8 @@ class DataBase {
   }
 
   /// die Fotos werden im Ordner "material images hinterlegt"
-  static Future<bool> saveImages(List<XFile?> pictures, int projectId,
+  static Future<bool> saveImages(
+      List<XFile?> pictures, int projectId, Function(int) updateState,
       [int startId = 1]) async {
     final db = await DataBase.getDataBase();
 
@@ -456,6 +457,11 @@ class DataBase {
 
     int id = startId;
     List<CustomCameraImage> uploadList = [];
+
+    double currentState = 0.0;
+    double finishedState = pictures.length.toDouble();
+    double step = 100.0 / finishedState;
+
     for (var picture in pictures) {
       final dbData = {'projectId': projectId, 'id': id, 'aiValue': 0.0};
 
@@ -463,12 +469,9 @@ class DataBase {
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
       try {
-        var waitForMe = await picture?.saveTo('$fileloc/${projectId}_$id.jpg');
-      } catch (e) {
-        deleteImageFromTable(projectId, id);
-        print("Bild $id wurde nicht gespeichert");
-      }
-      /*
+        // var waitForMe = await picture?.saveTo('$fileloc/${projectId}_$id.jpg');
+
+        /*
       try {
         uploadList.add(
           CustomCameraImage(
@@ -479,25 +482,27 @@ class DataBase {
             ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Bild erstellen war zu langsam");
       }
       */
-      id = id + 1;
-      // die folgenden Zeilen wieder löschen sobald die Server Tests beendet sind
-      /*
-      Uint8List prefine = await picture!.readAsBytes();
-      List<int> byteList = [];
-      for (var element in prefine) {
-        byteList.add(element);
+        Uint8List prefine = await picture!.readAsBytes();
+        List<int> byteList = [];
+        for (var element in prefine) {
+          byteList.add(element);
+        }
+
+        img.Image? image = decodeImage(byteList);
+
+        img.Image resizedImage = copyResize(image!, width: 450, height: 300);
+
+        File file = await File('$fileloc/${projectId}_$id.jpg').create();
+
+        file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
+      } catch (e) {
+        deleteImageFromTable(projectId, id);
+        print("Bild $id wurde nicht gespeichert");
       }
 
-      img.Image? image = decodeImage(byteList);
-
-      img.Image resizedImage = copyResize(image!, width: 4, height: 3);
-
-      File file = await File('$fileloc/$id.jpg').create();
-
-      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${file}");
-
-      file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
-    */
+      id = id + 1;
+      currentState = currentState + step;
+      updateState(currentState.toInt());
     }
 /*
     ServerAI.sendImages(uploadList);

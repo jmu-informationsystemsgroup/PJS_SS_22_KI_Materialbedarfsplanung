@@ -75,8 +75,7 @@ class Gallery extends StatelessWidget {
               ),
               ElevatedButton(
                   onPressed: () {
-                    row.children.remove(element);
-                    //    DataBase.deleteImage(element.projectId, element.id);
+                    //  DataBase.deleteImage(element.projectId, element.id);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Color.fromARGB(20, 0, 0, 0),

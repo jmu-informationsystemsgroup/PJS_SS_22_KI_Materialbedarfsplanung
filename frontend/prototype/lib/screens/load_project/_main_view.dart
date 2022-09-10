@@ -38,10 +38,10 @@ class _ProjectViewState extends State<ProjectView> {
   List<XFile?> galleryPictures = [];
   List<XFile?> addedPictures = [];
   bool safeNewPicturesButton = false;
-  bool imagesSaved = false;
   List<Widget> outcomeWidgetList = [];
   int state = 0;
   bool recalculate = false;
+  bool safingImages = false;
 
   @override
   void initState() {
@@ -171,11 +171,12 @@ class _ProjectViewState extends State<ProjectView> {
       );
     } else if (calculatedOutcome.exception) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(calculatedOutcome.exceptionText),
           Text("Aus den übrigen Bildern ergibt sich folgender Wert:"),
           Text(
-              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)}"),
+              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)} kg"),
           Text(
               "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
         ],
@@ -308,7 +309,6 @@ class _ProjectViewState extends State<ProjectView> {
                                     galleryPictures.addAll(images);
                                     addedPictures.addAll(images);
                                     safeNewPicturesButton = true;
-                                    imagesSaved = false;
                                   },
                                 );
                               },
@@ -374,20 +374,26 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
               ],
               onPressed: () async {
-                bool sth = await DataBase.saveImages(
-                    addedPictures, content.id, imageObjectList.last.id + 1);
+                bool sth =
+                    await DataBase.saveImages(addedPictures, content.id, (val) {
+                  setState(() {
+                    safingImages = true;
+                    state = val;
+                  });
+                }, imageObjectList.last.id + 1);
+                state = 0;
+                safingImages = false;
                 loadGalleryPictures();
                 setState(() {
                   safeNewPicturesButton = false;
-                  imagesSaved = sth;
                   addedPictures = [];
                 });
               },
             ),
           ),
           Visibility(
-            visible: imagesSaved,
-            child: Text("Speichern erfolgreich"),
+            visible: safingImages,
+            child: Text("Speichere Bilder $state %"),
           ),
 
           Webshop(

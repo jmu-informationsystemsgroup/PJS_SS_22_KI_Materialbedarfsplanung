@@ -45,9 +45,10 @@ class NewProject extends StatefulWidget {
 
 class _NewProjectState extends State<NewProject> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var visability = false;
+  var showState = false;
   int projectId = 0;
   List<XFile?> galleryPictures = [];
+  int state = 0;
 
   @override
   void initState() {
@@ -233,31 +234,35 @@ class _NewProjectState extends State<NewProject> {
                 // MVPWalls(),
                 MVPChecklist(),
                 //    preview(),
-
+                Visibility(
+                  child: Text("wird gespeichert ($state %)"),
+                  visible: showState,
+                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     child: const Text('Projekt speichern und berechnen'),
-                    onPressed: () {
+                    onPressed: () async {
                       //    Content.reset(NewProject.cash);
-                      setState(() async {
-                        visability = true;
-                        projectId =
-                            await DataBase.createNewProject(NewProject.cash);
-
-                        bool imagesComplete = await DataBase.saveImages(
-                            NewProject.cash.pictures, projectId);
-                        NewProject.cash = Content(); //reset
-                        NewProject.goToProjectView(projectId, context);
+                      setState(() {
+                        showState = true;
                       });
+
+                      projectId =
+                          await DataBase.createNewProject(NewProject.cash);
+
+                      bool imagesComplete = await DataBase.saveImages(
+                          NewProject.cash.pictures, projectId, (value) {
+                        setState(() {
+                          state = value;
+                        });
+                      });
+                      NewProject.cash = Content(); //reset
+                      NewProject.goToProjectView(projectId, context);
 
                       // goBack();
                     },
                   ),
-                ),
-                Visibility(
-                  child: Text("Projekt erfolgreich gespeichert!"),
-                  visible: visability,
                 ),
               ],
             ),
