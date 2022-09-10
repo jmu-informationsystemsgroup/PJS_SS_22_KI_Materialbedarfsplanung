@@ -293,7 +293,7 @@ class DataBase {
     }
   }
 
-  static deleteImage(int projectId, int id) async {
+  static deleteImageFromTable(int projectId, int id) async {
     final db = await DataBase.getDataBase();
     try {
       await db.delete("images", where: "projectId = $projectId AND id = $id");
@@ -457,17 +457,22 @@ class DataBase {
     int id = startId;
     List<CustomCameraImage> uploadList = [];
     for (var picture in pictures) {
-      final dbData = {'projectId': projectId, 'id': id, 'aiValue': -1.0};
+      final dbData = {'projectId': projectId, 'id': id, 'aiValue': 0.0};
 
       final id2 = await db.insert('images', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
-      await picture?.saveTo('$fileloc/${projectId}_$id.jpg');
+      try {
+        var waitForMe = await picture?.saveTo('$fileloc/${projectId}_$id.jpg');
+      } catch (e) {
+        deleteImageFromTable(projectId, id);
+        print("Bild $id wurde nicht gespeichert");
+      }
       /*
       try {
         uploadList.add(
           CustomCameraImage(
-              id: id, projectId: projectId, image: picture!, aiValue: -1.0),
+              id: id, projectId: projectId, image: picture!, aiValue: 0.0),
         );
       } catch (e) {
         print(

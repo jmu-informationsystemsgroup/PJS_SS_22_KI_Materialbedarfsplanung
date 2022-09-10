@@ -206,7 +206,10 @@ class _NewProjectState extends State<NewProject> {
                   },
                 )),
 
-                Gallery(pictures: galleryPictures),
+                Gallery(
+                  pictures: galleryPictures,
+                  creationMode: true,
+                ),
                 InputField(
                   saveTo: (text) => {NewProject.cash.client = text},
                   labelText: "Auftraggeber",

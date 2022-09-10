@@ -29,14 +29,17 @@ class Gallery extends StatelessWidget {
   }
   */
 
-  String getImageName(File file) {
-    String pathWithExtension =
-        FileSupport().getFileNameWithoutExtension(file).toString();
-    List<String> pathList = pathWithExtension.split("_");
-    String pathWithoutProjectId = pathList.last;
-    List<String> name = pathWithoutProjectId.split(".");
+  getImageName(File file) {
+    if (!creationMode) {
+      String pathWithExtension =
+          FileSupport().getFileNameWithoutExtension(file).toString();
+      List<String> pathList = pathWithExtension.split("_");
+      String pathWithoutProjectId = pathList.last;
+      List<String> name = pathWithoutProjectId.split(".");
 
-    return name.first;
+      return Text(name.first);
+    } else
+      return Container();
   }
 
   /// geht in einer Schleife durch die galleryList und erzeugt jedesmal ein Imagewidget.
@@ -67,10 +70,8 @@ class Gallery extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                getImageName(
-                  File(element.path),
-                ),
+              getImageName(
+                File(element.path),
               ),
               ElevatedButton(
                   onPressed: () {

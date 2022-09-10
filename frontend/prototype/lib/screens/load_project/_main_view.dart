@@ -41,6 +41,7 @@ class _ProjectViewState extends State<ProjectView> {
   bool imagesSaved = false;
   List<Widget> outcomeWidgetList = [];
   int state = 0;
+  bool recalculate = false;
 
   @override
   void initState() {
@@ -132,7 +133,9 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   Widget displayData() {
-    if (calculatedOutcome.aiOutcome == -1.0) {
+    if (recalculate) {
+      return Text("Status: $state%");
+    } else if (calculatedOutcome.aiOutcome == 0.0) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -141,7 +144,7 @@ class _ProjectViewState extends State<ProjectView> {
             onPressed: () async {
               setState(() {
                 state = 0;
-                calculatedOutcome.aiOutcome = -10.0;
+                recalculate = true;
               });
               List<CustomCameraImage> replaceList = [];
               if (galleryPictures.isNotEmpty) {
@@ -150,6 +153,9 @@ class _ProjectViewState extends State<ProjectView> {
                   setState(() {
                     state = value;
                   });
+                });
+                setState(() {
+                  recalculate = false;
                 });
               }
               CalculatorOutcome val = await ValueCalculator.getOutcomeObject(
@@ -163,8 +169,17 @@ class _ProjectViewState extends State<ProjectView> {
           ),
         ],
       );
-    } else if (calculatedOutcome.aiOutcome == -10.0) {
-      return Text("Status: $state%");
+    } else if (calculatedOutcome.exception) {
+      return Column(
+        children: [
+          Text(calculatedOutcome.exceptionText),
+          Text("Aus den übrigen Bildern ergibt sich folgender Wert:"),
+          Text(
+              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)}"),
+          Text(
+              "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
+        ],
+      );
     } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +195,6 @@ class _ProjectViewState extends State<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
-    print("Schleifentest");
     return Scaffold(
       appBar: AppBar(
         title: Text(
