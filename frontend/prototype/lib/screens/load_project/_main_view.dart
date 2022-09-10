@@ -69,8 +69,7 @@ class _ProjectViewState extends State<ProjectView> {
     List<CustomCameraImage> saveState =
         await DataBase.getImages(projectId: content.id);
     CalculatorOutcome val =
-        await ValueCalculator.getOutcomeObject(content, galleryImages);
-    List<XFile?> copyPictures = [];
+        await ValueCalculator.getOutcomeObject(content, saveState);
     originalLastValue = saveState.last.id;
 
     setState(() {
@@ -143,7 +142,9 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   Widget displayData() {
-    if (recalculate) {
+    if (galleryImages.isEmpty) {
+      return Text("Mache Bilder um einen KI Wert ermitteln zu können");
+    } else if (recalculate) {
       return Text("Status: $state%");
     } else if (calculatedOutcome.aiOutcome == 0.0) {
       return Column(
@@ -289,6 +290,16 @@ class _ProjectViewState extends State<ProjectView> {
                   flex: 8,
                   child: Gallery(
                     pictures: galleryImages,
+                    deleteFunction: (id) async {
+                      galleryImages.removeWhere((element) => element.id == id);
+                      var sh = await DataBase.deleteSingleImageFromTable(
+                          content.id, id);
+                      var sh2 = await DataBase.deleteSingleImageFromDirectory(
+                          content.id, id);
+                      loadGalleryPictures();
+                      print(
+                          ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${galleryImages.length.toString()}");
+                    },
                   ),
                 ),
                 Expanded(

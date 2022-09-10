@@ -12,22 +12,12 @@ class Gallery extends StatelessWidget {
   List<CustomCameraImage> pictures;
   int length;
   bool creationMode;
+  Function(int) deleteFunction;
   Gallery(
-      {required this.pictures, this.length = 8000, this.creationMode = false});
-
-/*
-  getImages() {
-    int projectID = int.parse(widget.src);
-
-    DataBase.getImages(projectID).then((value) => {
-          setState(() {
-            galleryList = value;
-          })
-        });
-
-    return galleryList;
-  }
-  */
+      {required this.pictures,
+      this.length = 8000,
+      this.creationMode = false,
+      required this.deleteFunction});
 
   getImageName(File file) {
     if (!creationMode) {
@@ -50,7 +40,6 @@ class Gallery extends StatelessWidget {
     );
 
     for (int i = 0; i < pictures.length; i++) {
-      if (i == length) break;
       CustomCameraImage element = pictures[i];
       row.children.add(
         Container(
@@ -72,7 +61,9 @@ class Gallery extends StatelessWidget {
               ),
               Text("${element.id}"),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteFunction(element.id);
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: Color.fromARGB(20, 0, 0, 0),
                     shadowColor: Colors.transparent,

@@ -210,6 +210,9 @@ class _NewProjectState extends State<NewProject> {
 
                 Gallery(
                   pictures: galleryPictures,
+                  deleteFunction: (id) {
+                    galleryPictures.removeWhere((element) => element.id == id);
+                  },
                   //  creationMode: true,
                 ),
                 InputField(
