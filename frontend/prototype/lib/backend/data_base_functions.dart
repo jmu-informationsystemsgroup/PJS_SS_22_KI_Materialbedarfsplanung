@@ -269,11 +269,11 @@ class DataBase {
       debugPrint("Something went wrong when deleting an item: $err");
     }
 
-    deleteImages(id);
+    deleteImagesFromDirectory(id);
     deleteWalls(id);
   }
 
-  static deleteImages(int projectId) async {
+  static deleteImagesFromDirectory(int projectId) async {
     final db = await DataBase.getDataBase();
 
     var images = await db.query('images',
@@ -288,6 +288,15 @@ class DataBase {
     }
     try {
       await db.delete("images", where: "projectId = ?", whereArgs: [projectId]);
+    } catch (err) {
+      debugPrint("Something went wrong when deleting an item: $err");
+    }
+  }
+
+  static deleteImage(int projectId, int id) async {
+    final db = await DataBase.getDataBase();
+    try {
+      await db.delete("images", where: "projectId = $projectId AND id = $id");
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }

@@ -169,8 +169,10 @@ class _ProjectViewState extends State<ProjectView> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("KI-Ergebnis: " + calculatedOutcome.aiOutcome.toString()),
-          Text("KI-Preis: " + calculatedOutcome.totalAiPrice.toString()),
+          Text(
+              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)}"),
+          Text(
+              "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
         ],
       );
     }

@@ -26,7 +26,7 @@ class ValueCalculator {
         aiOutcome = aiOutcome + element.aiValue;
       }
     }
-    return aiOutcome;
+    return aiOutcome / 1000;
   }
 
   static Future<double> getSquareMeter(int id) async {
@@ -60,7 +60,7 @@ class ValueCalculator {
   static double getAiPrice(String material, double aiOutcome) {
     double totalPrice = 0.0;
     Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
-    totalPrice = aiOutcome * valueInterpreter[material]!;
+    totalPrice = (aiOutcome * valueInterpreter[material]!);
 
     return totalPrice;
   }
