@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/components/buttons_order_by.dart';
-import 'package:prototype/components/input_field_search.dart';
+import 'package:prototype/components/appBar_custom.dart';
+import 'package:prototype/screens/home/buttons_order_by.dart';
+import 'package:prototype/screens/home/input_field_search.dart';
 import 'package:prototype/components/navBar.dart';
 
 import 'package:prototype/screens/home/button_new_project.dart';
 import '../../backend/data_base_functions.dart';
 import '../../backend/helper_objects.dart';
-import '../../components/project_list.dart';
+import 'project_list.dart';
 
 class Dashboard extends StatefulWidget {
-  String title = "Projektübersicht";
+  String title = "Alle Projekte";
 
   @override
   State<StatefulWidget> createState() {
@@ -23,7 +24,7 @@ class _DashboardState extends State<Dashboard> {
   String searchTerm = "";
 
   activateList() async {
-    DataBase.getAllActiveProjects(searchTerm).then((loadedContent) {
+    DataBase.getProjects(searchTerm: searchTerm).then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -45,8 +46,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Projektübersicht"),
-        primary: true,
+        leading: CustomAppBar(title: "Alle Projekte"),
       ),
       body: SingleChildScrollView(
         child: Column(

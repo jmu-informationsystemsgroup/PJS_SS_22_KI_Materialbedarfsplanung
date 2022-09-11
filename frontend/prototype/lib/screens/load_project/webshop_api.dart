@@ -5,7 +5,7 @@ import 'package:prototype/screens/load_project/user_form.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/helper_objects.dart';
-import '../../components/button_multiple_icons.dart';
+import '../../components/button_row_multiple_icons.dart';
 import '../../components/custom_container_white.dart';
 
 class Webshop extends StatefulWidget {
@@ -80,7 +80,7 @@ class _WebshopState extends State<Webshop> {
     }
     return Column(
       children: [
-        CustomButton(
+        CustomButtonRow(
           children: [
             Icon(
               Icons.shopping_cart,
@@ -95,7 +95,7 @@ class _WebshopState extends State<Webshop> {
             _launchUrl("https://spachtelprofi.com/shop/");
           },
         ),
-        CustomButton(
+        CustomButtonRow(
           children: [
             Icon(
               Icons.shopping_cart,

@@ -111,14 +111,16 @@ class DataBase {
 
   /// gibt eine Liste aller aktiven Projekte zurück
   /// @Params: term = Suchfilter, orderParameter = Begriff nach welchem geordnet wird
-  static Future<List<Content>> getAllActiveProjects(
-      [String searchTerm = "", String orderByParamter = "id"]) async {
+  static Future<List<Content>> getProjects(
+      {String searchTerm = "",
+      String orderByParamter = "id",
+      int statusActive = 1}) async {
     final db = await DataBase.getDataBase();
 
     List listOfMaps = await db.query('projects',
         orderBy: "$orderByParamter COLLATE NOCASE",
         where:
-            "(statusActive = 1) AND (projectName LIKE '%$searchTerm%' OR client LIKE '%$searchTerm%' OR street LIKE '%$searchTerm%' OR city LIKE '%$searchTerm%' OR zip LIKE '%$searchTerm%' OR comment LIKE '%$searchTerm%')");
+            "(statusActive = $statusActive) AND (projectName LIKE '%$searchTerm%' OR client LIKE '%$searchTerm%' OR street LIKE '%$searchTerm%' OR city LIKE '%$searchTerm%' OR zip LIKE '%$searchTerm%' OR comment LIKE '%$searchTerm%')");
 
     // List allImages = await getAllImages();
 

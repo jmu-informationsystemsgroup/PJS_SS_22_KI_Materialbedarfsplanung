@@ -18,10 +18,11 @@ class ContainerStyles {
     );
   }
 
-  static BoxDecoration roundetCorners() {
-    return const BoxDecoration(
+  static BoxDecoration roundetCorners(
+      {Color color = const Color.fromARGB(255, 8, 173, 11)}) {
+    return BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(8)),
-      color: Colors.lightBlue,
+      color: color,
     );
   }
 
@@ -47,7 +48,7 @@ class ContainerStyles {
 
   static TextStyle getTextStyle() {
     return const TextStyle(
-      color: Colors.white,
+      color: Color.fromARGB(255, 196, 196, 196),
     );
   }
 

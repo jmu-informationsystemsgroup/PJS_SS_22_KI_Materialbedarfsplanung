@@ -4,7 +4,7 @@ import 'package:prototype/components/navBar.dart';
 
 import 'package:prototype/screens/home/button_new_project.dart';
 import '../../backend/data_base_functions.dart';
-import '../../components/project_list.dart';
+import '../home/project_list.dart';
 
 class Archieve extends StatefulWidget {
   String title = "Projektübersicht";

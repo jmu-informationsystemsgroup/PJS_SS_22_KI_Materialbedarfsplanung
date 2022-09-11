@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/components/button_multiple_icons.dart';
+import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/screens/create_new_project/input_field_address.dart';
+import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/screens/load_project/editor.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
@@ -15,6 +16,7 @@ import 'package:camera/camera.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../backend/server_ai.dart';
+import '../../components/appBar_custom.dart';
 import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
@@ -132,6 +134,24 @@ class _ProjectViewState extends State<ProjectView> {
       return Icon(Icons.edit);
   }
 
+  Widget renderArchiveButton(int id) {
+    if (content.statusActive == 0) {
+      return ElevatedButton(
+        onPressed: () {
+          DataBase.activateProject(id);
+        },
+        child: const Icon(Icons.settings_backup_restore),
+      );
+    } else {
+      return ElevatedButton(
+        onPressed: () {
+          DataBase.archieveProject(id);
+        },
+        child: const Icon(Icons.archive),
+      );
+    }
+  }
+
   Future<void> _launchUrl() async {
     String urlString =
         "https://www.google.com/maps/place/${content.street}+${content.houseNumber},+${content.zip}+${content.city}";
@@ -206,9 +226,7 @@ class _ProjectViewState extends State<ProjectView> {
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>last value: $originalLastValue");
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          content.projectName,
-        ),
+        leading: CustomAppBar(title: content.projectName),
       ),
       body: SingleChildScrollView(
         child: Column(children: [
@@ -309,7 +327,7 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
                 Expanded(
                   flex: 4,
-                  child: CustomButton(
+                  child: CustomButtonRow(
                     children: const [
                       Icon(
                         Icons.add,
@@ -388,7 +406,7 @@ class _ProjectViewState extends State<ProjectView> {
           */
           Visibility(
             visible: safeNewPicturesButton,
-            child: CustomButton(
+            child: CustomButtonRow(
               children: const [
                 Icon(
                   Icons.image,
@@ -426,13 +444,36 @@ class _ProjectViewState extends State<ProjectView> {
             visible: safingImages,
             child: Text("Speichere Bilder $state %"),
           ),
+          Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(5.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    DataBase.deleteProject(content.id);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Dashboard()),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                  child: Icon(Icons.delete),
+                  style: ElevatedButton.styleFrom(primary: Colors.red),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(5.0),
+                child: renderArchiveButton(content.id),
+              ),
+            ],
+          ),
 
           Webshop(
             aiValue: calculatedOutcome.aiOutcome,
           )
         ]),
       ),
-      bottomNavigationBar: NavBar(4),
+      bottomNavigationBar: NavBar(99),
     );
   }
 }

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../styles/container.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomButtonRow extends StatelessWidget {
   List<Widget> children;
   Function() onPressed;
-  CustomButton({required this.children, required this.onPressed});
+  CustomButtonRow({required this.children, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

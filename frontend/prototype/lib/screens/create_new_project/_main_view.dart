@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:prototype/components/button_multiple_icons.dart';
+import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
 import 'package:prototype/components/input_field_date.dart';
@@ -11,6 +11,7 @@ import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../components/appBar_custom.dart';
 import '../../components/screen_camera.dart';
 
 import '../../backend/helper_objects.dart';
@@ -136,9 +137,7 @@ class _NewProjectState extends State<NewProject> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Neues Projekt",
-          ),
+          leading: CustomAppBar(title: "Neues Projekt"),
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -174,7 +173,7 @@ class _NewProjectState extends State<NewProject> {
                 ),
 
                 Center(
-                    child: CustomButton(
+                    child: CustomButtonRow(
                   children: [
                     Icon(
                       Icons.camera_alt,
