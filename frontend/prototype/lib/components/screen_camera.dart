@@ -67,7 +67,9 @@ class _CameraPageState extends State<CameraPage> {
     });
 
     for (var element in widget.originalGallery) {
-      previewImages.add(element.image);
+      if (element.display) {
+        previewImages.add(element.image);
+      }
     }
 
     print(">>>>>>>>>>>>>>>>>>>>>>${widget.cameras}");

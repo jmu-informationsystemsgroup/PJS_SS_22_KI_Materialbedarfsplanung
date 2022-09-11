@@ -54,7 +54,7 @@ class _MVPChecklist extends State<MVPChecklist> {
                     isCheckedQ2 = value!;
                     isCheckedQ3 = false;
                     isCheckedQ4 = false;
-                    NewProject.cash.material = "Q2";
+                    NewProject.cache.material = "Q2";
                   });
                 },
               )
@@ -75,7 +75,7 @@ class _MVPChecklist extends State<MVPChecklist> {
                     isCheckedQ3 = value!;
                     isCheckedQ2 = false;
                     isCheckedQ4 = false;
-                    NewProject.cash.material = "Q3";
+                    NewProject.cache.material = "Q3";
                   });
                 },
               )
@@ -96,7 +96,7 @@ class _MVPChecklist extends State<MVPChecklist> {
                     isCheckedQ4 = value!;
                     isCheckedQ2 = false;
                     isCheckedQ3 = false;
-                    NewProject.cash.material = "Q4";
+                    NewProject.cache.material = "Q4";
                   });
                 },
               )

@@ -153,9 +153,11 @@ class CustomCameraImage {
   int projectId;
   XFile image;
   double aiValue;
+  bool display;
   CustomCameraImage(
       {required this.id,
       this.projectId = 0,
+      this.display = true,
       required this.image,
       this.aiValue = 0.0});
 }

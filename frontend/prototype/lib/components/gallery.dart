@@ -12,7 +12,7 @@ class Gallery extends StatelessWidget {
   List<CustomCameraImage> pictures;
   int length;
   bool creationMode;
-  Function(int) deleteFunction;
+  Function(CustomCameraImage) deleteFunction;
   Gallery(
       {required this.pictures,
       this.length = 8000,
@@ -41,41 +41,43 @@ class Gallery extends StatelessWidget {
 
     for (int i = 0; i < pictures.length; i++) {
       CustomCameraImage element = pictures[i];
-      row.children.add(
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Color.fromARGB(255, 206, 206, 206),
+      if (element.display) {
+        row.children.add(
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromARGB(255, 206, 206, 206),
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              FullScreenWidget(
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                  child: Image.file(
-                    File(element.image.path),
-                    width: 80,
+            child: Column(
+              children: [
+                FullScreenWidget(
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                    child: Image.file(
+                      File(element.image.path),
+                      width: 80,
+                    ),
                   ),
                 ),
-              ),
-              Text("${element.id}"),
-              ElevatedButton(
-                  onPressed: () {
-                    deleteFunction(element.id);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(20, 0, 0, 0),
-                    shadowColor: Colors.transparent,
-                  ),
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  )),
-            ],
+                Text("${element.id}"),
+                ElevatedButton(
+                    onPressed: () {
+                      deleteFunction(element);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(20, 0, 0, 0),
+                      shadowColor: Colors.transparent,
+                    ),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    )),
+              ],
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
 
     return row;

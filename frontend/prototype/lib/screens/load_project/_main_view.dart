@@ -290,13 +290,18 @@ class _ProjectViewState extends State<ProjectView> {
                   flex: 8,
                   child: Gallery(
                     pictures: galleryImages,
-                    deleteFunction: (id) async {
-                      galleryImages.removeWhere((element) => element.id == id);
-                      var sh = await DataBase.deleteSingleImageFromTable(
-                          content.id, id);
-                      var sh2 = await DataBase.deleteSingleImageFromDirectory(
-                          content.id, id);
-                      loadGalleryPictures();
+                    deleteFunction: (element) async {
+                      setState(() {
+                        element.display = false;
+                      });
+                      if (!addedImages.contains(element)) {
+                        var sh = await DataBase.deleteSingleImageFromTable(
+                            content.id, element.id);
+                        var sh2 = await DataBase.deleteSingleImageFromDirectory(
+                            content.id, element.id);
+                        loadGalleryPictures();
+                      }
+
                       print(
                           ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${galleryImages.length.toString()}");
                     },
@@ -394,6 +399,7 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
               ],
               onPressed: () async {
+                addedImages.removeWhere((element) => element.display == false);
                 bool sth = await DataBase.saveImages(
                   pictures: addedImages,
                   startId: originalLastValue + 1,

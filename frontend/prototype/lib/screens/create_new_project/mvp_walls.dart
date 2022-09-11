@@ -75,7 +75,7 @@ class _MVPWalls extends State<MVPWalls> {
                       setState(
                         () {
                           walls.removeWhere((key, value) => key == widgetId);
-                          NewProject.cash.squareMeters
+                          NewProject.cache.squareMeters
                               .removeWhere((key, value) => key == widgetId);
                         },
                       );
@@ -86,7 +86,7 @@ class _MVPWalls extends State<MVPWalls> {
                     onPressed: () {
                       setState(
                         () {
-                          NewProject.cash.squareMeters[widgetId] = newWall;
+                          NewProject.cache.squareMeters[widgetId] = newWall;
                         },
                       );
                     },
@@ -106,7 +106,7 @@ class _MVPWalls extends State<MVPWalls> {
   @override
   Widget build(BuildContext context) {
     print("Safe area ---------------------------------------" +
-        NewProject.cash.squareMeters.toString());
+        NewProject.cache.squareMeters.toString());
     return Column(
       children: <Widget>[
         ElevatedButton(

@@ -23,7 +23,7 @@ import 'mvp_walls.dart';
 class NewProject extends StatefulWidget {
   String title = "Neues Projekt";
   // instanzieeren eines Contentobjekts, in dem sämtliche EIngabeinformationen zwischengespeichert werden
-  static var cash = Content();
+  static var cache = Content();
   static List<XFile?> images = [];
   static bool askAgain = true;
 
@@ -58,7 +58,7 @@ class _NewProjectState extends State<NewProject> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    galleryPictures = NewProject.cash.pictures;
+    galleryPictures = NewProject.cache.pictures;
   }
 
   Future<void> _showMyDialog() async {
@@ -145,7 +145,7 @@ class _NewProjectState extends State<NewProject> {
             child: Column(
               children: <Widget>[
                 InputField(
-                  saveTo: (text) => {NewProject.cash.projectName = text},
+                  saveTo: (text) => {NewProject.cache.projectName = text},
                   labelText: "Name",
                 ),
 
@@ -160,10 +160,10 @@ class _NewProjectState extends State<NewProject> {
                                       originalGallery: galleryPictures,
                                       updateGallery: (images) {
                                         setState(() {
-                                          NewProject.cash.pictures
+                                          NewProject.cache.pictures
                                               .addAll(images);
                                           galleryPictures =
-                                              NewProject.cash.pictures;
+                                              NewProject.cache.pictures;
                                         });
                                       },
                                     )),
@@ -199,9 +199,9 @@ class _NewProjectState extends State<NewProject> {
                     if (image != null) {
                       setState(
                         () {
-                          NewProject.cash.pictures.add(CustomCameraImage(
+                          NewProject.cache.pictures.add(CustomCameraImage(
                               id: galleryPictures.last.id + 1, image: image));
-                          galleryPictures = NewProject.cash.pictures;
+                          galleryPictures = NewProject.cache.pictures;
                         },
                       );
                     }
@@ -210,28 +210,30 @@ class _NewProjectState extends State<NewProject> {
 
                 Gallery(
                   pictures: galleryPictures,
-                  deleteFunction: (id) {
-                    galleryPictures.removeWhere((element) => element.id == id);
+                  deleteFunction: (element) {
+                    setState(() {
+                      element.display = false;
+                    });
                   },
                   //  creationMode: true,
                 ),
                 InputField(
-                  saveTo: (text) => {NewProject.cash.client = text},
+                  saveTo: (text) => {NewProject.cache.client = text},
                   labelText: "Auftraggeber",
                 ),
                 InputDate(
-                  saveTo: (text) => {NewProject.cash.date = text},
+                  saveTo: (text) => {NewProject.cache.date = text},
                 ),
                 AddressInput(
                   updateAddress: (value) {
-                    NewProject.cash.street = value.street;
-                    NewProject.cash.houseNumber = value.houseNumber;
-                    NewProject.cash.zip = value.zip;
-                    NewProject.cash.city = value.city;
+                    NewProject.cache.street = value.street;
+                    NewProject.cache.houseNumber = value.houseNumber;
+                    NewProject.cache.zip = value.zip;
+                    NewProject.cache.city = value.city;
                   },
                 ),
                 InputField(
-                  saveTo: (text) => {NewProject.cash.comment = text},
+                  saveTo: (text) => {NewProject.cache.comment = text},
                   labelText: "Kommentar",
                   maxLines: 6,
                 ),
@@ -252,18 +254,22 @@ class _NewProjectState extends State<NewProject> {
                         showState = true;
                       });
 
+                      NewProject.cache.pictures
+                          .removeWhere((element) => element.display == false);
+
                       projectId =
-                          await DataBase.createNewProject(NewProject.cash);
+                          await DataBase.createNewProject(NewProject.cache);
 
                       bool imagesComplete = await DataBase.saveImages(
-                          pictures: NewProject.cash.pictures,
+                          pictures: NewProject.cache.pictures,
                           projectId: projectId,
                           updateState: (value) {
                             setState(() {
                               state = value;
                             });
                           });
-                      NewProject.cash = Content(); //reset
+
+                      NewProject.cache = Content(); //reset
                       NewProject.goToProjectView(projectId, context);
 
                       // goBack();
