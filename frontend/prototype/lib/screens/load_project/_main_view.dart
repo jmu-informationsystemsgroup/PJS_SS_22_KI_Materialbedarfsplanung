@@ -334,6 +334,7 @@ class _ProjectViewState extends State<ProjectView> {
                                     galleryImages.addAll(images);
                                     addedImages.addAll(images);
                                     safeNewPicturesButton = true;
+                                    calculatedOutcome.aiOutcome = 0.0;
                                   },
                                 );
                               },
