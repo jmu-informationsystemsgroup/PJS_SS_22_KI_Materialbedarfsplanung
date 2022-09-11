@@ -21,8 +21,9 @@ class ContainerStyles {
   static BoxDecoration roundetCorners(
       {Color color = const Color.fromARGB(255, 8, 173, 11)}) {
     return BoxDecoration(
+      border: Border.all(color: color, width: 2.0),
       borderRadius: BorderRadius.all(Radius.circular(8)),
-      color: color,
+      color: Colors.transparent,
     );
   }
 

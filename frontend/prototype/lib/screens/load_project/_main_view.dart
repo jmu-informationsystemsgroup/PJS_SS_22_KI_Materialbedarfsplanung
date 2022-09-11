@@ -21,6 +21,8 @@ import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 
+import '../../styles/general.dart';
+
 class ProjectView extends StatefulWidget {
   Content content;
   ProjectView(this.content);
@@ -328,14 +330,14 @@ class _ProjectViewState extends State<ProjectView> {
                 Expanded(
                   flex: 4,
                   child: CustomButtonRow(
-                    children: const [
+                    children: [
                       Icon(
                         Icons.add,
-                        color: Colors.white,
+                        color: GeneralStyle.getUglyGreen(),
                       ),
                       Icon(
                         Icons.image,
-                        color: Colors.white,
+                        color: GeneralStyle.getUglyGreen(),
                       ),
                     ],
                     onPressed: () async {
@@ -407,14 +409,14 @@ class _ProjectViewState extends State<ProjectView> {
           Visibility(
             visible: safeNewPicturesButton,
             child: CustomButtonRow(
-              children: const [
+              children: [
                 Icon(
                   Icons.image,
-                  color: Colors.white,
+                  color: GeneralStyle.getUglyGreen(),
                 ),
                 Icon(
                   Icons.save,
-                  color: Colors.white,
+                  color: GeneralStyle.getUglyGreen(),
                 ),
               ],
               onPressed: () async {

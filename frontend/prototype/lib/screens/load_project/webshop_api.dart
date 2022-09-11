@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../backend/helper_objects.dart';
 import '../../components/button_row_multiple_icons.dart';
 import '../../components/custom_container_white.dart';
+import '../../styles/general.dart';
 
 class Webshop extends StatefulWidget {
   /// dies sollte ein double value sein, allerdings kann es zu ladeverzögerungen und damit
@@ -84,11 +85,11 @@ class _WebshopState extends State<Webshop> {
           children: [
             Icon(
               Icons.shopping_cart,
-              color: Colors.white,
+              color: GeneralStyle.getUglyGreen(),
             ),
             Icon(
               Icons.public,
-              color: Colors.white,
+              color: GeneralStyle.getUglyGreen(),
             ),
           ],
           onPressed: () {
@@ -99,11 +100,11 @@ class _WebshopState extends State<Webshop> {
           children: [
             Icon(
               Icons.shopping_cart,
-              color: Colors.white,
+              color: GeneralStyle.getUglyGreen(),
             ),
             Icon(
               Icons.mail,
-              color: Colors.white,
+              color: GeneralStyle.getUglyGreen(),
             )
           ],
           onPressed: () {

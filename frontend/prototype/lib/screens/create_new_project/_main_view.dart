@@ -10,6 +10,7 @@ import 'package:prototype/components/input_field_date.dart';
 import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prototype/styles/general.dart';
 
 import '../../components/appBar_custom.dart';
 import '../../components/screen_camera.dart';
@@ -177,12 +178,12 @@ class _NewProjectState extends State<NewProject> {
                   children: [
                     Icon(
                       Icons.camera_alt,
-                      color: Colors.white,
+                      color: GeneralStyle.getUglyGreen(),
                     ),
                     Text(
                       "Picker",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: GeneralStyle.getUglyGreen(),
                       ),
                     ),
                   ],
