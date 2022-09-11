@@ -29,6 +29,7 @@ class _CameraPageState extends State<CameraPage> {
   List<XFile?> previewImages = [];
   List<CustomCameraImage> newImages = [];
   int id = 0;
+  bool flashOn = false;
 
   Widget preview() {
     Column column = Column(
@@ -67,6 +68,7 @@ class _CameraPageState extends State<CameraPage> {
       }
       setState(() {});
     });
+    controller.setFlashMode(FlashMode.off);
 
     for (var element in widget.originalGallery) {
       if (element.display) {
@@ -220,6 +222,32 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                   ),
                 ),
+
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 25, 100, 25),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                      ),
+                      onPressed: () async {
+                        if (flashOn) {
+                          setState(() {
+                            flashOn = false;
+                          });
+                          controller.setFlashMode(FlashMode.off);
+                        } else {
+                          setState(() {
+                            flashOn = true;
+                          });
+                          controller.setFlashMode(FlashMode.always);
+                        }
+                      },
+                      child: getFlashIcon(),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -249,5 +277,13 @@ class _CameraPageState extends State<CameraPage> {
         )
       ],
     );
+  }
+
+  Icon getFlashIcon() {
+    if (flashOn) {
+      return Icon(Icons.flash_off);
+    } else {
+      return Icon(Icons.flash_on);
+    }
   }
 }
