@@ -49,6 +49,7 @@ dependencies:
   camera: any
   image: any
   image_picker: any
+  native_device_orientation: ^1.1.4
 
   # ai integration
   # tflite: any

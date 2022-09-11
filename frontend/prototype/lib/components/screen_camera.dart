@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:flutter/services.dart';
@@ -55,6 +56,7 @@ class _CameraPageState extends State<CameraPage> {
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
     ]);
+
     controller = CameraController(
       widget.cameras!.first,
       ResolutionPreset.medium,
@@ -158,11 +160,35 @@ class _CameraPageState extends State<CameraPage> {
           child: Center(
             child: Stack(
               children: [
+                /// Workarround um Kamera daran zu hindern sich selbstständig zu drehen, Quelle: https://github.com/flutter/flutter/issues/16587
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
-                    child: CameraPreview(controller),
-                  ),
+                      child: NativeDeviceOrientationReader(builder: (context) {
+                    NativeDeviceOrientation orientation =
+                        NativeDeviceOrientationReader.orientation(context);
+
+                    int turns;
+                    switch (orientation) {
+                      case NativeDeviceOrientation.landscapeLeft:
+                        turns = 0;
+                        break;
+                      case NativeDeviceOrientation.landscapeRight:
+                        turns = 2;
+                        break;
+                      case NativeDeviceOrientation.portraitDown:
+                        turns = 1;
+                        break;
+                      default:
+                        turns = -1;
+                        break;
+                    }
+
+                    return RotatedBox(
+                      quarterTurns: turns,
+                      child: CameraPreview(controller),
+                    );
+                  })),
                 ),
                 Align(
                   child: addBlackBox(),
