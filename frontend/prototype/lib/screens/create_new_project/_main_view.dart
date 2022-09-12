@@ -20,7 +20,7 @@ import '../../backend/helper_objects.dart';
 import '../load_project/_main_view.dart';
 import '../../components/input_field.dart';
 import 'input_field_address.dart';
-import 'mvp_checklist.dart';
+import 'checklist_quality.dart';
 import 'mvp_walls.dart';
 
 class NewProject extends StatefulWidget {
@@ -238,7 +238,11 @@ class _NewProjectState extends State<NewProject> {
                     maxLines: 6,
                   ),
                   // MVPWalls(),
-                  MVPChecklist(),
+                  QualityChecklist(
+                    changeQuality: (qualitString) => {
+                      NewProject.cache.material = qualitString,
+                    },
+                  ),
                   //    preview(),
                   Visibility(
                     child: Text("wird gespeichert ($state %)"),

@@ -22,9 +22,8 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
 
   String createEmailContent(var user) {
     String body =
-        "Hallo Matthias von Spachtelprofi, \n \n Deine App hat ergeben, dass der optimale Spachtelmassenbedarf für mein anstehendes Bauprojekt " +
-            widget.aiValue.toString() +
-            " Liter betragen würde. Gerne würde ich in einem Gespräch mit dir genaueres darüber aushandeln. Anbei meine Kundendaten: \n \n Kundennummer: " +
+        "Hallo Matthias von Spachtelprofi, \n \n Deine App hat ergeben, dass der optimale Spachtelmassenbedarf für mein anstehendes Bauprojekt ${widget.aiValue.toStringAsFixed(2)} kg" +
+            " betragen würde. Gerne würde ich in einem Gespräch mit dir genaueres darüber aushandeln. Anbei meine Kundendaten: \n \n Kundennummer: " +
             user["customerId"].toString() +
             "\n Adresse: " +
             user["address"].toString() +

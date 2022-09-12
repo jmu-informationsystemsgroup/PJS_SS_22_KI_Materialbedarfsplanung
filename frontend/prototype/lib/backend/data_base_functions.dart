@@ -367,7 +367,8 @@ class DataBase {
       'street': content.street,
       'houseNumber': content.houseNumber,
       'zip': content.zip,
-      'city': content.city
+      'city': content.city,
+      'material': content.material
     };
 
     final result =

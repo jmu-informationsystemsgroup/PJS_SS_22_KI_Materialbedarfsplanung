@@ -159,6 +159,19 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  Widget outComeText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Qualität: ${content.material}"),
+        Text(
+            "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)} kg"),
+        Text(
+            "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
+      ],
+    );
+  }
+
   Widget displayData() {
     if (galleryImages.isEmpty) {
       return Text("Mache Bilder um einen KI Wert ermitteln zu können");
@@ -199,22 +212,11 @@ class _ProjectViewState extends State<ProjectView> {
         children: [
           Text(calculatedOutcome.exceptionText),
           Text("Aus den übrigen Bildern ergibt sich folgender Wert:"),
-          Text(
-              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)} kg"),
-          Text(
-              "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
+          outComeText(),
         ],
       );
     } else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)} kg"),
-          Text(
-              "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
-        ],
-      );
+      return outComeText();
     }
   }
 
@@ -279,6 +281,7 @@ class _ProjectViewState extends State<ProjectView> {
                             content = data;
                             editorVisablity = false;
                           });
+                          loadGalleryPictures();
                         }),
                       ),
                     ),

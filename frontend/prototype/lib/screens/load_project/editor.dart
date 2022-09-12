@@ -3,6 +3,7 @@ import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/input_field.dart';
 import 'package:prototype/components/input_field_date.dart';
+import 'package:prototype/screens/create_new_project/checklist_quality.dart';
 import 'package:prototype/screens/create_new_project/input_field_address.dart';
 
 import '../create_new_project/_main_view.dart';
@@ -50,6 +51,12 @@ class EditorWidget extends StatelessWidget {
           labelText: "Kommentar",
           value: input.comment,
           maxLines: 6,
+        ),
+        QualityChecklist(
+          value: data.material,
+          changeQuality: (material) {
+            data.material = material;
+          },
         ),
         ElevatedButton(
             onPressed: () {

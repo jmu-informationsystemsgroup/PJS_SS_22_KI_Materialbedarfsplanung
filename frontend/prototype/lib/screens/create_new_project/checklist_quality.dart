@@ -3,14 +3,21 @@ import 'package:prototype/screens/create_new_project/_main_view.dart';
 
 import '../../styles/container.dart';
 
-class MVPChecklist extends StatefulWidget {
+class QualityChecklist extends StatefulWidget {
+  Function(String) changeQuality;
+  String value;
+  QualityChecklist({required this.changeQuality, this.value = "Q2"});
   @override
   State<StatefulWidget> createState() {
-    return _MVPChecklist();
+    return _QualityChecklist();
   }
 }
 
-class _MVPChecklist extends State<MVPChecklist> {
+class _QualityChecklist extends State<QualityChecklist> {
+  bool isCheckedQ2 = true;
+  bool isCheckedQ3 = false;
+  bool isCheckedQ4 = false;
+
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
       MaterialState.pressed,
@@ -23,9 +30,23 @@ class _MVPChecklist extends State<MVPChecklist> {
     return Colors.red;
   }
 
-  bool isCheckedQ2 = true;
-  bool isCheckedQ3 = false;
-  bool isCheckedQ4 = false;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.value == "Q2") {
+      isCheckedQ2 = true;
+      isCheckedQ3 = false;
+      isCheckedQ4 = false;
+    } else if (widget.value == "Q3") {
+      isCheckedQ2 = false;
+      isCheckedQ3 = true;
+      isCheckedQ4 = false;
+    } else if (widget.value == "Q3") {
+      isCheckedQ2 = false;
+      isCheckedQ3 = false;
+      isCheckedQ4 = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +75,7 @@ class _MVPChecklist extends State<MVPChecklist> {
                     isCheckedQ2 = value!;
                     isCheckedQ3 = false;
                     isCheckedQ4 = false;
-                    NewProject.cache.material = "Q2";
+                    widget.changeQuality("Q2");
                   });
                 },
               )
@@ -75,7 +96,7 @@ class _MVPChecklist extends State<MVPChecklist> {
                     isCheckedQ3 = value!;
                     isCheckedQ2 = false;
                     isCheckedQ4 = false;
-                    NewProject.cache.material = "Q3";
+                    widget.changeQuality("Q3");
                   });
                 },
               )
@@ -96,7 +117,7 @@ class _MVPChecklist extends State<MVPChecklist> {
                     isCheckedQ4 = value!;
                     isCheckedQ2 = false;
                     isCheckedQ3 = false;
-                    NewProject.cache.material = "Q4";
+                    widget.changeQuality("Q4");
                   });
                 },
               )

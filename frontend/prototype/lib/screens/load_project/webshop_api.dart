@@ -96,23 +96,6 @@ class _WebshopState extends State<Webshop> {
             _launchUrl("https://spachtelprofi.com/shop/");
           },
         ),
-        CustomButtonRow(
-          children: [
-            Icon(
-              Icons.shopping_cart,
-              color: GeneralStyle.getUglyGreen(),
-            ),
-            Icon(
-              Icons.mail,
-              color: GeneralStyle.getUglyGreen(),
-            )
-          ],
-          onPressed: () {
-            setState(() {
-              mailVisability = true;
-            });
-          },
-        ),
         Visibility(
           visible: mailVisability,
           child: Column(
@@ -184,7 +167,24 @@ class _WebshopState extends State<Webshop> {
               ),
             ],
           ),
-        )
+        ),
+        CustomButtonRow(
+          children: [
+            Icon(
+              Icons.shopping_cart,
+              color: GeneralStyle.getUglyGreen(),
+            ),
+            Icon(
+              Icons.mail,
+              color: GeneralStyle.getUglyGreen(),
+            )
+          ],
+          onPressed: () {
+            setState(() {
+              mailVisability = true;
+            });
+          },
+        ),
       ],
     );
   }
