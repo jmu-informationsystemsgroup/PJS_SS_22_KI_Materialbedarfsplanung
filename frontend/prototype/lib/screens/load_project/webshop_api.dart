@@ -137,7 +137,7 @@ class _WebshopState extends State<Webshop> {
               ),
               Visibility(
                 visible: userExistsVisibility,
-                child: CustomContainerWhite(
+                child: CustomContainerBorder(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

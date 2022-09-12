@@ -228,11 +228,9 @@ class _ProjectViewState extends State<ProjectView> {
     print(
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>last value: $originalLastValue");
     return Scaffold(
-      appBar: AppBar(
-        leading: CustomAppBar(title: content.projectName),
-      ),
-      body: CustomContainerBody(
-        child: SingleChildScrollView(
+      body: CustomScaffoldContainer(
+        appBar: CustomAppBar(title: content.projectName),
+        body: SingleChildScrollView(
           child: Column(
             children: [
               Center(
@@ -244,7 +242,7 @@ class _ProjectViewState extends State<ProjectView> {
                       zip: content.zip),
                 ),
               ),
-              CustomContainerWhite(
+              CustomContainerBorder(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -294,7 +292,7 @@ class _ProjectViewState extends State<ProjectView> {
               ),
               // test to check if Project view is able to load data, which had been entered before
 
-              CustomContainerWhite(
+              CustomContainerBorder(
                 child: displayData(),
               ),
 
@@ -306,7 +304,7 @@ class _ProjectViewState extends State<ProjectView> {
               Container(
                 margin: const EdgeInsets.all(10.0),
               ),
-              CustomContainerWhite(
+              CustomContainerBorder(
                 child: Row(
                   children: [
                     Expanded(
@@ -481,8 +479,8 @@ class _ProjectViewState extends State<ProjectView> {
             ],
           ),
         ),
+        navBar: NavBar(99),
       ),
-      bottomNavigationBar: NavBar(99),
     );
   }
 }

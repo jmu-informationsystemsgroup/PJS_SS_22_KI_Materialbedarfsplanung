@@ -78,11 +78,9 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: CustomAppBar(title: "Alle Projekte"),
-      ),
-      body: CustomContainerBody(
-        child: SingleChildScrollView(
+      body: CustomScaffoldContainer(
+        appBar: CustomAppBar(title: "Alle Projekte"),
+        body: SingleChildScrollView(
           child: Column(
             children: [
               InputSearch(
@@ -107,8 +105,8 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
         ),
+        navBar: NavBar(0),
       ),
-      bottomNavigationBar: NavBar(0),
     );
   }
 }

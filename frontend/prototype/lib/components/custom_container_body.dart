@@ -4,17 +4,36 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../styles/container.dart';
+import 'appBar_custom.dart';
 
-class CustomContainerBody extends StatelessWidget {
-  Widget child;
-  CustomContainerBody({required this.child});
+class CustomScaffoldContainer extends StatelessWidget {
+  Widget body;
+  Widget appBar;
+  Widget navBar;
+  CustomScaffoldContainer(
+      {required this.body, required this.appBar, required this.navBar});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-      decoration: ContainerStyles.bodyDecoration(),
-      child: child,
+    return Column(
+      children: [
+        Expanded(
+          flex: 2,
+          child: appBar,
+        ),
+        Expanded(
+          flex: 6,
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+            decoration: ContainerStyles.bodyDecoration(),
+            child: body,
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: navBar,
+        )
+      ],
     );
   }
 }

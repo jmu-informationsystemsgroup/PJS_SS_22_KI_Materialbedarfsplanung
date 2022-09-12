@@ -41,7 +41,7 @@ class ProjectList extends StatelessWidget {
                     children: <Widget>[
                       Expanded(
                         flex: 3,
-                        child: CustomContainerWhite(
+                        child: CustomContainerBorder(
                           //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                           child: Icon(
                             Icons.home,

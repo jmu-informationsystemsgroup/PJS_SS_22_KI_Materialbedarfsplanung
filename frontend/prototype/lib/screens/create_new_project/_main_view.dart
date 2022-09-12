@@ -138,11 +138,9 @@ class _NewProjectState extends State<NewProject> {
     // TODO: implement build
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          leading: CustomAppBar(title: "Neues Projekt"),
-        ),
-        body: CustomContainerBody(
-          child: SingleChildScrollView(
+        body: CustomScaffoldContainer(
+          appBar: CustomAppBar(title: "Neues Projekt"),
+          body: SingleChildScrollView(
             child: Form(
               child: Column(
                 children: <Widget>[
@@ -282,8 +280,8 @@ class _NewProjectState extends State<NewProject> {
               ),
             ),
           ),
+          navBar: NavBar(1),
         ),
-        bottomNavigationBar: NavBar(1),
       ),
     );
   }

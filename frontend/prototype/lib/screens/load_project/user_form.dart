@@ -58,7 +58,7 @@ class _UserFormState extends State<UserForm> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainerWhite(
+    return CustomContainerBorder(
       child: Column(children: [
         InputField(
           saveTo: (text) => {cash.firstName = text},

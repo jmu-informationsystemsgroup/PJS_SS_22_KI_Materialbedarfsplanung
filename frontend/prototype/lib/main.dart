@@ -15,6 +15,7 @@ class RootClass extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.openSansTextTheme(),
         scaffoldBackgroundColor: GeneralStyle.getLightGray(),
+        primaryColor: GeneralStyle.getUglyGreen(),
         appBarTheme: appBarStyle(),
         cardTheme: CardTheme(
           shadowColor: Colors.transparent,
