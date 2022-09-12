@@ -21,7 +21,7 @@ class _InputSearchState extends State<InputSearch> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: ContainerStyles.getMargin(),
+      margin: ContainerStyles.getSearchMargin(),
       child: TextField(
         controller: nameController,
         onChanged: (searchTerm) async {

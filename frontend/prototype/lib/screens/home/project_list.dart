@@ -6,6 +6,7 @@ import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/screens/load_project/_main_view.dart';
+import 'package:prototype/styles/general.dart';
 import 'package:relative_scale/relative_scale.dart';
 import '../../backend/helper_objects.dart';
 import '../../components/gallery.dart';
@@ -36,7 +37,6 @@ class ProjectList extends StatelessWidget {
                 },
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 25),
                   child: Row(
                     children: <Widget>[
                       Expanded(
@@ -44,14 +44,14 @@ class ProjectList extends StatelessWidget {
                         child: CustomContainerWhite(
                           //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                           child: Icon(
-                            Icons.house,
-                            color: Color.fromARGB(75, 0, 0, 0),
+                            Icons.home,
+                            color: GeneralStyle.getLightGray(),
                             size: 80,
                           ),
                         ),
                       ),
                       Expanded(
-                        flex: 4,
+                        flex: 5,
                         child: Container(
                           margin: ContainerStyles.getMargin(),
                           child: Column(
@@ -62,9 +62,9 @@ class ProjectList extends StatelessWidget {
                                 child: Text(
                                   element.projectName,
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                  ),
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w800),
                                 ),
                               ),
                               Text("Kunde: " + element.client,

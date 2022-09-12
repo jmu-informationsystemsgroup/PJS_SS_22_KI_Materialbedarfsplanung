@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:prototype/screens/archive/_main_view.dart';
 import 'package:prototype/screens/contact/_main_view.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
+import 'package:prototype/screens/profile/profile.dart';
 import 'package:prototype/styles/buttons.dart';
+import 'package:prototype/styles/container.dart';
+import 'package:prototype/styles/general.dart';
 import '../screens/home/_main_view.dart';
 
 class NavBar extends StatefulWidget {
@@ -16,12 +18,12 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  final screens = [Dashboard(), NewProject(), Archieve(), Contact()];
+  final screens = [Dashboard(), NewProject(), Profile(), Contact()];
 
   final titles = [
     Dashboard().title,
     NewProject().title,
-    Archieve().title,
+    Profile().title,
     Contact().title
   ];
 
@@ -35,77 +37,72 @@ class _NavBarState extends State<NavBar> {
 
   Color getCurrentIndexColor(int buttonPosition) {
     if (widget.currentIndex == buttonPosition) {
-      return Color.fromARGB(255, 0, 0, 0);
+      return GeneralStyle.getDarkGray();
     } else
-      return Color.fromARGB(80, 0, 0, 0);
+      return GeneralStyle.getLightGray();
+  }
+
+  double getCurrentIndexSize(int buttonPosition) {
+    if (widget.currentIndex == buttonPosition) {
+      return 50;
+    } else
+      return 30;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-          child: Icon(
-            Icons.home,
-            color: getCurrentIndexColor(0),
-          ),
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            padding: EdgeInsets.all(30),
-            primary: Colors.white,
-            shadowColor: Color.fromARGB(0, 0, 0, 0),
-          ),
-          onPressed: () {
-            _onItemTapped(0);
-          },
+    return Container(
+      color: Colors.white,
+      child: Container(
+        margin: EdgeInsets.fromLTRB(35, 15, 35, 0),
+        decoration: ContainerStyles.borderTop(),
+        height: 80,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              child: Icon(
+                Icons.home,
+                color: getCurrentIndexColor(0),
+                size: getCurrentIndexSize(0),
+              ),
+              onTap: () {
+                _onItemTapped(0);
+              },
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.add_a_photo,
+                color: getCurrentIndexColor(1),
+                size: getCurrentIndexSize(1),
+              ),
+              onTap: () {
+                _onItemTapped(1);
+              },
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.archive,
+                color: getCurrentIndexColor(2),
+                size: getCurrentIndexSize(2),
+              ),
+              onTap: () {
+                _onItemTapped(2);
+              },
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.quick_contacts_mail_outlined,
+                color: getCurrentIndexColor(3),
+                size: getCurrentIndexSize(3),
+              ),
+              onTap: () {
+                _onItemTapped(3);
+              },
+            ),
+          ],
         ),
-        ElevatedButton(
-          child: Icon(
-            Icons.add_a_photo,
-            color: getCurrentIndexColor(1),
-            size: 50,
-          ),
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            padding: EdgeInsets.all(30),
-            primary: Colors.white,
-          ),
-          onPressed: () {
-            _onItemTapped(1);
-          },
-        ),
-        ElevatedButton(
-          child: Icon(
-            Icons.archive,
-            color: getCurrentIndexColor(2),
-          ),
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            padding: EdgeInsets.all(30),
-            primary: Colors.white,
-            shadowColor: Color.fromARGB(0, 0, 0, 0),
-          ),
-          onPressed: () {
-            _onItemTapped(2);
-          },
-        ),
-        ElevatedButton(
-          child: Icon(
-            Icons.quick_contacts_mail_outlined,
-            color: getCurrentIndexColor(3),
-          ),
-          style: ElevatedButton.styleFrom(
-            shape: CircleBorder(),
-            padding: EdgeInsets.all(30),
-            primary: Colors.white,
-            shadowColor: Color.fromARGB(0, 0, 0, 0),
-          ),
-          onPressed: () {
-            _onItemTapped(3);
-          },
-        ),
-      ],
+      ),
     );
   }
 }

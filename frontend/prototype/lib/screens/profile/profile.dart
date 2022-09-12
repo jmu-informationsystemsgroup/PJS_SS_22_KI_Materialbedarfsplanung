@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/navBar.dart';
 
 class Profile extends StatelessWidget {
-  String title = "Kontakt";
+  String title = "Profil";
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -12,9 +12,9 @@ class Profile extends StatelessWidget {
         appBar: AppBar(),
         body: SingleChildScrollView(
             child: Column(
-          children: [Text("Werkzeug und Baustoffhandel")],
+          children: [Text("Profil")],
         )),
-        bottomNavigationBar: NavBar(3),
+        bottomNavigationBar: NavBar(2),
       ),
     );
   }

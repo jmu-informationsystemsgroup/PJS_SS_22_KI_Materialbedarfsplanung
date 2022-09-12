@@ -17,6 +17,7 @@ import 'package:prototype/styles/container.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../backend/server_ai.dart';
 import '../../components/appBar_custom.dart';
+import '../../components/custom_container_body.dart';
 import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
@@ -214,7 +215,7 @@ class _ProjectViewState extends State<ProjectView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)}"),
+              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)} kg"),
           Text(
               "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
         ],
@@ -230,144 +231,147 @@ class _ProjectViewState extends State<ProjectView> {
       appBar: AppBar(
         leading: CustomAppBar(title: content.projectName),
       ),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          Center(
-            child: ProjectMap(
-              adress: Adress(
-                  street: content.street,
-                  houseNumber: content.houseNumber,
-                  city: content.city,
-                  zip: content.zip),
-            ),
-          ),
-          CustomContainerWhite(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Visibility(
-                  visible: !editorVisablity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Auftraggeber: " + content.client),
-                      Text("Datum: " + content.date),
-                      Text(
-                          "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}"),
-                      ElevatedButton(
-                        child: Icon(Icons.map),
-                        onPressed: () {
-                          setState(() {
-                            _launchUrl();
-                          });
-                        },
+      body: CustomContainerBody(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Center(
+                child: ProjectMap(
+                  adress: Adress(
+                      street: content.street,
+                      houseNumber: content.houseNumber,
+                      city: content.city,
+                      zip: content.zip),
+                ),
+              ),
+              CustomContainerWhite(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Visibility(
+                      visible: !editorVisablity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Auftraggeber: " + content.client),
+                          Text("Datum: " + content.date),
+                          Text(
+                              "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}"),
+                          ElevatedButton(
+                            child: Icon(Icons.map),
+                            onPressed: () {
+                              setState(() {
+                                _launchUrl();
+                              });
+                            },
+                          ),
+                          Text("Kommentar: " + content.comment),
+                        ],
                       ),
-                      Text("Kommentar: " + content.comment),
-                    ],
-                  ),
+                    ),
+                    ElevatedButton(
+                      child: getIcon(),
+                      onPressed: () {
+                        setState(() {
+                          editorVisablity = changeBool(editorVisablity);
+                        });
+                      },
+                    ),
+                    Visibility(
+                      visible: editorVisablity,
+                      child: EditorWidget(
+                        input: content,
+                        route: ((data) {
+                          setState(() {
+                            content = data;
+                            editorVisablity = false;
+                          });
+                        }),
+                      ),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  child: getIcon(),
-                  onPressed: () {
-                    setState(() {
-                      editorVisablity = changeBool(editorVisablity);
-                    });
-                  },
-                ),
-                Visibility(
-                  visible: editorVisablity,
-                  child: EditorWidget(
-                    input: content,
-                    route: ((data) {
-                      setState(() {
-                        content = data;
-                        editorVisablity = false;
-                      });
-                    }),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // test to check if Project view is able to load data, which had been entered before
+              ),
+              // test to check if Project view is able to load data, which had been entered before
 
-          CustomContainerWhite(
-            child: displayData(),
-          ),
+              CustomContainerWhite(
+                child: displayData(),
+              ),
 
-          /*
+              /*
             Text("Quadratmeter: " +
                     calculatedOutcome["totalSquareMeters"].toString()),
            Text("Preis: " + calculatedOutcome["totalPrice"].toString()),
 */
-          Container(
-            margin: const EdgeInsets.all(10.0),
-          ),
-          CustomContainerWhite(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 8,
-                  child: Gallery(
-                    pictures: galleryImages,
-                    deleteFunction: (element) async {
-                      setState(() {
-                        element.display = false;
-                      });
-                      if (!addedImages.contains(element)) {
-                        var sh = await DataBase.deleteSingleImageFromTable(
-                            content.id, element.id);
-                        var sh2 = await DataBase.deleteSingleImageFromDirectory(
-                            content.id, element.id);
-                        loadGalleryPictures();
-                      }
+              Container(
+                margin: const EdgeInsets.all(10.0),
+              ),
+              CustomContainerWhite(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 8,
+                      child: Gallery(
+                        pictures: galleryImages,
+                        deleteFunction: (element) async {
+                          setState(() {
+                            element.display = false;
+                          });
+                          if (!addedImages.contains(element)) {
+                            var sh = await DataBase.deleteSingleImageFromTable(
+                                content.id, element.id);
+                            var sh2 =
+                                await DataBase.deleteSingleImageFromDirectory(
+                                    content.id, element.id);
+                            loadGalleryPictures();
+                          }
 
-                      print(
-                          ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${galleryImages.length.toString()}");
-                    },
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: CustomButtonRow(
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: GeneralStyle.getUglyGreen(),
+                          print(
+                              ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${galleryImages.length.toString()}");
+                        },
                       ),
-                      Icon(
-                        Icons.image,
-                        color: GeneralStyle.getUglyGreen(),
-                      ),
-                    ],
-                    onPressed: () async {
-                      await availableCameras().then(
-                        (value) => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CameraPage(
-                              cameras: value,
-                              originalGallery: galleryImages,
-                              updateGallery: (images) {
-                                setState(
-                                  () {
-                                    galleryImages.addAll(images);
-                                    addedImages.addAll(images);
-                                    safeNewPicturesButton = true;
-                                    calculatedOutcome.aiOutcome = 0.0;
-                                  },
-                                );
-                              },
-                            ),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: CustomButtonRow(
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: GeneralStyle.getUglyGreen(),
                           ),
-                        ),
-                      );
-                    },
-                  ),
+                          Icon(
+                            Icons.image,
+                            color: GeneralStyle.getUglyGreen(),
+                          ),
+                        ],
+                        onPressed: () async {
+                          await availableCameras().then(
+                            (value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CameraPage(
+                                  cameras: value,
+                                  originalGallery: galleryImages,
+                                  updateGallery: (images) {
+                                    setState(
+                                      () {
+                                        galleryImages.addAll(images);
+                                        addedImages.addAll(images);
+                                        safeNewPicturesButton = true;
+                                        calculatedOutcome.aiOutcome = 0.0;
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
 
 /*
           CustomButton(
@@ -406,74 +410,77 @@ class _ProjectViewState extends State<ProjectView> {
             },
           ),
           */
-          Visibility(
-            visible: safeNewPicturesButton,
-            child: CustomButtonRow(
-              children: [
-                Icon(
-                  Icons.image,
-                  color: GeneralStyle.getUglyGreen(),
-                ),
-                Icon(
-                  Icons.save,
-                  color: GeneralStyle.getUglyGreen(),
-                ),
-              ],
-              onPressed: () async {
-                addedImages.removeWhere((element) => element.display == false);
-                bool sth = await DataBase.saveImages(
-                  pictures: addedImages,
-                  startId: originalLastValue + 1,
-                  projectId: content.id,
-                  updateState: (val) {
+              Visibility(
+                visible: safeNewPicturesButton,
+                child: CustomButtonRow(
+                  children: [
+                    Icon(
+                      Icons.image,
+                      color: GeneralStyle.getUglyGreen(),
+                    ),
+                    Icon(
+                      Icons.save,
+                      color: GeneralStyle.getUglyGreen(),
+                    ),
+                  ],
+                  onPressed: () async {
+                    addedImages
+                        .removeWhere((element) => element.display == false);
+                    bool sth = await DataBase.saveImages(
+                      pictures: addedImages,
+                      startId: originalLastValue + 1,
+                      projectId: content.id,
+                      updateState: (val) {
+                        setState(() {
+                          safingImages = true;
+                          state = val;
+                        });
+                      },
+                    );
+                    state = 0;
+                    safingImages = false;
+                    loadGalleryPictures();
                     setState(() {
-                      safingImages = true;
-                      state = val;
+                      safeNewPicturesButton = false;
+                      addedImages = [];
                     });
                   },
-                );
-                state = 0;
-                safingImages = false;
-                loadGalleryPictures();
-                setState(() {
-                  safeNewPicturesButton = false;
-                  addedImages = [];
-                });
-              },
-            ),
-          ),
-          Visibility(
-            visible: safingImages,
-            child: Text("Speichere Bilder $state %"),
-          ),
-          Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.all(5.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    DataBase.deleteProject(content.id);
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => Dashboard()),
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                  child: Icon(Icons.delete),
-                  style: ElevatedButton.styleFrom(primary: Colors.red),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.all(5.0),
-                child: renderArchiveButton(content.id),
+              Visibility(
+                visible: safingImages,
+                child: Text("Speichere Bilder $state %"),
               ),
+              Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(5.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        DataBase.deleteProject(content.id);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => Dashboard()),
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                      child: Icon(Icons.delete),
+                      style: ElevatedButton.styleFrom(primary: Colors.red),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(5.0),
+                    child: renderArchiveButton(content.id),
+                  ),
+                ],
+              ),
+
+              Webshop(
+                aiValue: calculatedOutcome.aiOutcome,
+              )
             ],
           ),
-
-          Webshop(
-            aiValue: calculatedOutcome.aiOutcome,
-          )
-        ]),
+        ),
       ),
       bottomNavigationBar: NavBar(99),
     );

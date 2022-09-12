@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
+import 'package:prototype/components/custom_container_body.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
 import 'package:prototype/components/input_field_date.dart';
@@ -140,143 +141,145 @@ class _NewProjectState extends State<NewProject> {
         appBar: AppBar(
           leading: CustomAppBar(title: "Neues Projekt"),
         ),
-        body: SingleChildScrollView(
-          child: Form(
-            child: Column(
-              children: <Widget>[
-                InputField(
-                  saveTo: (text) => {NewProject.cache.projectName = text},
-                  labelText: "Name",
-                ),
-
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await availableCameras().then((value) => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CameraPage(
-                                      cameras: value,
-                                      originalGallery: galleryPictures,
-                                      updateGallery: (images) {
-                                        setState(() {
-                                          NewProject.cache.pictures
-                                              .addAll(images);
-                                          galleryPictures =
-                                              NewProject.cache.pictures;
-                                        });
-                                      },
-                                    )),
-                          ));
-                    },
-                    child: Icon(Icons.camera_alt),
+        body: CustomContainerBody(
+          child: SingleChildScrollView(
+            child: Form(
+              child: Column(
+                children: <Widget>[
+                  InputField(
+                    saveTo: (text) => {NewProject.cache.projectName = text},
+                    labelText: "Name",
                   ),
-                ),
 
-                Center(
-                    child: CustomButtonRow(
-                  children: [
-                    Icon(
-                      Icons.camera_alt,
-                      color: GeneralStyle.getUglyGreen(),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        await availableCameras().then((value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CameraPage(
+                                        cameras: value,
+                                        originalGallery: galleryPictures,
+                                        updateGallery: (images) {
+                                          setState(() {
+                                            NewProject.cache.pictures
+                                                .addAll(images);
+                                            galleryPictures =
+                                                NewProject.cache.pictures;
+                                          });
+                                        },
+                                      )),
+                            ));
+                      },
+                      child: Icon(Icons.camera_alt),
                     ),
-                    Text(
-                      "Picker",
-                      style: TextStyle(
+                  ),
+
+                  Center(
+                      child: CustomButtonRow(
+                    children: [
+                      Icon(
+                        Icons.camera_alt,
                         color: GeneralStyle.getUglyGreen(),
                       ),
-                    ),
-                  ],
-                  onPressed: () async {
-                    final ImagePicker _picker = ImagePicker();
-                    var dialog = await _showMyDialog();
-                    // Pick an image
-
-                    final XFile? image = await _picker.pickImage(
-                        source: ImageSource.camera,
-                        maxWidth: 400,
-                        maxHeight: 300);
-                    if (image != null) {
-                      setState(
-                        () {
-                          NewProject.cache.pictures.add(CustomCameraImage(
-                              id: galleryPictures.last.id + 1, image: image));
-                          galleryPictures = NewProject.cache.pictures;
-                        },
-                      );
-                    }
-                  },
-                )),
-
-                Gallery(
-                  pictures: galleryPictures,
-                  deleteFunction: (element) {
-                    setState(() {
-                      element.display = false;
-                    });
-                  },
-                  //  creationMode: true,
-                ),
-                InputField(
-                  saveTo: (text) => {NewProject.cache.client = text},
-                  labelText: "Auftraggeber",
-                ),
-                InputDate(
-                  saveTo: (text) => {NewProject.cache.date = text},
-                ),
-                AddressInput(
-                  updateAddress: (value) {
-                    NewProject.cache.street = value.street;
-                    NewProject.cache.houseNumber = value.houseNumber;
-                    NewProject.cache.zip = value.zip;
-                    NewProject.cache.city = value.city;
-                  },
-                ),
-                InputField(
-                  saveTo: (text) => {NewProject.cache.comment = text},
-                  labelText: "Kommentar",
-                  maxLines: 6,
-                ),
-                // MVPWalls(),
-                MVPChecklist(),
-                //    preview(),
-                Visibility(
-                  child: Text("wird gespeichert ($state %)"),
-                  visible: showState,
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    child: const Text('Projekt speichern und berechnen'),
+                      Text(
+                        "Picker",
+                        style: TextStyle(
+                          color: GeneralStyle.getUglyGreen(),
+                        ),
+                      ),
+                    ],
                     onPressed: () async {
-                      //    Content.reset(NewProject.cash);
+                      final ImagePicker _picker = ImagePicker();
+                      var dialog = await _showMyDialog();
+                      // Pick an image
+
+                      final XFile? image = await _picker.pickImage(
+                          source: ImageSource.camera,
+                          maxWidth: 400,
+                          maxHeight: 300);
+                      if (image != null) {
+                        setState(
+                          () {
+                            NewProject.cache.pictures.add(CustomCameraImage(
+                                id: galleryPictures.last.id + 1, image: image));
+                            galleryPictures = NewProject.cache.pictures;
+                          },
+                        );
+                      }
+                    },
+                  )),
+
+                  Gallery(
+                    pictures: galleryPictures,
+                    deleteFunction: (element) {
                       setState(() {
-                        showState = true;
+                        element.display = false;
                       });
-
-                      NewProject.cache.pictures
-                          .removeWhere((element) => element.display == false);
-
-                      projectId =
-                          await DataBase.createNewProject(NewProject.cache);
-
-                      bool imagesComplete = await DataBase.saveImages(
-                          pictures: NewProject.cache.pictures,
-                          projectId: projectId,
-                          updateState: (value) {
-                            setState(() {
-                              state = value;
-                            });
-                          });
-
-                      NewProject.cache = Content(); //reset
-                      NewProject.goToProjectView(projectId, context);
-
-                      // goBack();
+                    },
+                    //  creationMode: true,
+                  ),
+                  InputField(
+                    saveTo: (text) => {NewProject.cache.client = text},
+                    labelText: "Auftraggeber",
+                  ),
+                  InputDate(
+                    saveTo: (text) => {NewProject.cache.date = text},
+                  ),
+                  AddressInput(
+                    updateAddress: (value) {
+                      NewProject.cache.street = value.street;
+                      NewProject.cache.houseNumber = value.houseNumber;
+                      NewProject.cache.zip = value.zip;
+                      NewProject.cache.city = value.city;
                     },
                   ),
-                ),
-              ],
+                  InputField(
+                    saveTo: (text) => {NewProject.cache.comment = text},
+                    labelText: "Kommentar",
+                    maxLines: 6,
+                  ),
+                  // MVPWalls(),
+                  MVPChecklist(),
+                  //    preview(),
+                  Visibility(
+                    child: Text("wird gespeichert ($state %)"),
+                    visible: showState,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      child: const Text('Projekt speichern und berechnen'),
+                      onPressed: () async {
+                        //    Content.reset(NewProject.cash);
+                        setState(() {
+                          showState = true;
+                        });
+
+                        NewProject.cache.pictures
+                            .removeWhere((element) => element.display == false);
+
+                        projectId =
+                            await DataBase.createNewProject(NewProject.cache);
+
+                        bool imagesComplete = await DataBase.saveImages(
+                            pictures: NewProject.cache.pictures,
+                            projectId: projectId,
+                            updateState: (value) {
+                              setState(() {
+                                state = value;
+                              });
+                            });
+
+                        NewProject.cache = Content(); //reset
+                        NewProject.goToProjectView(projectId, context);
+
+                        // goBack();
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

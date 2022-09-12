@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/components/button_column_multiple_icons.dart';
+import 'package:prototype/styles/general.dart';
 
 import '../../../styles/container.dart';
 import '../../backend/helper_objects.dart';
 
 class ButtonsOrderBy extends StatefulWidget {
+  static int selectedIndex = 1000;
   final Function(List<Content>) orderChanged;
   String searchTerm;
   ButtonsOrderBy({required this.orderChanged, required this.searchTerm});
@@ -17,10 +19,8 @@ class ButtonsOrderBy extends StatefulWidget {
 }
 
 class _ButtonsOrderByState extends State<ButtonsOrderBy> {
-  int selectedIndex = 1000;
-
   currentOrderColor(int bottenrowPosition) {
-    if (selectedIndex == bottenrowPosition) {
+    if (ButtonsOrderBy.selectedIndex == bottenrowPosition) {
       return Color.fromARGB(255, 115, 115, 115);
     } else
       return Color.fromARGB(255, 196, 196, 196);
@@ -29,6 +29,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
   @override
   Widget build(BuildContext context) {
     Row buttonrow = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         CustomButtonColumn(
           children: [
@@ -50,7 +51,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
             );
             widget.orderChanged(newOrderList);
             setState(() {
-              selectedIndex = 0;
+              ButtonsOrderBy.selectedIndex = 0;
             });
           },
         ),
@@ -74,7 +75,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
             );
             widget.orderChanged(newOrderList);
             setState(() {
-              selectedIndex = 1;
+              ButtonsOrderBy.selectedIndex = 1;
             });
           },
         ),
@@ -98,39 +99,28 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
             );
             widget.orderChanged(newOrderList);
             setState(() {
-              selectedIndex = 2;
-            });
-          },
-        ),
-        CustomButtonColumn(
-          children: [
-            Icon(
-              Icons.folder_open,
-              color: currentOrderColor(3),
-            ),
-            Text(
-              "Archiv",
-              style: TextStyle(
-                color: currentOrderColor(3),
-              ),
-            )
-          ],
-          onPressed: () async {
-            List<Content> newOrderList = await DataBase.getProjects(
-              searchTerm: widget.searchTerm,
-              statusActive: 0,
-            );
-            widget.orderChanged(newOrderList);
-            setState(() {
-              selectedIndex = 3;
+              ButtonsOrderBy.selectedIndex = 2;
             });
           },
         ),
       ],
     );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Text("Sortieren nach"), buttonrow],
+
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Sortieren nach:",
+            style: TextStyle(
+              color: GeneralStyle.getLightGray(),
+            ),
+          ),
+          buttonrow,
+        ],
+      ),
+      margin: ContainerStyles.marginLeftRight(),
+      decoration: ContainerStyles.borderBottom(),
     );
   }
 }
