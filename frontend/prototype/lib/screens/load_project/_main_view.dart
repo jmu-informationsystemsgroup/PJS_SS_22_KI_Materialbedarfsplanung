@@ -43,13 +43,8 @@ class _ProjectViewState extends State<ProjectView> {
   /// eine Liste sämtlicher Bildobjekte zu dem Projekt
   List<CustomCameraImage> galleryImages = [];
 
-  /// eine Liste aller Bilder die der Nutzer nachträglich hinzugefügt hat und die noch
-  /// nicht abgespeichert wurden
-  List<CustomCameraImage> addedImages = [];
-
   /// eine Liste aller Bilder zu denen noch kein KI Ergebnis vorliegt
   List<CustomCameraImage> galleryImagesNotYetCalculated = [];
-  bool safeNewPicturesButton = false;
   List<Widget> outcomeWidgetList = [];
   int state = 0;
   bool recalculate = false;
@@ -315,14 +310,12 @@ class _ProjectViewState extends State<ProjectView> {
                           setState(() {
                             element.display = false;
                           });
-                          if (!addedImages.contains(element)) {
-                            var sh = await DataBase.deleteSingleImageFromTable(
-                                content.id, element.id);
-                            var sh2 =
-                                await DataBase.deleteSingleImageFromDirectory(
-                                    content.id, element.id);
-                            loadGalleryPictures();
-                          }
+                          var sh = await DataBase.deleteSingleImageFromTable(
+                              content.id, element.id);
+                          var sh2 =
+                              await DataBase.deleteSingleImageFromDirectory(
+                                  content.id, element.id);
+                          loadGalleryPictures();
 
                           print(
                               ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${galleryImages.length.toString()}");
@@ -350,15 +343,27 @@ class _ProjectViewState extends State<ProjectView> {
                                 builder: (context) => CameraPage(
                                   cameras: value,
                                   originalGallery: galleryImages,
-                                  updateGallery: (images) {
+                                  updateGallery: (images) async {
                                     setState(
                                       () {
                                         galleryImages.addAll(images);
-                                        addedImages.addAll(images);
-                                        safeNewPicturesButton = true;
                                         calculatedOutcome.aiOutcome = 0.0;
                                       },
                                     );
+                                    bool sth = await DataBase.saveImages(
+                                      pictures: images,
+                                      startId: originalLastValue + 1,
+                                      projectId: content.id,
+                                      updateState: (val) {
+                                        setState(() {
+                                          safingImages = true;
+                                          state = val;
+                                        });
+                                      },
+                                    );
+                                    state = 0;
+                                    safingImages = false;
+                                    loadGalleryPictures();
                                   },
                                 ),
                               ),
@@ -408,43 +413,7 @@ class _ProjectViewState extends State<ProjectView> {
             },
           ),
           */
-              Visibility(
-                visible: safeNewPicturesButton,
-                child: CustomButtonRow(
-                  children: [
-                    Icon(
-                      Icons.image,
-                      color: GeneralStyle.getUglyGreen(),
-                    ),
-                    Icon(
-                      Icons.save,
-                      color: GeneralStyle.getUglyGreen(),
-                    ),
-                  ],
-                  onPressed: () async {
-                    addedImages
-                        .removeWhere((element) => element.display == false);
-                    bool sth = await DataBase.saveImages(
-                      pictures: addedImages,
-                      startId: originalLastValue + 1,
-                      projectId: content.id,
-                      updateState: (val) {
-                        setState(() {
-                          safingImages = true;
-                          state = val;
-                        });
-                      },
-                    );
-                    state = 0;
-                    safingImages = false;
-                    loadGalleryPictures();
-                    setState(() {
-                      safeNewPicturesButton = false;
-                      addedImages = [];
-                    });
-                  },
-                ),
-              ),
+
               Visibility(
                 visible: safingImages,
                 child: Text("Speichere Bilder $state %"),
