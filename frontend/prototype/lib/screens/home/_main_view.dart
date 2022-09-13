@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/components/appBar_custom.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_body.dart';
+import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/screens/home/buttons_order_by.dart';
 import 'package:prototype/screens/home/input_field_search.dart';
 import 'package:prototype/components/navBar.dart';
@@ -25,7 +26,9 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   static List<Content> allProjects = [];
+  User user = User();
   String searchTerm = "";
+  List userData = [];
 
   activateList() async {
     DataBase.getProjects(searchTerm: searchTerm).then((loadedContent) {
@@ -43,7 +46,33 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     activateList();
+    getUser();
     wait();
+  }
+
+  getUser() async {
+    DataBase.getUserData().then((loadedContent) {
+      setState(() {
+        userData = loadedContent;
+      });
+      if (userData.isNotEmpty) {
+        setState(() {
+          user = User.mapToUser(userData[0]);
+        });
+      }
+      ;
+    });
+  }
+
+  Widget addUserData() {
+    if (userData.isNotEmpty) {
+      return IconAndText(
+          text: "${user.firstName} ${user.lastName}",
+          icon: Icons.quick_contacts_mail_outlined,
+          color: Colors.black);
+    } else {
+      return Text("Bitte klicken um UserDaten hinzuzufügen");
+    }
   }
 
   Widget archieveButton() {
@@ -79,7 +108,10 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScaffoldContainer(
-        appBar: CustomAppBar(title: "Alle Projekte"),
+        appBar: CustomAppBar(
+          title: "Alle Projekte",
+          subTitle: addUserData(),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [

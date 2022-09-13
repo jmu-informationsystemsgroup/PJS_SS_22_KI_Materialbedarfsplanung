@@ -39,7 +39,7 @@ class _WebshopState extends State<Webshop> {
   @override
   void initState() {
     super.initState();
-    activateList();
+    getUser();
   }
 
   bool changeBool(bool input) {
@@ -57,7 +57,7 @@ class _WebshopState extends State<Webshop> {
       return Icon(Icons.close);
   }
 
-  activateList() async {
+  getUser() async {
     DataBase.getUserData().then((loadedContent) {
       setState(() {
         userData = loadedContent;

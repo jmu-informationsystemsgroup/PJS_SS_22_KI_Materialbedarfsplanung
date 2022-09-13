@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/screens/load_project/_main_view.dart';
 import 'package:prototype/styles/general.dart';
@@ -67,12 +68,18 @@ class ProjectList extends StatelessWidget {
                                       fontWeight: FontWeight.w800),
                                 ),
                               ),
-                              Text("Kunde: " + element.client,
-                                  style: ContainerStyles.getTextStyle()),
-                              Text("Ort: " + element.city,
-                                  style: ContainerStyles.getTextStyle()),
-                              Text("Datum: " + element.date,
-                                  style: ContainerStyles.getTextStyle()),
+                              IconAndText(
+                                icon: Icons.person_pin_circle_outlined,
+                                text: "Kunde: ${element.client}",
+                              ),
+                              IconAndText(
+                                icon: Icons.location_on_outlined,
+                                text: "Ort: ${element.city}",
+                              ),
+                              IconAndText(
+                                icon: Icons.calendar_month_outlined,
+                                text: "Datum: ${element.date}",
+                              ),
                             ],
                           ),
                         ),

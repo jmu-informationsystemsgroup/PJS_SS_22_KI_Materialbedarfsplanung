@@ -3,7 +3,8 @@ import 'package:prototype/styles/container.dart';
 
 class CustomAppBar extends StatelessWidget {
   String title;
-  CustomAppBar({required this.title});
+  Widget subTitle;
+  CustomAppBar({required this.title, required this.subTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +16,20 @@ class CustomAppBar extends StatelessWidget {
           child: Container(
             margin: ContainerStyles.marginLeftRight(),
             child: Text(
-              this.title,
+              title,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 30,
                 fontWeight: FontWeight.w600,
               ),
             ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Container(
+            margin: ContainerStyles.marginLeftRight(),
+            child: subTitle,
           ),
         ),
         Align(

@@ -18,6 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../backend/server_ai.dart';
 import '../../components/appBar_custom.dart';
 import '../../components/custom_container_body.dart';
+import '../../components/icon_and_text.dart';
 import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
@@ -226,7 +227,25 @@ class _ProjectViewState extends State<ProjectView> {
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>last value: $originalLastValue");
     return Scaffold(
       body: CustomScaffoldContainer(
-        appBar: CustomAppBar(title: content.projectName),
+        appBar: CustomAppBar(
+          title: content.projectName,
+          subTitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconAndText(
+                text: "Aufttraggeber: ${content.client}",
+                icon: Icons.person_pin_circle_outlined,
+                color: Colors.black,
+              ),
+              IconAndText(
+                text:
+                    "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
+                icon: Icons.location_on_outlined,
+                color: Colors.black,
+              ),
+            ],
+          ),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [

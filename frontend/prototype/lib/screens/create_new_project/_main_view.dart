@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prototype/styles/general.dart';
 
 import '../../components/appBar_custom.dart';
+import '../../components/icon_and_text.dart';
 import '../../components/screen_camera.dart';
 
 import '../../backend/helper_objects.dart';
@@ -52,6 +53,12 @@ class _NewProjectState extends State<NewProject> {
   int projectId = 0;
   List<CustomCameraImage> galleryPictures = [];
   int state = 0;
+  String street = "";
+  String houseNumber = "";
+  String zip = "";
+  String city = "";
+  String projectName = "";
+  String client = "";
 
   @override
   void initState() {
@@ -62,6 +69,12 @@ class _NewProjectState extends State<NewProject> {
       DeviceOrientation.portraitDown,
     ]);
     galleryPictures = NewProject.cache.pictures;
+    street = NewProject.cache.street;
+    houseNumber = NewProject.cache.houseNumber;
+    zip = NewProject.cache.zip;
+    city = NewProject.cache.city;
+    projectName = NewProject.cache.projectName;
+    client = NewProject.cache.client;
   }
 
   Future<void> _showMyDialog() async {
@@ -139,14 +152,35 @@ class _NewProjectState extends State<NewProject> {
     return SafeArea(
       child: Scaffold(
         body: CustomScaffoldContainer(
-          appBar: CustomAppBar(title: "Neues Projekt"),
+          appBar: CustomAppBar(
+            title: "Neues Projekt",
+            subTitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconAndText(
+                  text: "Aufttraggeber: $client",
+                  icon: Icons.person_pin_circle_outlined,
+                  color: Colors.black,
+                ),
+                IconAndText(
+                  text: "Adresse: $street $houseNumber $zip $city",
+                  icon: Icons.location_on_outlined,
+                  color: Colors.black,
+                ),
+              ],
+            ),
+          ),
           body: SingleChildScrollView(
             child: Form(
               child: Column(
                 children: <Widget>[
                   InputField(
-                    saveTo: (text) => {NewProject.cache.projectName = text},
+                    saveTo: (text) => {
+                      NewProject.cache.projectName = text,
+                      projectName = text
+                    },
                     labelText: "Name",
+                    value: projectName,
                   ),
 
                   Center(
@@ -218,8 +252,10 @@ class _NewProjectState extends State<NewProject> {
                     //  creationMode: true,
                   ),
                   InputField(
-                    saveTo: (text) => {NewProject.cache.client = text},
+                    saveTo: (text) =>
+                        {NewProject.cache.client = text, client = text},
                     labelText: "Auftraggeber",
+                    value: client,
                   ),
                   InputDate(
                     saveTo: (text) => {NewProject.cache.date = text},
@@ -230,6 +266,12 @@ class _NewProjectState extends State<NewProject> {
                       NewProject.cache.houseNumber = value.houseNumber;
                       NewProject.cache.zip = value.zip;
                       NewProject.cache.city = value.city;
+                      setState(() {
+                        street = value.street;
+                        houseNumber = value.houseNumber;
+                        zip = value.zip;
+                        city = value.city;
+                      });
                     },
                   ),
                   InputField(
