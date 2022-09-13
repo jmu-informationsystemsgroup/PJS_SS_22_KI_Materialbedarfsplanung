@@ -8,8 +8,8 @@ import 'data_base_functions.dart';
 class Content {
   int id = 0;
   String projectName = "Default";
-  String client = "Default";
-  String date = "Default";
+  String client = "";
+  String date = "";
   String comment = "";
   Map<int, Wall> squareMeters = {};
   List<CustomCameraImage> pictures = [];

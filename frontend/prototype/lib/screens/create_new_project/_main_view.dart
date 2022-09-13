@@ -86,7 +86,7 @@ class _NewProjectState extends State<NewProject> {
           return AlertDialog(
             title: const Text('Kamera einstellen'),
             content: SingleChildScrollView(
-              child: ListBody(
+              child: ListView(
                 children: <Widget>[
                   Row(children: [
                     Icon(Icons.stay_current_portrait),
@@ -154,20 +154,29 @@ class _NewProjectState extends State<NewProject> {
         body: CustomScaffoldContainer(
           appBar: CustomAppBar(
             title: "Neues Projekt",
-            subTitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IconAndText(
-                  text: "Aufttraggeber: $client",
-                  icon: Icons.person_pin_circle_outlined,
-                  color: Colors.black,
-                ),
-                IconAndText(
-                  text: "Adresse: $street $houseNumber $zip $city",
-                  icon: Icons.location_on_outlined,
-                  color: Colors.black,
-                ),
-              ],
+            subTitle: Container(
+              child: Stack(
+                children: [
+                  Positioned(
+                    bottom: 40,
+                    left: 0,
+                    child: IconAndText(
+                      text: "Aufttraggeber: $client",
+                      icon: Icons.person_pin_circle_outlined,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    left: 0,
+                    child: IconAndText(
+                      text: "Adresse: $street $houseNumber $zip $city",
+                      icon: Icons.location_on_outlined,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           body: SingleChildScrollView(
@@ -176,8 +185,10 @@ class _NewProjectState extends State<NewProject> {
                 children: <Widget>[
                   InputField(
                     saveTo: (text) => {
-                      NewProject.cache.projectName = text,
-                      projectName = text
+                      setState(() {
+                        NewProject.cache.projectName = text;
+                        projectName = text;
+                      }),
                     },
                     labelText: "Name",
                     value: projectName,
@@ -252,8 +263,12 @@ class _NewProjectState extends State<NewProject> {
                     //  creationMode: true,
                   ),
                   InputField(
-                    saveTo: (text) =>
-                        {NewProject.cache.client = text, client = text},
+                    saveTo: (text) => {
+                      setState(() {
+                        NewProject.cache.client = text;
+                        client = text;
+                      }),
+                    },
                     labelText: "Auftraggeber",
                     value: client,
                   ),

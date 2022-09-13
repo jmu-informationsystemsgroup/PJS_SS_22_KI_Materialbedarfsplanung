@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/screens/load_project/button_send_mail.dart';
 import 'package:prototype/screens/load_project/user_form.dart';
+import 'package:prototype/screens/profile/user_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/helper_objects.dart';
@@ -126,15 +127,8 @@ class _WebshopState extends State<Webshop> {
                     children: [
                       Visibility(
                         visible: textVisiblity,
-                        child: Text(
-                          "Bitte Daten kontrollieren: \nName: " +
-                              user.firstName.toString() +
-                              " " +
-                              user.lastName.toString() +
-                              "\nKundennummer: " +
-                              user.customerId.toString() +
-                              "\nAdresse: " +
-                              user.address.toString(),
+                        child: DisplayUserData(
+                          user: user,
                         ),
                       ),
                       ElevatedButton(

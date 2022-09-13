@@ -2,14 +2,15 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:prototype/components/navBar.dart';
 
 import '../styles/container.dart';
 import 'appBar_custom.dart';
 
 class CustomScaffoldContainer extends StatelessWidget {
   Widget body;
-  Widget appBar;
-  Widget navBar;
+  CustomAppBar appBar;
+  NavBar navBar;
   CustomScaffoldContainer(
       {required this.body, required this.appBar, required this.navBar});
 

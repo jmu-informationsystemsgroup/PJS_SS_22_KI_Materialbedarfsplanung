@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:prototype/screens/contact/_main_view.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
-import 'package:prototype/screens/profile/profile.dart';
+import 'package:prototype/screens/profile/_main_view.dart';
 import 'package:prototype/styles/buttons.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/styles/general.dart';

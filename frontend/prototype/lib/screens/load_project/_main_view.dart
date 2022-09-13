@@ -239,7 +239,7 @@ class _ProjectViewState extends State<ProjectView> {
               ),
               IconAndText(
                 text:
-                    "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
+                    "${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
                 icon: Icons.location_on_outlined,
                 color: Colors.black,
               ),
