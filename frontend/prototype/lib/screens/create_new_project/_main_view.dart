@@ -154,28 +154,18 @@ class _NewProjectState extends State<NewProject> {
         body: CustomScaffoldContainer(
           appBar: CustomAppBar(
             title: "Neues Projekt",
-            subTitle: Column(
-              children: [
-                Positioned(
-                  bottom: 40,
-                  left: 0,
-                  child: IconAndText(
-                    text: "Aufttraggeber: $client",
-                    icon: Icons.person_pin_circle_outlined,
-                    color: Colors.black,
-                  ),
-                ),
-                Positioned(
-                  bottom: 10,
-                  left: 0,
-                  child: IconAndText(
-                    text: "Adresse: $street $houseNumber $zip $city",
-                    icon: Icons.location_on_outlined,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
+            subTitle: [
+              IconAndText(
+                text: "Aufttraggeber: $client",
+                icon: Icons.person_pin_circle_outlined,
+                color: Colors.black,
+              ),
+              IconAndText(
+                text: "Adresse: $street $houseNumber $zip $city",
+                icon: Icons.location_on_outlined,
+                color: Colors.black,
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             child: Form(

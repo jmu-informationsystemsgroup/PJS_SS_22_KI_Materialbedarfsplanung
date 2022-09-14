@@ -229,22 +229,19 @@ class _ProjectViewState extends State<ProjectView> {
       body: CustomScaffoldContainer(
         appBar: CustomAppBar(
           title: content.projectName,
-          subTitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconAndText(
-                text: "Aufttraggeber: ${content.client}",
-                icon: Icons.person_pin_circle_outlined,
-                color: Colors.black,
-              ),
-              IconAndText(
-                text:
-                    "${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
-                icon: Icons.location_on_outlined,
-                color: Colors.black,
-              ),
-            ],
-          ),
+          subTitle: [
+            IconAndText(
+              text: "Aufttraggeber: ${content.client}",
+              icon: Icons.person_pin_circle_outlined,
+              color: Colors.black,
+            ),
+            IconAndText(
+              text:
+                  "${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
+              icon: Icons.location_on_outlined,
+              color: Colors.black,
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(

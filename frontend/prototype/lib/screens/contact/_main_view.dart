@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_body.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../components/appBar_custom.dart';
 import '../../components/navBar.dart';
+import '../../styles/general.dart';
 
 class Contact extends StatelessWidget {
   String title = "Kontakt";
@@ -63,7 +65,22 @@ class Contact extends StatelessWidget {
               Text("Simmringerstrasse 4"),
               Text("97244 Bütthard"),
               Text("Deutschland - Germany"),
-              contactRow()
+              contactRow(),
+              CustomButtonRow(
+                children: [
+                  Icon(
+                    Icons.shopping_cart,
+                    color: GeneralStyle.getUglyGreen(),
+                  ),
+                  Icon(
+                    Icons.public,
+                    color: GeneralStyle.getUglyGreen(),
+                  ),
+                ],
+                onPressed: () {
+                  _launchUrl("https://spachtelprofi.com/shop/");
+                },
+              ),
             ],
           ),
         )
@@ -80,7 +97,7 @@ class Contact extends StatelessWidget {
           body: getBody(),
           appBar: CustomAppBar(
             title: "Kontakt",
-            subTitle: Text("Ihr Experte und Ansprechpartner"),
+            subTitle: [Text("Ihr Experte und Ansprechpartner")],
           ),
           navBar: NavBar(3),
         ),

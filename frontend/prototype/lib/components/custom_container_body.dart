@@ -21,6 +21,7 @@ class CustomScaffoldContainer extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Container(
+            padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
             width: MediaQuery.of(context).size.width,
             child: appBar,
           ),

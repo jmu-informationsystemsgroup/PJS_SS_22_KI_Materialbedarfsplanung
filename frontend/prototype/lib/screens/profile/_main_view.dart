@@ -111,7 +111,7 @@ class _ProfileState extends State<Profile> {
           body: getBody(),
           appBar: CustomAppBar(
             title: "Mein Profil",
-            subTitle: Text("test"),
+            subTitle: [Text("test")],
           ),
           navBar: NavBar(2),
         ),

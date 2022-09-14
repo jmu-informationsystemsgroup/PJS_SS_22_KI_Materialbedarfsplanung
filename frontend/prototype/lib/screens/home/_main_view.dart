@@ -64,14 +64,16 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  Widget addUserData() {
+  List<Widget> addUserData() {
     if (userData.isNotEmpty) {
-      return IconAndText(
-          text: "${user.firstName} ${user.lastName}",
-          icon: Icons.quick_contacts_mail_outlined,
-          color: Colors.black);
+      return [
+        IconAndText(
+            text: "${user.firstName} ${user.lastName}",
+            icon: Icons.quick_contacts_mail_outlined,
+            color: Colors.black)
+      ];
     } else {
-      return Text("Bitte klicken um UserDaten hinzuzufügen");
+      return [Text("Bitte klicken um UserDaten hinzuzufügen")];
     }
   }
 
