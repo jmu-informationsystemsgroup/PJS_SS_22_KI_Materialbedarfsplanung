@@ -1,7 +1,6 @@
 import shutil
 import matplotlib.pyplot as plt
 from datetime import date, datetime
-
 import numpy as np
 import os
 import cv2
@@ -11,6 +10,22 @@ from keras.utils.layer_utils import count_params
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPool2D, Dense, Dropout, Flatten
 from sklearn.model_selection import train_test_split
+
+
+##################################################################################
+# Beschreibung
+##################################################################################
+# Ordnerstruktur vor dem Ausführen des Programms:
+#   data
+#       Testdaten (hier liegen alle Bilder, mit denen getestet und trainiert wird)
+#       Wand_Label_Infos
+#           Wand_Label_Infos_Int.csv
+#   scr
+#       train_eval_neuralnet.py
+#   training
+#       Evaluation
+#           Evaluation.csv
+
 
 
 ##################################################################################
@@ -460,3 +475,5 @@ var0.append(var_list)
 with open(path_eval, 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(var0)
+    
+    
