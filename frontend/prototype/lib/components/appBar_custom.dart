@@ -24,8 +24,9 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              flex: 1,
+            Positioned(
+              bottom: 0,
+              left: 0,
               child: subTitle,
             ),
           ],

@@ -67,26 +67,24 @@ class _ProfileState extends State<Profile> {
 
   Widget getBody() {
     if (userData.isNotEmpty && textVisiblity) {
-      return CustomContainerBorder(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Visibility(
-              visible: textVisiblity,
-              child: DisplayUserData(
-                user: user,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Visibility(
+            visible: textVisiblity,
+            child: DisplayUserData(
+              user: user,
             ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  textVisiblity = changeBool(textVisiblity);
-                });
-              },
-              child: getIcon(),
-            ),
-          ],
-        ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                textVisiblity = changeBool(textVisiblity);
+              });
+            },
+            child: getIcon(),
+          ),
+        ],
       );
     } else {
       return SingleChildScrollView(
@@ -95,6 +93,7 @@ class _ProfileState extends State<Profile> {
             setState(() {
               userData = data;
               textVisiblity = changeBool(textVisiblity);
+              getUser();
             });
           },
           editUser: userDataNullCheckSafe(),

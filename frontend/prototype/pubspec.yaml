@@ -104,14 +104,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/Wall1.jpg
-   - assets/livingRoom1.jpg
-   - assets/livingRoom2.jpg
-   - assets/livingRoom3.jpg
-   - assets/bathRoom1.jpg
-   - assets/bathRoom12.jpg
-   - assets/bathRoom2.jpg
-   - assets/bathRoom3.jpg
+   - assets/matthias.jpg
   # - assets/material_model.tflite
   #   - images/a_dot_ham.jpeg
 

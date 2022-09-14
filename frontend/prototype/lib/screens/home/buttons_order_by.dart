@@ -119,7 +119,6 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
           buttonrow,
         ],
       ),
-      margin: ContainerStyles.marginLeftRight(),
       decoration: ContainerStyles.borderBottom(),
     );
   }

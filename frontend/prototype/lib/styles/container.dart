@@ -82,10 +82,6 @@ class ContainerStyles {
     return const EdgeInsets.fromLTRB(25, 0, 25, 15);
   }
 
-  static EdgeInsets marginLeftRight() {
-    return const EdgeInsets.fromLTRB(20, 0, 20, 0);
-  }
-
   static BoxDecoration borderBottom() {
     return BoxDecoration(
       border: Border(
