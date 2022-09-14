@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/backend/helper_objects.dart';
 
-import '../../styles/container.dart';
+import '../../../styles/container.dart';
 
 class InputSearch extends StatefulWidget {
   final Function(String, List<Content>) onSearchTermChange;
@@ -21,12 +21,12 @@ class _InputSearchState extends State<InputSearch> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: ContainerStyles.getMargin(),
+      margin: ContainerStyles.getSearchMargin(),
       child: TextField(
         controller: nameController,
         onChanged: (searchTerm) async {
           List<Content> searchedProjects =
-              await DataBase.getAllActiveProjects(searchTerm);
+              await DataBase.getProjects(searchTerm: searchTerm);
           widget.onSearchTermChange(searchTerm, searchedProjects);
           //   Dashboard.list = searchedProjects;
         },

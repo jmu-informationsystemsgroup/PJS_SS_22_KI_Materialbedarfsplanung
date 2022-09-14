@@ -8,11 +8,11 @@ import 'data_base_functions.dart';
 class Content {
   int id = 0;
   String projectName = "Default";
-  String client = "Default";
-  String date = "Default";
+  String client = "";
+  String date = "";
   String comment = "";
   Map<int, Wall> squareMeters = {};
-  List<XFile?> pictures = [];
+  List<CustomCameraImage> pictures = [];
   String material = "Q2";
   int statusActive = 1;
   double aiValue = 41.0;
@@ -153,9 +153,11 @@ class CustomCameraImage {
   int projectId;
   XFile image;
   double aiValue;
+  bool display;
   CustomCameraImage(
       {required this.id,
-      required this.projectId,
+      this.projectId = 0,
+      this.display = true,
       required this.image,
-      required this.aiValue});
+      this.aiValue = 0.0});
 }

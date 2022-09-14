@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/screens/load_project/button_send_mail.dart';
 import 'package:prototype/screens/load_project/user_form.dart';
+import 'package:prototype/screens/profile/user_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/helper_objects.dart';
-import '../../components/button_multiple_icons.dart';
+import '../../components/button_row_multiple_icons.dart';
 import '../../components/custom_container_white.dart';
+import '../../styles/general.dart';
 
 class Webshop extends StatefulWidget {
   /// dies sollte ein double value sein, allerdings kann es zu ladeverzögerungen und damit
@@ -38,7 +40,7 @@ class _WebshopState extends State<Webshop> {
   @override
   void initState() {
     super.initState();
-    activateList();
+    getUser();
   }
 
   bool changeBool(bool input) {
@@ -56,7 +58,7 @@ class _WebshopState extends State<Webshop> {
       return Icon(Icons.close);
   }
 
-  activateList() async {
+  getUser() async {
     DataBase.getUserData().then((loadedContent) {
       setState(() {
         userData = loadedContent;
@@ -80,36 +82,19 @@ class _WebshopState extends State<Webshop> {
     }
     return Column(
       children: [
-        CustomButton(
+        CustomButtonRow(
           children: [
             Icon(
               Icons.shopping_cart,
-              color: Colors.white,
+              color: GeneralStyle.getUglyGreen(),
             ),
             Icon(
               Icons.public,
-              color: Colors.white,
+              color: GeneralStyle.getUglyGreen(),
             ),
           ],
           onPressed: () {
             _launchUrl("https://spachtelprofi.com/shop/");
-          },
-        ),
-        CustomButton(
-          children: [
-            Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.mail,
-              color: Colors.white,
-            )
-          ],
-          onPressed: () {
-            setState(() {
-              mailVisability = true;
-            });
           },
         ),
         Visibility(
@@ -136,21 +121,14 @@ class _WebshopState extends State<Webshop> {
               ),
               Visibility(
                 visible: userExistsVisibility,
-                child: CustomContainerWhite(
+                child: CustomContainerBorder(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Visibility(
                         visible: textVisiblity,
-                        child: Text(
-                          "Bitte Daten kontrollieren: \nName: " +
-                              user.firstName.toString() +
-                              " " +
-                              user.lastName.toString() +
-                              "\nKundennummer: " +
-                              user.customerId.toString() +
-                              "\nAdresse: " +
-                              user.address.toString(),
+                        child: DisplayUserData(
+                          user: user,
                         ),
                       ),
                       ElevatedButton(
@@ -183,7 +161,24 @@ class _WebshopState extends State<Webshop> {
               ),
             ],
           ),
-        )
+        ),
+        CustomButtonRow(
+          children: [
+            Icon(
+              Icons.shopping_cart,
+              color: GeneralStyle.getUglyGreen(),
+            ),
+            Icon(
+              Icons.mail,
+              color: GeneralStyle.getUglyGreen(),
+            )
+          ],
+          onPressed: () {
+            setState(() {
+              mailVisability = true;
+            });
+          },
+        ),
       ],
     );
   }

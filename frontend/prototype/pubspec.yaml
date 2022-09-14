@@ -49,6 +49,7 @@ dependencies:
   camera: any
   image: any
   image_picker: any
+  native_device_orientation: ^1.1.4
 
   # ai integration
   # tflite: any
@@ -75,6 +76,9 @@ dependencies:
   proj4dart: ^2.0.0
   collection: ^1.14.0
   file_support: ^1.0.6
+
+  # styling
+  relative_scale: ^2.0.0
 
 dev_dependencies:
   flutter_test:

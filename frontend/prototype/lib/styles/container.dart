@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import 'general.dart';
+
 class ContainerStyles {
   static BoxDecoration getColoredBoxDecoration() {
     return const BoxDecoration(
@@ -18,17 +20,34 @@ class ContainerStyles {
     );
   }
 
-  static BoxDecoration roundetCorners() {
-    return const BoxDecoration(
+  static BoxDecoration roundetCorners(
+      {Color color = const Color.fromARGB(255, 8, 173, 11)}) {
+    return BoxDecoration(
+      border: Border.all(color: color, width: 2.0),
       borderRadius: BorderRadius.all(Radius.circular(8)),
-      color: Colors.lightBlue,
+      color: Colors.transparent,
     );
   }
 
-  static BoxDecoration getBoxDecoration() {
+  static BoxDecoration getBoxDecoration(
+      {Color color = const Color.fromARGB(255, 115, 115, 115)}) {
     return BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.white,
+      border: Border.all(color: color, width: 2.0),
+
+      /*
+      border: Border.all(
+          color: Color.fromARGB(118, 0, 0, 0),
+          width: 1.0,
+          style: BorderStyle.solid),*/
+    );
+  }
+
+  static BoxDecoration bodyDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+      color: Colors.white,
+      /*
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
@@ -37,17 +56,17 @@ class ContainerStyles {
             offset: Offset(0, 3), // changes position of shadow
           ),
         ]
-        /*
+        
       border: Border.all(
           color: Color.fromARGB(118, 0, 0, 0),
           width: 1.0,
           style: BorderStyle.solid),*/
-        );
+    );
   }
 
   static TextStyle getTextStyle() {
     return const TextStyle(
-      color: Colors.white,
+      color: Color.fromARGB(255, 196, 196, 196),
     );
   }
 
@@ -57,6 +76,36 @@ class ContainerStyles {
 
   static EdgeInsets getMargin() {
     return const EdgeInsets.all(15.0);
+  }
+
+  static EdgeInsets getSearchMargin() {
+    return const EdgeInsets.fromLTRB(25, 0, 25, 15);
+  }
+
+  static EdgeInsets marginLeftRight() {
+    return const EdgeInsets.fromLTRB(20, 0, 20, 0);
+  }
+
+  static BoxDecoration borderBottom() {
+    return BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          width: 2.0,
+          color: GeneralStyle.getLightGray(),
+        ),
+      ),
+    );
+  }
+
+  static BoxDecoration borderTop() {
+    return BoxDecoration(
+      border: Border(
+        top: BorderSide(
+          width: 2.0,
+          color: GeneralStyle.getLightGray(),
+        ),
+      ),
+    );
   }
 
   static getInputStyle(String labelTextInput) {

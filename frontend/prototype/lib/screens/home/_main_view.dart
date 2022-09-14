@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/components/buttons_order_by.dart';
-import 'package:prototype/components/input_field_search.dart';
+import 'package:prototype/components/appBar_custom.dart';
+import 'package:prototype/components/button_row_multiple_icons.dart';
+import 'package:prototype/components/custom_container_body.dart';
+import 'package:prototype/components/icon_and_text.dart';
+import 'package:prototype/screens/home/buttons_order_by.dart';
+import 'package:prototype/screens/home/input_field_search.dart';
 import 'package:prototype/components/navBar.dart';
 
 import 'package:prototype/screens/home/button_new_project.dart';
+import 'package:prototype/styles/container.dart';
+import 'package:prototype/styles/general.dart';
 import '../../backend/data_base_functions.dart';
 import '../../backend/helper_objects.dart';
-import '../../components/project_list.dart';
+import 'project_list.dart';
 
 class Dashboard extends StatefulWidget {
-  String title = "Projektübersicht";
+  String title = "Alle Projekte";
 
   @override
   State<StatefulWidget> createState() {
@@ -20,10 +26,12 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   static List<Content> allProjects = [];
+  User user = User();
   String searchTerm = "";
+  List userData = [];
 
   activateList() async {
-    DataBase.getAllActiveProjects(searchTerm).then((loadedContent) {
+    DataBase.getProjects(searchTerm: searchTerm).then((loadedContent) {
       setState(() {
         allProjects = loadedContent;
       });
@@ -38,41 +46,99 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     activateList();
+    getUser();
     wait();
+  }
+
+  getUser() async {
+    DataBase.getUserData().then((loadedContent) {
+      setState(() {
+        userData = loadedContent;
+      });
+      if (userData.isNotEmpty) {
+        setState(() {
+          user = User.mapToUser(userData[0]);
+        });
+      }
+      ;
+    });
+  }
+
+  Widget addUserData() {
+    if (userData.isNotEmpty) {
+      return IconAndText(
+          text: "${user.firstName} ${user.lastName}",
+          icon: Icons.quick_contacts_mail_outlined,
+          color: Colors.black);
+    } else {
+      return Text("Bitte klicken um UserDaten hinzuzufügen");
+    }
+  }
+
+  Widget archieveButton() {
+    return CustomButtonRow(
+      children: [
+        Icon(
+          Icons.folder_open,
+          color: GeneralStyle.getUglyGreen(),
+        ),
+        Text(
+          "Archiv",
+          style: TextStyle(
+            color: GeneralStyle.getUglyGreen(),
+          ),
+        )
+      ],
+      onPressed: () async {
+        List<Content> newOrderList = await DataBase.getProjects(
+          searchTerm: searchTerm,
+          statusActive: 0,
+        );
+        setState(
+          () {
+            allProjects = newOrderList;
+            ButtonsOrderBy.selectedIndex = 1000;
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Projektübersicht"),
-        primary: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            InputSearch(
-                onSearchTermChange: (String term, List<Content> list) => {
-                      setState(() {
-                        searchTerm = term;
-                        allProjects = list;
-                      })
-                    }),
-            ButtonsOrderBy(
-              searchTerm: searchTerm,
-              orderChanged: (List<Content> list) => {
-                setState(() {
-                  allProjects = list;
-                })
-              },
-            ),
-            ProjectList(allProjects, activateList),
-            projectMessage(),
-            AddProjectButton()
-          ],
+      body: CustomScaffoldContainer(
+        appBar: CustomAppBar(
+          title: "Alle Projekte",
+          subTitle: addUserData(),
         ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              InputSearch(
+                  onSearchTermChange: (String term, List<Content> list) => {
+                        setState(() {
+                          searchTerm = term;
+                          allProjects = list;
+                        })
+                      }),
+              ButtonsOrderBy(
+                searchTerm: searchTerm,
+                orderChanged: (List<Content> list) => {
+                  setState(() {
+                    allProjects = list;
+                  })
+                },
+              ),
+              ProjectList(allProjects, activateList),
+              projectMessage(),
+              AddProjectButton(),
+              archieveButton(),
+            ],
+          ),
+        ),
+        navBar: NavBar(0),
       ),
-      bottomNavigationBar: NavBar(0),
     );
   }
 }

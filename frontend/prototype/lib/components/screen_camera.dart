@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +10,8 @@ import '../screens/create_new_project/_main_view.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
-  final Function(List<XFile?>)? updateGallery;
-  List<XFile?> originalGallery;
+  final Function(List<CustomCameraImage>)? updateGallery;
+  List<CustomCameraImage> originalGallery;
   CameraPage(
       {this.cameras,
       Key? key,
@@ -26,7 +27,9 @@ class _CameraPageState extends State<CameraPage> {
   bool fotoFeedBack = false;
   XFile? pictureFile;
   List<XFile?> previewImages = [];
-  List<XFile?> newImages = [];
+  List<CustomCameraImage> newImages = [];
+  int id = 0;
+  bool flashOn = false;
 
   Widget preview() {
     Column column = Column(
@@ -47,10 +50,14 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.originalGallery.isNotEmpty) {
+      id = widget.originalGallery.last.id + 1;
+    }
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
     ]);
+
     controller = CameraController(
       widget.cameras!.first,
       ResolutionPreset.medium,
@@ -61,7 +68,14 @@ class _CameraPageState extends State<CameraPage> {
       }
       setState(() {});
     });
-    previewImages.addAll(widget.originalGallery);
+    controller.setFlashMode(FlashMode.off);
+
+    for (var element in widget.originalGallery) {
+      if (element.display) {
+        previewImages.add(element.image);
+      }
+    }
+
     print(">>>>>>>>>>>>>>>>>>>>>>${widget.cameras}");
   }
 
@@ -108,7 +122,12 @@ class _CameraPageState extends State<CameraPage> {
           onPressed: () async {
             pictureFile = await controller.takePicture();
             previewImages.add(pictureFile!);
-            newImages.add(pictureFile!);
+
+            newImages.add(
+              CustomCameraImage(id: id, image: pictureFile!),
+            );
+
+            id += 1;
             setState(() {
               fotoFeedBack = true;
             });
@@ -143,11 +162,35 @@ class _CameraPageState extends State<CameraPage> {
           child: Center(
             child: Stack(
               children: [
+                /// Workarround um Kamera daran zu hindern sich selbstständig zu drehen, Quelle: https://github.com/flutter/flutter/issues/16587
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
-                    child: CameraPreview(controller),
-                  ),
+                      child: NativeDeviceOrientationReader(builder: (context) {
+                    NativeDeviceOrientation orientation =
+                        NativeDeviceOrientationReader.orientation(context);
+
+                    int turns;
+                    switch (orientation) {
+                      case NativeDeviceOrientation.landscapeLeft:
+                        turns = 0;
+                        break;
+                      case NativeDeviceOrientation.landscapeRight:
+                        turns = 2;
+                        break;
+                      case NativeDeviceOrientation.portraitDown:
+                        turns = 1;
+                        break;
+                      default:
+                        turns = -1;
+                        break;
+                    }
+
+                    return RotatedBox(
+                      quarterTurns: turns,
+                      child: CameraPreview(controller),
+                    );
+                  })),
                 ),
                 Align(
                   child: addBlackBox(),
@@ -176,6 +219,32 @@ class _CameraPageState extends State<CameraPage> {
                         widget.updateGallery!(newImages);
                       },
                       child: Icon(Icons.close),
+                    ),
+                  ),
+                ),
+
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 25, 100, 25),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                      ),
+                      onPressed: () async {
+                        if (flashOn) {
+                          setState(() {
+                            flashOn = false;
+                          });
+                          controller.setFlashMode(FlashMode.off);
+                        } else {
+                          setState(() {
+                            flashOn = true;
+                          });
+                          controller.setFlashMode(FlashMode.always);
+                        }
+                      },
+                      child: getFlashIcon(),
                     ),
                   ),
                 ),
@@ -208,5 +277,13 @@ class _CameraPageState extends State<CameraPage> {
         )
       ],
     );
+  }
+
+  Icon getFlashIcon() {
+    if (flashOn) {
+      return Icon(Icons.flash_off);
+    } else {
+      return Icon(Icons.flash_on);
+    }
   }
 }

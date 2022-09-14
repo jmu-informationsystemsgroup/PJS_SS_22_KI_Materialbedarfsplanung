@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/components/button_multiple_icons.dart';
+import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/screens/create_new_project/input_field_address.dart';
+import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/screens/load_project/editor.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
@@ -15,9 +16,14 @@ import 'package:camera/camera.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../backend/server_ai.dart';
+import '../../components/appBar_custom.dart';
+import '../../components/custom_container_body.dart';
+import '../../components/icon_and_text.dart';
 import '../../components/screen_camera.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
+
+import '../../styles/general.dart';
 
 class ProjectView extends StatefulWidget {
   Content content;
@@ -34,13 +40,17 @@ class _ProjectViewState extends State<ProjectView> {
   CalculatorOutcome calculatedOutcome = CalculatorOutcome();
   bool editorVisablity = false;
   Content content = Content();
-  List<CustomCameraImage> imageObjectList = [];
-  List<XFile?> galleryPictures = [];
-  List<XFile?> addedPictures = [];
-  bool safeNewPicturesButton = false;
-  bool imagesSaved = false;
+
+  /// eine Liste sämtlicher Bildobjekte zu dem Projekt
+  List<CustomCameraImage> galleryImages = [];
+
+  /// eine Liste aller Bilder zu denen noch kein KI Ergebnis vorliegt
+  List<CustomCameraImage> galleryImagesNotYetCalculated = [];
   List<Widget> outcomeWidgetList = [];
   int state = 0;
+  bool recalculate = false;
+  bool safingImages = false;
+  int originalLastValue = 0;
 
   @override
   void initState() {
@@ -55,15 +65,16 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   loadGalleryPictures() async {
-    imageObjectList = await DataBase.getImages(content.id);
+    galleryImagesNotYetCalculated =
+        await DataBase.getImages(projectId: content.id, onlyNewImages: true);
+    List<CustomCameraImage> saveState =
+        await DataBase.getImages(projectId: content.id);
     CalculatorOutcome val =
-        await ValueCalculator.getOutcomeObject(content, imageObjectList);
-    List<XFile?> copyPictures = [];
-    for (var element in imageObjectList) {
-      copyPictures.add(element.image);
-    }
+        await ValueCalculator.getOutcomeObject(content, saveState);
+    originalLastValue = saveState.last.id;
+
     setState(() {
-      galleryPictures = copyPictures;
+      galleryImages = saveState;
       calculatedOutcome = val;
     });
   }
@@ -122,6 +133,24 @@ class _ProjectViewState extends State<ProjectView> {
       return Icon(Icons.edit);
   }
 
+  Widget renderArchiveButton(int id) {
+    if (content.statusActive == 0) {
+      return ElevatedButton(
+        onPressed: () {
+          DataBase.activateProject(id);
+        },
+        child: const Icon(Icons.settings_backup_restore),
+      );
+    } else {
+      return ElevatedButton(
+        onPressed: () {
+          DataBase.archieveProject(id);
+        },
+        child: const Icon(Icons.archive),
+      );
+    }
+  }
+
   Future<void> _launchUrl() async {
     String urlString =
         "https://www.google.com/maps/place/${content.street}+${content.houseNumber},+${content.zip}+${content.city}";
@@ -131,8 +160,25 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  Widget outComeText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Qualität: ${content.material}"),
+        Text(
+            "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)} kg"),
+        Text(
+            "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
+      ],
+    );
+  }
+
   Widget displayData() {
-    if (calculatedOutcome.aiOutcome == -1.0) {
+    if (galleryImages.isEmpty) {
+      return Text("Mache Bilder um einen KI Wert ermitteln zu können");
+    } else if (recalculate) {
+      return Text("Status: $state%");
+    } else if (calculatedOutcome.aiOutcome == 0.0) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -141,173 +187,216 @@ class _ProjectViewState extends State<ProjectView> {
             onPressed: () async {
               setState(() {
                 state = 0;
-                calculatedOutcome.aiOutcome = -10.0;
+                recalculate = true;
               });
               List<CustomCameraImage> replaceList = [];
-              if (galleryPictures.isNotEmpty) {
+              if (galleryImagesNotYetCalculated.isNotEmpty) {
                 replaceList = await ServerAI.getAiValuesFromServer(
-                    imageObjectList, (value) {
+                    galleryImagesNotYetCalculated, (value) {
                   setState(() {
                     state = value;
                   });
                 });
+                setState(() {
+                  recalculate = false;
+                });
               }
-              CalculatorOutcome val = await ValueCalculator.getOutcomeObject(
-                  content, imageObjectList);
-              setState(() {
-                imageObjectList = replaceList;
-                calculatedOutcome = val;
-              });
+              loadGalleryPictures();
             },
             child: Text("Bilder synchronisieren"),
           ),
         ],
       );
-    } else if (calculatedOutcome.aiOutcome == -10.0) {
-      return Text("Status: $state%");
-    } else {
+    } else if (calculatedOutcome.exception) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)}"),
-          Text(
-              "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
+          Text(calculatedOutcome.exceptionText),
+          Text("Aus den übrigen Bildern ergibt sich folgender Wert:"),
+          outComeText(),
         ],
       );
+    } else {
+      return outComeText();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Schleifentest");
+    print(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>last value: $originalLastValue");
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          content.projectName,
+      body: CustomScaffoldContainer(
+        appBar: CustomAppBar(
+          title: content.projectName,
+          subTitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconAndText(
+                text: "Aufttraggeber: ${content.client}",
+                icon: Icons.person_pin_circle_outlined,
+                color: Colors.black,
+              ),
+              IconAndText(
+                text:
+                    "${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
+                icon: Icons.location_on_outlined,
+                color: Colors.black,
+              ),
+            ],
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          Center(
-            child: ProjectMap(
-              adress: Adress(
-                  street: content.street,
-                  houseNumber: content.houseNumber,
-                  city: content.city,
-                  zip: content.zip),
-            ),
-          ),
-          CustomContainerWhite(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Visibility(
-                  visible: !editorVisablity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Auftraggeber: " + content.client),
-                      Text("Datum: " + content.date),
-                      Text(
-                          "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}"),
-                      ElevatedButton(
-                        child: Icon(Icons.map),
-                        onPressed: () {
-                          setState(() {
-                            _launchUrl();
-                          });
-                        },
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Center(
+                child: ProjectMap(
+                  adress: Adress(
+                      street: content.street,
+                      houseNumber: content.houseNumber,
+                      city: content.city,
+                      zip: content.zip),
+                ),
+              ),
+              CustomContainerBorder(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Visibility(
+                      visible: !editorVisablity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Auftraggeber: " + content.client),
+                          Text("Datum: " + content.date),
+                          Text(
+                              "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}"),
+                          ElevatedButton(
+                            child: Icon(Icons.map),
+                            onPressed: () {
+                              setState(() {
+                                _launchUrl();
+                              });
+                            },
+                          ),
+                          Text("Kommentar: " + content.comment),
+                        ],
                       ),
-                      Text("Kommentar: " + content.comment),
-                    ],
-                  ),
+                    ),
+                    ElevatedButton(
+                      child: getIcon(),
+                      onPressed: () {
+                        setState(() {
+                          editorVisablity = changeBool(editorVisablity);
+                        });
+                      },
+                    ),
+                    Visibility(
+                      visible: editorVisablity,
+                      child: EditorWidget(
+                        input: content,
+                        route: ((data) {
+                          setState(() {
+                            content = data;
+                            editorVisablity = false;
+                          });
+                          loadGalleryPictures();
+                        }),
+                      ),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  child: getIcon(),
-                  onPressed: () {
-                    setState(() {
-                      editorVisablity = changeBool(editorVisablity);
-                    });
-                  },
-                ),
-                Visibility(
-                  visible: editorVisablity,
-                  child: EditorWidget(
-                    input: content,
-                    route: ((data) {
-                      setState(() {
-                        content = data;
-                        editorVisablity = false;
-                      });
-                    }),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // test to check if Project view is able to load data, which had been entered before
+              ),
+              // test to check if Project view is able to load data, which had been entered before
 
-          CustomContainerWhite(
-            child: displayData(),
-          ),
+              CustomContainerBorder(
+                child: displayData(),
+              ),
 
-          /*
+              /*
             Text("Quadratmeter: " +
                     calculatedOutcome["totalSquareMeters"].toString()),
            Text("Preis: " + calculatedOutcome["totalPrice"].toString()),
 */
-          Container(
-            margin: const EdgeInsets.all(10.0),
-          ),
-          CustomContainerWhite(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 8,
-                  child: Gallery(pictures: galleryPictures),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: CustomButton(
-                    children: const [
-                      Icon(
-                        Icons.add,
-                        color: Colors.white,
+              Container(
+                margin: const EdgeInsets.all(10.0),
+              ),
+              CustomContainerBorder(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 8,
+                      child: Gallery(
+                        pictures: galleryImages,
+                        deleteFunction: (element) async {
+                          setState(() {
+                            element.display = false;
+                          });
+                          var sh = await DataBase.deleteSingleImageFromTable(
+                              content.id, element.id);
+                          var sh2 =
+                              await DataBase.deleteSingleImageFromDirectory(
+                                  content.id, element.id);
+                          loadGalleryPictures();
+
+                          print(
+                              ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${galleryImages.length.toString()}");
+                        },
                       ),
-                      Icon(
-                        Icons.image,
-                        color: Colors.white,
-                      ),
-                    ],
-                    onPressed: () async {
-                      await availableCameras().then(
-                        (value) => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CameraPage(
-                              cameras: value,
-                              originalGallery: galleryPictures,
-                              updateGallery: (images) {
-                                setState(
-                                  () {
-                                    galleryPictures.addAll(images);
-                                    addedPictures.addAll(images);
-                                    safeNewPicturesButton = true;
-                                    imagesSaved = false;
-                                  },
-                                );
-                              },
-                            ),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: CustomButtonRow(
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: GeneralStyle.getUglyGreen(),
                           ),
-                        ),
-                      );
-                    },
-                  ),
+                          Icon(
+                            Icons.image,
+                            color: GeneralStyle.getUglyGreen(),
+                          ),
+                        ],
+                        onPressed: () async {
+                          await availableCameras().then(
+                            (value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CameraPage(
+                                  cameras: value,
+                                  originalGallery: galleryImages,
+                                  updateGallery: (images) async {
+                                    setState(
+                                      () {
+                                        galleryImages.addAll(images);
+                                        calculatedOutcome.aiOutcome = 0.0;
+                                      },
+                                    );
+                                    bool sth = await DataBase.saveImages(
+                                      pictures: images,
+                                      startId: originalLastValue + 1,
+                                      projectId: content.id,
+                                      updateState: (val) {
+                                        setState(() {
+                                          safingImages = true;
+                                          state = val;
+                                        });
+                                      },
+                                    );
+                                    state = 0;
+                                    safingImages = false;
+                                    loadGalleryPictures();
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
 
 /*
           CustomButton(
@@ -346,42 +435,43 @@ class _ProjectViewState extends State<ProjectView> {
             },
           ),
           */
-          Visibility(
-            visible: safeNewPicturesButton,
-            child: CustomButton(
-              children: const [
-                Icon(
-                  Icons.image,
-                  color: Colors.white,
-                ),
-                Icon(
-                  Icons.save,
-                  color: Colors.white,
-                ),
-              ],
-              onPressed: () async {
-                bool sth = await DataBase.saveImages(
-                    addedPictures, content.id, imageObjectList.last.id + 1);
-                loadGalleryPictures();
-                setState(() {
-                  safeNewPicturesButton = false;
-                  imagesSaved = sth;
-                  addedPictures = [];
-                });
-              },
-            ),
-          ),
-          Visibility(
-            visible: imagesSaved,
-            child: Text("Speichern erfolgreich"),
-          ),
 
-          Webshop(
-            aiValue: calculatedOutcome.aiOutcome,
-          )
-        ]),
+              Visibility(
+                visible: safingImages,
+                child: Text("Speichere Bilder $state %"),
+              ),
+              Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(5.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        DataBase.deleteProject(content.id);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => Dashboard()),
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                      child: Icon(Icons.delete),
+                      style: ElevatedButton.styleFrom(primary: Colors.red),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(5.0),
+                    child: renderArchiveButton(content.id),
+                  ),
+                ],
+              ),
+
+              Webshop(
+                aiValue: calculatedOutcome.aiOutcome,
+              )
+            ],
+          ),
+        ),
+        navBar: NavBar(99),
       ),
-      bottomNavigationBar: NavBar(4),
     );
   }
 }

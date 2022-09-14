@@ -111,14 +111,16 @@ class DataBase {
 
   /// gibt eine Liste aller aktiven Projekte zurück
   /// @Params: term = Suchfilter, orderParameter = Begriff nach welchem geordnet wird
-  static Future<List<Content>> getAllActiveProjects(
-      [String searchTerm = "", String orderByParamter = "id"]) async {
+  static Future<List<Content>> getProjects(
+      {String searchTerm = "",
+      String orderByParamter = "id",
+      int statusActive = 1}) async {
     final db = await DataBase.getDataBase();
 
     List listOfMaps = await db.query('projects',
         orderBy: "$orderByParamter COLLATE NOCASE",
         where:
-            "(statusActive = 1) AND (projectName LIKE '%$searchTerm%' OR client LIKE '%$searchTerm%' OR street LIKE '%$searchTerm%' OR city LIKE '%$searchTerm%' OR zip LIKE '%$searchTerm%' OR comment LIKE '%$searchTerm%')");
+            "(statusActive = $statusActive) AND (projectName LIKE '%$searchTerm%' OR client LIKE '%$searchTerm%' OR street LIKE '%$searchTerm%' OR city LIKE '%$searchTerm%' OR zip LIKE '%$searchTerm%' OR comment LIKE '%$searchTerm%')");
 
     // List allImages = await getAllImages();
 
@@ -189,17 +191,13 @@ class DataBase {
     List listOfMaps = await db
         .query('projects', orderBy: "id", where: "id = ?", whereArgs: [id]);
 
-    List<CustomCameraImage> allImages = await getImages(id);
+    List<CustomCameraImage> allImages = await getImages(projectId: id);
 
     List<Content> contentList = [];
     Content contentElement;
 
     contentElement = Content.mapToContent(listOfMaps[0]);
-    allImages.forEach(
-      (pictureObject) {
-        contentElement.pictures.add(pictureObject.image);
-      },
-    );
+    contentElement.pictures = allImages;
 
     return contentElement;
   }
@@ -228,15 +226,25 @@ class DataBase {
     return list;
   }
 
-  static Future<List<CustomCameraImage>> getImages(int projectId) async {
+  /// gibt alle Bilder zu einer projectId als CustomCameraImage Liste zurück, onlyNewImages wird für
+  /// die aufwändige KI Berechnung benutzt, indem hier nur Bilder nachgeladen werden, zu denen noch
+  /// kein KI Wert bestimmt wurde
+  static Future<List<CustomCameraImage>> getImages(
+      {required int projectId, bool onlyNewImages = false}) async {
     final db = await DataBase.getDataBase();
+
+    String additionalCommand = "";
+
+    if (onlyNewImages) {
+      additionalCommand = "AND aiValue <= 0";
+    }
 
     var path = await getFilePath;
 
     List<CustomCameraImage> list = [];
 
     var images = await db.query('images',
-        orderBy: "id", where: "projectId = ?", whereArgs: [projectId]);
+        orderBy: "id", where: "projectId = $projectId $additionalCommand");
 
     for (var element in images) {
       String imageId = element["id"].toString();
@@ -269,11 +277,11 @@ class DataBase {
       debugPrint("Something went wrong when deleting an item: $err");
     }
 
-    deleteImagesFromDirectory(id);
+    deleteImages(id);
     deleteWalls(id);
   }
 
-  static deleteImagesFromDirectory(int projectId) async {
+  static deleteImages(int projectId) async {
     final db = await DataBase.getDataBase();
 
     var images = await db.query('images',
@@ -293,13 +301,20 @@ class DataBase {
     }
   }
 
-  static deleteImage(int projectId, int id) async {
+  static deleteSingleImageFromTable(int projectId, int id) async {
     final db = await DataBase.getDataBase();
     try {
       await db.delete("images", where: "projectId = $projectId AND id = $id");
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }
+  }
+
+  static deleteSingleImageFromDirectory(int projectId, int imageId) async {
+    final path = await getFilePath;
+
+    var file = File('$path/material_images/${projectId}_$imageId.jpg');
+    file.delete();
   }
 
   static deleteWalls(int projectId) async {
@@ -352,7 +367,8 @@ class DataBase {
       'street': content.street,
       'houseNumber': content.houseNumber,
       'zip': content.zip,
-      'city': content.city
+      'city': content.city,
+      'material': content.material
     };
 
     final result =
@@ -444,8 +460,11 @@ class DataBase {
   }
 
   /// die Fotos werden im Ordner "material images hinterlegt"
-  static Future<bool> saveImages(List<XFile?> pictures, int projectId,
-      [int startId = 1]) async {
+  static Future<bool> saveImages(
+      {required List<CustomCameraImage> pictures,
+      required int projectId,
+      required Function(int) updateState,
+      int startId = 1}) async {
     final db = await DataBase.getDataBase();
 
     final path = await getFilePath;
@@ -456,43 +475,54 @@ class DataBase {
 
     int id = startId;
     List<CustomCameraImage> uploadList = [];
+
+    double currentState = 0.0;
+    double finishedState = pictures.length.toDouble();
+    double step = 100.0 / finishedState;
+
     for (var picture in pictures) {
-      final dbData = {'projectId': projectId, 'id': id, 'aiValue': -1.0};
+      final dbData = {'projectId': projectId, 'id': id, 'aiValue': 0.0};
 
       final id2 = await db.insert('images', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
-      await picture?.saveTo('$fileloc/${projectId}_$id.jpg');
-      /*
+      try {
+        // var waitForMe = await picture?.saveTo('$fileloc/${projectId}_$id.jpg');
+
+        /*
       try {
         uploadList.add(
           CustomCameraImage(
-              id: id, projectId: projectId, image: picture!, aiValue: -1.0),
+              id: id, projectId: projectId, image: picture!, aiValue: 0.0),
         );
       } catch (e) {
         print(
             ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Bild erstellen war zu langsam");
       }
       */
-      id = id + 1;
-      // die folgenden Zeilen wieder löschen sobald die Server Tests beendet sind
-      /*
-      Uint8List prefine = await picture!.readAsBytes();
-      List<int> byteList = [];
-      for (var element in prefine) {
-        byteList.add(element);
+        Uint8List prefine = await picture.image.readAsBytes();
+        List<int> byteList = [];
+        for (var element in prefine) {
+          byteList.add(element);
+        }
+
+        img.Image? image = decodeImage(byteList);
+
+        img.Image resizedImage = copyResize(image!, width: 450, height: 300);
+
+        //   resizedImage = copyCrop(resizedImage, int x, int y, int w, int h);
+
+        File file = await File('$fileloc/${projectId}_$id.jpg').create();
+
+        file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
+      } catch (e) {
+        deleteSingleImageFromTable(projectId, id);
+        print("Bild $id wurde nicht gespeichert");
       }
 
-      img.Image? image = decodeImage(byteList);
-
-      img.Image resizedImage = copyResize(image!, width: 4, height: 3);
-
-      File file = await File('$fileloc/$id.jpg').create();
-
-      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${file}");
-
-      file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
-    */
+      id = id + 1;
+      currentState = currentState + step;
+      updateState(currentState.toInt());
     }
 /*
     ServerAI.sendImages(uploadList);

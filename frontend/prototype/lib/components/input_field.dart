@@ -31,24 +31,30 @@ class InputField extends StatefulWidget {
 }
 
 class _InputFieldState extends State<InputField> {
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController textController = TextEditingController();
   bool visibleWarning = false;
 
   @override
   void initState() {
     super.initState();
-    nameController.text = widget.value;
+    textController.text = widget.value;
+  }
+
+  @override
+  void dispose() {
+    textController.clear();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (nameController.text.isEmpty && widget.mandatory) {
+    if (textController.text.isEmpty && widget.mandatory) {
       setState(() {
         widget.formComplete!(false);
         visibleWarning = true;
       });
     }
-    if (nameController.text.isNotEmpty && widget.mandatory) {
+    if (textController.text.isNotEmpty && widget.mandatory) {
       setState(() {
         widget.formComplete!(true);
         visibleWarning = false;
@@ -67,7 +73,7 @@ class _InputFieldState extends State<InputField> {
           margin: ContainerStyles.getMargin(),
           height: widget.maxLines * 25.0,
           child: TextField(
-            controller: nameController,
+            controller: textController,
             maxLines: widget.maxLines.toInt(),
             onChanged: (text) {
               setState(() {

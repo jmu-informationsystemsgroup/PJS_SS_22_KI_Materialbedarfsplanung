@@ -10,11 +10,11 @@ import '../../components/custom_container_white.dart';
 
 class UserForm extends StatefulWidget {
   final Function(List list) updateValues;
-  var aiValue;
+  double aiValue;
   Map<String, dynamic> editUser;
   UserForm(
       {required this.updateValues,
-      required this.aiValue,
+      this.aiValue = 0.0,
       this.editUser = User.emptyUser});
   @override
   _UserFormState createState() {
@@ -58,7 +58,7 @@ class _UserFormState extends State<UserForm> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainerWhite(
+    return CustomContainerBorder(
       child: Column(children: [
         InputField(
           saveTo: (text) => {cash.firstName = text},
