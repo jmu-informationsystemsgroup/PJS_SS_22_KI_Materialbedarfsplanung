@@ -263,6 +263,34 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
               ),
               */
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  child: getIcon(),
+                  onPressed: () {
+                    setState(() {
+                      editorVisablity = changeBool(editorVisablity);
+                    });
+                  },
+                ),
+              ),
+
+              Visibility(
+                visible: editorVisablity,
+                child: CustomContainerBorder(
+                  child: EditorWidget(
+                    input: content,
+                    route: ((data) {
+                      setState(() {
+                        content = data;
+                        editorVisablity = false;
+                      });
+                      loadGalleryPictures();
+                    }),
+                  ),
+                ),
+              ),
+
               Dashboard(
                 content: content,
                 price: calculatedOutcome.totalAiPrice,
@@ -280,27 +308,6 @@ class _ProjectViewState extends State<ProjectView> {
                         children: [
                           Text("Datum: " + content.date),
                         ],
-                      ),
-                    ),
-                    ElevatedButton(
-                      child: getIcon(),
-                      onPressed: () {
-                        setState(() {
-                          editorVisablity = changeBool(editorVisablity);
-                        });
-                      },
-                    ),
-                    Visibility(
-                      visible: editorVisablity,
-                      child: EditorWidget(
-                        input: content,
-                        route: ((data) {
-                          setState(() {
-                            content = data;
-                            editorVisablity = false;
-                          });
-                          loadGalleryPictures();
-                        }),
                       ),
                     ),
                   ],

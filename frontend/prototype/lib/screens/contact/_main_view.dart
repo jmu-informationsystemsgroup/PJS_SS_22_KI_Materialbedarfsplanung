@@ -45,6 +45,7 @@ class Contact extends StatelessWidget {
   Widget getBody() {
     return Flex(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       direction: Axis.horizontal,
       children: [
         Expanded(
@@ -66,6 +67,22 @@ class Contact extends StatelessWidget {
               Text("97244 Bütthard"),
               Text("Deutschland - Germany"),
               contactRow(),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScaffoldContainer(
+          body: Column(
+            children: [
+              getBody(),
               CustomButtonRow(
                 children: [
                   Icon(
@@ -83,20 +100,8 @@ class Contact extends StatelessWidget {
               ),
             ],
           ),
-        )
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return SafeArea(
-      child: Scaffold(
-        body: CustomScaffoldContainer(
-          body: getBody(),
           appBar: CustomAppBar(
-            title: "Kontakt",
+            title: "Spachtelprofi",
             subTitle: [Text("Ihr Experte und Ansprechpartner")],
           ),
           navBar: NavBar(3),
