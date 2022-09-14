@@ -60,10 +60,9 @@ class CustomAppBar extends StatelessWidget {
         Positioned(
           top: 0,
           right: 0,
-          child: Icon(
-            Icons.filter_none,
-            color: Color.fromARGB(255, 8, 173, 11),
-            size: 60,
+          child: SizedBox(
+            width: 50,
+            child: Image.asset("assets/logo.jpg"),
           ),
         ),
       ],
