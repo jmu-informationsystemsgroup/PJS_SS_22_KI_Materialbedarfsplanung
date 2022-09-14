@@ -14,17 +14,17 @@ import '../../backend/data_base_functions.dart';
 import '../../backend/helper_objects.dart';
 import 'project_list.dart';
 
-class Dashboard extends StatefulWidget {
+class Home extends StatefulWidget {
   String title = "Alle Projekte";
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _DashboardState();
+    return _HomeState();
   }
 }
 
-class _DashboardState extends State<Dashboard> {
+class _HomeState extends State<Home> {
   static List<Content> allProjects = [];
   User user = User();
   String searchTerm = "";
@@ -148,7 +148,7 @@ class _DashboardState extends State<Dashboard> {
 class projectMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (_DashboardState.allProjects.isEmpty) {
+    if (_HomeState.allProjects.isEmpty) {
       return Center(
         child: Column(
           children: <Widget>[

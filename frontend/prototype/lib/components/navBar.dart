@@ -18,10 +18,10 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  final screens = [Dashboard(), NewProject(), Profile(), Contact()];
+  final screens = [Home(), NewProject(), Profile(), Contact()];
 
   final titles = [
-    Dashboard().title,
+    Home().title,
     NewProject().title,
     Profile().title,
     Contact().title

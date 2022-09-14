@@ -42,12 +42,15 @@ class ProjectList extends StatelessWidget {
                     children: <Widget>[
                       Expanded(
                         flex: 3,
-                        child: CustomContainerBorder(
-                          //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
-                          child: Icon(
-                            Icons.home,
-                            color: GeneralStyle.getLightGray(),
-                            size: 80,
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: CustomContainerBorder(
+                            //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                            child: Icon(
+                              Icons.home,
+                              color: GeneralStyle.getLightGray(),
+                              size: 80,
+                            ),
                           ),
                         ),
                       ),

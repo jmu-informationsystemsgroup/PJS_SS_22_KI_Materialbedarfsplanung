@@ -139,7 +139,7 @@ class _NewProjectState extends State<NewProject> {
     await Future.delayed(Duration(seconds: 1));
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => Dashboard()),
+      MaterialPageRoute(builder: (context) => Home()),
       (Route<dynamic> route) => false,
     );
   }

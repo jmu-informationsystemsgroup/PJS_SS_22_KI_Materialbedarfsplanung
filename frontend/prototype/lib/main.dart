@@ -21,7 +21,7 @@ class RootClass extends StatelessWidget {
           shadowColor: Colors.transparent,
         ),
       ),
-      home: Dashboard(),
+      home: Home(),
     );
   }
 

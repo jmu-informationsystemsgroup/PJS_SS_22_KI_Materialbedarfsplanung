@@ -7,6 +7,7 @@ import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/screens/create_new_project/input_field_address.dart';
 import 'package:prototype/screens/home/_main_view.dart';
+import 'package:prototype/screens/load_project/dashboard.dart';
 import 'package:prototype/screens/load_project/editor.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
@@ -151,7 +152,7 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
-  Future<void> _launchUrl() async {
+  Future<void> _launchMapsLink() async {
     String urlString =
         "https://www.google.com/maps/place/${content.street}+${content.houseNumber},+${content.zip}+${content.city}";
     Uri url = Uri.parse(urlString);
@@ -231,21 +232,27 @@ class _ProjectViewState extends State<ProjectView> {
           title: content.projectName,
           subTitle: [
             IconAndText(
-              text: "Aufttraggeber: ${content.client}",
+              text: "${content.client}",
               icon: Icons.person_pin_circle_outlined,
               color: Colors.black,
             ),
-            IconAndText(
-              text:
-                  "${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
-              icon: Icons.location_on_outlined,
-              color: Colors.black,
+            GestureDetector(
+              onTap: () {
+                _launchMapsLink();
+              },
+              child: IconAndText(
+                text:
+                    "${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
+                icon: Icons.location_on_outlined,
+                color: Colors.black,
+              ),
             ),
           ],
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
+              /*
               Center(
                 child: ProjectMap(
                   adress: Adress(
@@ -254,6 +261,13 @@ class _ProjectViewState extends State<ProjectView> {
                       city: content.city,
                       zip: content.zip),
                 ),
+              ),
+              */
+              Dashboard(
+                content: content,
+                price: calculatedOutcome.totalAiPrice,
+                aiValue: calculatedOutcome.aiOutcome,
+                galleryImages: galleryImages,
               ),
               CustomContainerBorder(
                 child: Column(
@@ -264,19 +278,7 @@ class _ProjectViewState extends State<ProjectView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Auftraggeber: " + content.client),
                           Text("Datum: " + content.date),
-                          Text(
-                              "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}"),
-                          ElevatedButton(
-                            child: Icon(Icons.map),
-                            onPressed: () {
-                              setState(() {
-                                _launchUrl();
-                              });
-                            },
-                          ),
-                          Text("Kommentar: " + content.comment),
                         ],
                       ),
                     ),
@@ -446,7 +448,7 @@ class _ProjectViewState extends State<ProjectView> {
                         DataBase.deleteProject(content.id);
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => Dashboard()),
+                          MaterialPageRoute(builder: (context) => Home()),
                           (Route<dynamic> route) => false,
                         );
                       },
