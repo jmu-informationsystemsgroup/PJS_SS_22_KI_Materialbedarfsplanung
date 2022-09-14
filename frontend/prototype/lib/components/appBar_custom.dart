@@ -9,9 +9,7 @@ class CustomAppBar extends StatelessWidget {
   Widget getSubTitle() {
     Flex col = Flex(
       direction: Axis.vertical,
-      /*
-      mainAxisAlignment: MainAxisAlignment.start,
-      */
+      mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -38,25 +36,11 @@ class CustomAppBar extends StatelessWidget {
     return Stack(
       children: [
         Align(
-          alignment: Alignment.bottomLeft,
-          child: Flex(
-            direction: Axis.vertical,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  child: getSubTitle(),
-                ),
-              ),
-            ],
-          ),
-        ),
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              margin: ContainerStyles.getMargin(),
+              child: getSubTitle(),
+            )),
         Positioned(
           top: 0,
           right: 0,

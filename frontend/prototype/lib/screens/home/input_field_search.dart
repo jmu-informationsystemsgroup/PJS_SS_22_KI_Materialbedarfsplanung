@@ -20,20 +20,17 @@ class _InputSearchState extends State<InputSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: ContainerStyles.getSearchMargin(),
-      child: TextField(
-        controller: nameController,
-        onChanged: (searchTerm) async {
-          List<Content> searchedProjects =
-              await DataBase.getProjects(searchTerm: searchTerm);
-          widget.onSearchTermChange(searchTerm, searchedProjects);
-          //   Dashboard.list = searchedProjects;
-        },
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: "Suche",
-        ),
+    return TextField(
+      controller: nameController,
+      onChanged: (searchTerm) async {
+        List<Content> searchedProjects =
+            await DataBase.getProjects(searchTerm: searchTerm);
+        widget.onSearchTermChange(searchTerm, searchedProjects);
+        //   Dashboard.list = searchedProjects;
+      },
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: "Suche",
       ),
     );
   }
