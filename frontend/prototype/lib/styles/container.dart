@@ -78,6 +78,10 @@ class ContainerStyles {
     return const EdgeInsets.all(15.0);
   }
 
+  static EdgeInsets getMarginLeftRight() {
+    return const EdgeInsets.fromLTRB(5, 0, 5, 0);
+  }
+
   static BoxDecoration borderBottom() {
     return BoxDecoration(
       border: Border(

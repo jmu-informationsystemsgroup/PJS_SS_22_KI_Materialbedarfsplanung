@@ -74,14 +74,17 @@ class ProjectList extends StatelessWidget {
                               IconAndText(
                                 icon: Icons.person_pin_circle_outlined,
                                 text: "Kunde: ${element.client}",
+                                flexLevel: 5,
                               ),
                               IconAndText(
                                 icon: Icons.location_on_outlined,
                                 text: "Ort: ${element.city}",
+                                flexLevel: 5,
                               ),
                               IconAndText(
                                 icon: Icons.calendar_month_outlined,
                                 text: "Datum: ${element.date}",
+                                flexLevel: 5,
                               ),
                             ],
                           ),

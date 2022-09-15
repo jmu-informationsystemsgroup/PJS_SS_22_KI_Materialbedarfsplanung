@@ -82,7 +82,7 @@ class _NavBarState extends State<NavBar> {
             ),
             GestureDetector(
               child: Icon(
-                Icons.archive,
+                Icons.person,
                 color: getCurrentIndexColor(2),
                 size: getCurrentIndexSize(2),
               ),

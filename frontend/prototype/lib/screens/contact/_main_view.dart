@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_body.dart';
+import 'package:prototype/styles/container.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../components/appBar_custom.dart';
 import '../../components/navBar.dart';
@@ -49,25 +50,31 @@ class Contact extends StatelessWidget {
       direction: Axis.horizontal,
       children: [
         Expanded(
-          flex: 1,
-          child: Image.asset('assets/matthias.jpg'),
-        ),
+            flex: 1,
+            child: Container(
+              margin: ContainerStyles.getMarginLeftRight(),
+              child: Image.asset('assets/matthias.jpg'),
+            )),
         Expanded(
           flex: 1,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Spachtelprofi",
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              Text(""),
-              Text("Werkzeug und Baustoffhandel"),
-              Text("Simmringerstrasse 4"),
-              Text("97244 Bütthard"),
-              Text("Deutschland - Germany"),
-              contactRow(),
-            ],
+          child: Container(
+            margin: ContainerStyles.getMarginLeftRight(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Spachtelprofi",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                Text(""),
+                Text("Werkzeug und Baustoffhandel"),
+                Text("Simmringerstrasse 4"),
+                Text("97244 Bütthard"),
+                Text("Deutschland - Germany"),
+                Text(""),
+                contactRow(),
+              ],
+            ),
           ),
         )
       ],
@@ -86,12 +93,14 @@ class Contact extends StatelessWidget {
               CustomButtonRow(
                 children: [
                   Icon(
-                    Icons.shopping_cart,
-                    color: GeneralStyle.getUglyGreen(),
-                  ),
-                  Icon(
                     Icons.public,
                     color: GeneralStyle.getUglyGreen(),
+                  ),
+                  Text(
+                    "Jezt mehr erfahren",
+                    style: TextStyle(
+                      color: GeneralStyle.getUglyGreen(),
+                    ),
                   ),
                 ],
                 onPressed: () {
