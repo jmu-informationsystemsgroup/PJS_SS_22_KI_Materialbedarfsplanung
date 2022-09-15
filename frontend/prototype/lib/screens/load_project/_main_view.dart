@@ -7,6 +7,7 @@ import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/screens/create_new_project/input_field_address.dart';
 import 'package:prototype/screens/home/_main_view.dart';
+import 'package:prototype/screens/load_project/container_all_data.dart';
 import 'package:prototype/screens/load_project/dashboard.dart';
 import 'package:prototype/screens/load_project/editor.dart';
 import 'package:prototype/components/gallery.dart';
@@ -127,11 +128,11 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
-  Icon getIcon() {
+  IconData getIcon() {
     if (editorVisablity) {
-      return Icon(Icons.close);
+      return Icons.close;
     } else
-      return Icon(Icons.edit);
+      return Icons.edit_outlined;
   }
 
   Widget renderArchiveButton(int id) {
@@ -161,65 +162,25 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
-  Widget outComeText() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Qualität: ${content.material}"),
-        Text(
-            "KI-Ergebnis: ${calculatedOutcome.aiOutcome.toStringAsFixed(2)} kg"),
-        Text(
-            "KI-Preis: ${calculatedOutcome.totalAiPrice.toStringAsFixed(2)} €"),
-      ],
-    );
-  }
-
-  Widget displayData() {
-    if (galleryImages.isEmpty) {
-      return Text("Mache Bilder um einen KI Wert ermitteln zu können");
-    } else if (recalculate) {
-      return Text("Status: $state%");
-    } else if (calculatedOutcome.aiOutcome == 0.0) {
-      return Column(
+  Widget rowThree() {
+    return CustomContainerBorder(
+      color: GeneralStyle.getLightGray(),
+      child: Column(
+        //  crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Um den Bedarf zu ermitteln synchronisiere deine Bilddaten"),
-          ElevatedButton(
-            onPressed: () async {
-              setState(() {
-                state = 0;
-                recalculate = true;
-              });
-              List<CustomCameraImage> replaceList = [];
-              if (galleryImagesNotYetCalculated.isNotEmpty) {
-                replaceList = await ServerAI.getAiValuesFromServer(
-                    galleryImagesNotYetCalculated, (value) {
-                  setState(() {
-                    state = value;
-                  });
-                });
-                setState(() {
-                  recalculate = false;
-                });
-              }
-              loadGalleryPictures();
-            },
-            child: Text("Bilder synchronisieren"),
+          Text(
+            "Kommentar:",
+            style: TextStyle(
+              color: GeneralStyle.getLightGray(),
+              fontStyle: FontStyle.italic,
+            ),
           ),
+          Text(content.comment),
         ],
-      );
-    } else if (calculatedOutcome.exception) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(calculatedOutcome.exceptionText),
-          Text("Aus den übrigen Bildern ergibt sich folgender Wert:"),
-          outComeText(),
-        ],
-      );
-    } else {
-      return outComeText();
-    }
+      ),
+    );
   }
 
   @override
@@ -265,16 +226,27 @@ class _ProjectViewState extends State<ProjectView> {
               */
               Align(
                 alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  child: getIcon(),
-                  onPressed: () {
+                child: GestureDetector(
+                  child: Container(
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2.0,
+                          color: GeneralStyle.getDarkGray(),
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Icon(
+                      getIcon(),
+                      color: GeneralStyle.getDarkGray(),
+                    ),
+                  ),
+                  onTap: () {
                     setState(() {
                       editorVisablity = changeBool(editorVisablity);
                     });
                   },
                 ),
               ),
-
               Visibility(
                 visible: editorVisablity,
                 child: CustomContainerBorder(
@@ -290,34 +262,36 @@ class _ProjectViewState extends State<ProjectView> {
                   ),
                 ),
               ),
-
               Dashboard(
                 content: content,
-                price: calculatedOutcome.totalAiPrice,
-                aiValue: calculatedOutcome.aiOutcome,
+                recalculate: recalculate,
+                outcome: calculatedOutcome,
                 galleryImages: galleryImages,
+                state: state,
+                updateImages: () async {
+                  setState(() {
+                    state = 0;
+                    recalculate = true;
+                  });
+                  List<CustomCameraImage> replaceList = [];
+                  if (galleryImagesNotYetCalculated.isNotEmpty) {
+                    replaceList = await ServerAI.getAiValuesFromServer(
+                        galleryImagesNotYetCalculated, (value) {
+                      setState(() {
+                        state = value;
+                      });
+                    });
+                    setState(() {
+                      recalculate = false;
+                    });
+                  }
+                  loadGalleryPictures();
+                },
               ),
-              CustomContainerBorder(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Visibility(
-                      visible: !editorVisablity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Datum: " + content.date),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              Webshop(
+                aiValue: calculatedOutcome.aiOutcome,
               ),
-              // test to check if Project view is able to load data, which had been entered before
-
-              CustomContainerBorder(
-                child: displayData(),
-              ),
+              rowThree(),
 
               /*
             Text("Quadratmeter: " +
@@ -446,6 +420,10 @@ class _ProjectViewState extends State<ProjectView> {
                 visible: safingImages,
                 child: Text("Speichere Bilder $state %"),
               ),
+              Visibility(
+                visible: !editorVisablity,
+                child: AllData(content: content),
+              ),
               Row(
                 children: [
                   Container(
@@ -468,10 +446,6 @@ class _ProjectViewState extends State<ProjectView> {
                     child: renderArchiveButton(content.id),
                   ),
                 ],
-              ),
-
-              Webshop(
-                aiValue: calculatedOutcome.aiOutcome,
               )
             ],
           ),

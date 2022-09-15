@@ -85,12 +85,12 @@ class _WebshopState extends State<Webshop> {
         CustomButtonRow(
           children: [
             Icon(
-              Icons.shopping_cart,
+              Icons.shopping_cart_outlined,
               color: GeneralStyle.getUglyGreen(),
             ),
-            Icon(
-              Icons.public,
-              color: GeneralStyle.getUglyGreen(),
+            Text(
+              "Zum Webshop",
+              style: TextStyle(color: GeneralStyle.getUglyGreen()),
             ),
           ],
           onPressed: () {
@@ -165,13 +165,15 @@ class _WebshopState extends State<Webshop> {
         CustomButtonRow(
           children: [
             Icon(
-              Icons.shopping_cart,
+              Icons.email_outlined,
               color: GeneralStyle.getUglyGreen(),
             ),
-            Icon(
-              Icons.mail,
-              color: GeneralStyle.getUglyGreen(),
-            )
+            Text(
+              "Direkt bestellen",
+              style: TextStyle(
+                color: GeneralStyle.getUglyGreen(),
+              ),
+            ),
           ],
           onPressed: () {
             setState(() {

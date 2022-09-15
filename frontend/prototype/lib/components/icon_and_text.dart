@@ -12,19 +12,27 @@ class IconAndText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
+    return Flex(
+      direction: Axis.horizontal,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          color: color,
-        ),
-        Text(" "),
-        Text(
-          text,
-          style: TextStyle(
+        Expanded(
+          flex: 1,
+          child: Icon(
+            icon,
             color: color,
           ),
-        )
+        ),
+        Expanded(child: Text(" ")),
+        Expanded(
+          flex: 7,
+          child: Text(
+            text,
+            style: TextStyle(
+              color: color,
+            ),
+          ),
+        ),
       ],
     );
   }

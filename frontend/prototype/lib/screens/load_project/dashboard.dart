@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/styles/general.dart';
 
 import '../../backend/helper_objects.dart';
+import '../../backend/value_calculator.dart';
 
 class Dashboard extends StatelessWidget {
   List galleryImages;
   Content content;
-  double aiValue;
-  double price;
+  CalculatorOutcome outcome;
+  int state;
+  Function() updateImages;
+  bool recalculate;
   Dashboard(
       {required this.galleryImages,
+      required this.updateImages,
       required this.content,
-      required this.aiValue,
-      required this.price});
+      required this.state,
+      required this.recalculate,
+      required this.outcome});
   Widget square({required IconData icon, required String underLine}) {
     return AspectRatio(
       aspectRatio: 1 / 1,
@@ -32,6 +38,100 @@ class Dashboard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget squareAiValue({required IconData icon, required String underLine}) {
+    return AspectRatio(
+      aspectRatio: 1 / 1,
+      child: CustomContainerBorder(
+        color: GeneralStyle.getUglyGreen(),
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Icon(
+                Icons.info,
+                color: GeneralStyle.getLightGray(),
+              ),
+            ),
+            Column(
+              //  crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon),
+                Text(
+                  underLine,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget displayData() {
+    if (galleryImages.isEmpty) {
+      return CustomContainerBorder(
+        child: Column(
+          children: [
+            Text("Mache Bilder um einen KI Wert ermitteln zu können"),
+            Icon(Icons.add_a_photo_outlined),
+          ],
+        ),
+      );
+    } else if (recalculate) {
+      return Text("Status: $state%");
+    } else if (outcome.aiOutcome == 0.0) {
+      return CustomContainerBorder(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Um den Bedarf zu ermitteln synchronisiere deine Bilddaten"),
+            CustomButtonRow(children: [
+              Icon(
+                Icons.sync,
+                color: GeneralStyle.getUglyGreen(),
+              ),
+              Text(
+                "Bilder synchronisieren",
+                style: TextStyle(color: GeneralStyle.getUglyGreen()),
+              ),
+            ], onPressed: updateImages),
+          ],
+        ),
+      );
+    } else if (outcome.exception) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          rowTwo(),
+          CustomContainerBorder(
+            color: Colors.orange,
+            child: Flex(
+              direction: Axis.horizontal,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Icon(
+                    Icons.warning_amber,
+                    color: Colors.orange,
+                    size: 50,
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Text(outcome.exceptionText),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      return rowTwo();
+    }
   }
 
   Widget rowOne() {
@@ -56,37 +156,18 @@ class Dashboard extends StatelessWidget {
       direction: Axis.horizontal,
       children: [
         Expanded(
-          child: square(
+          child: squareAiValue(
               icon: Icons.colorize,
-              underLine: "${aiValue.toStringAsFixed(2)} kg Spachtelmasse"),
+              underLine:
+                  "${outcome.aiOutcome.toStringAsFixed(2)} kg Spachtelmasse"),
         ),
         Expanded(
           child: square(
               icon: Icons.euro,
-              underLine: "${price.toStringAsFixed(2)} € Materialkosten"),
+              underLine:
+                  "${outcome.totalAiPrice.toStringAsFixed(2)} € Materialkosten"),
         ),
       ],
-    );
-  }
-
-  Widget rowThree() {
-    return CustomContainerBorder(
-      color: GeneralStyle.getLightGray(),
-      child: Column(
-        //  crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Kommentar:",
-            style: TextStyle(
-              color: GeneralStyle.getLightGray(),
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-          Text(content.comment),
-        ],
-      ),
     );
   }
 
@@ -95,8 +176,7 @@ class Dashboard extends StatelessWidget {
     return Column(
       children: [
         rowOne(),
-        rowTwo(),
-        rowThree(),
+        displayData(),
       ],
     );
   }
