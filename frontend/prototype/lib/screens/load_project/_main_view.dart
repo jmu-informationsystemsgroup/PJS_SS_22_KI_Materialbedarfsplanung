@@ -50,15 +50,28 @@ class _ProjectViewState extends State<ProjectView> {
 
   /// eine Liste aller Bilder zu denen noch kein KI Ergebnis vorliegt
   List<CustomCameraImage> galleryImagesNotYetCalculated = [];
-  List<Widget> outcomeWidgetList = [];
+
+  /// eine Liste aller Bilder zu denen es fehlerhafte KI Werte gibt und zu denen
+  /// der Nutzer aufgewfordert wird, sie zu löschen
+  List<CustomCameraImage> galleryImagesToDelete = [];
+
+  /// gibt den Ladestatus, wenn entweder der KI Wert zu einem Bild ermittelt wird
+  /// oder aber ein Bild gerade gespeichert wird
   int state = 0;
+
+  /// wenn true: verhindert dass veraltete KI-Werte angezeigt werden
   bool recalculate = false;
+
+  /// wenn true: sorgt dafür dass ein Speicherstatus zu den zu verarbeitenden Bildern
+  /// angezeigt wird
   bool safingImages = false;
+
+  /// wichtig für das Speichern neu hinzugefügter Bilder: gibt an unter welcher id das
+  /// neuhinzugefügt Bild gespeichert werden kann und zählt dann hoch
   int originalLastValue = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -70,6 +83,8 @@ class _ProjectViewState extends State<ProjectView> {
 
   loadGalleryPictures() async {
     galleryImagesNotYetCalculated =
+        await DataBase.getImages(projectId: content.id, onlyNewImages: true);
+    galleryImagesToDelete =
         await DataBase.getImages(projectId: content.id, onlyNewImages: true);
     List<CustomCameraImage> saveState =
         await DataBase.getImages(projectId: content.id);
@@ -379,10 +394,14 @@ class _ProjectViewState extends State<ProjectView> {
               ),
               Dashboard(
                 content: content,
+                imagesToDelete: galleryImagesToDelete,
                 recalculate: recalculate,
                 outcome: calculatedOutcome,
                 galleryImages: galleryImages,
                 state: state,
+                deleteFunction: (element) {
+                  _askForImageDelete(element);
+                },
                 updateImages: () async {
                   setState(() {
                     state = 0;

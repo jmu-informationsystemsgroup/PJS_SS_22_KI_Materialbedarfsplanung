@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/styles/general.dart';
 
@@ -9,16 +10,20 @@ import '../../backend/value_calculator.dart';
 
 class Dashboard extends StatefulWidget {
   List galleryImages;
+  List<CustomCameraImage> imagesToDelete;
   Content content;
   CalculatorOutcome outcome;
   int state;
   Function() updateImages;
+  Function(CustomCameraImage) deleteFunction;
   bool recalculate;
   Dashboard(
       {required this.galleryImages,
+      required this.imagesToDelete,
       required this.updateImages,
       required this.content,
       required this.state,
+      required this.deleteFunction,
       required this.recalculate,
       required this.outcome});
   @override
@@ -153,21 +158,30 @@ class _DashboardState extends State<Dashboard> {
           rowTwo(),
           CustomContainerBorder(
             color: Colors.orange,
-            child: Flex(
-              direction: Axis.horizontal,
+            child: Column(
               children: [
-                Expanded(
-                  flex: 2,
-                  child: Icon(
-                    Icons.warning_amber,
-                    color: Colors.orange,
-                    size: 50,
-                  ),
+                Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Icon(
+                        Icons.warning_amber,
+                        color: Colors.orange,
+                        size: 50,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(widget.outcome.exceptionText),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 5,
-                  child: Text(widget.outcome.exceptionText),
-                ),
+                Gallery(
+                    pictures: widget.imagesToDelete,
+                    deleteFunction: (element) {
+                      widget.deleteFunction(element);
+                    })
               ],
             ),
           ),
