@@ -15,6 +15,7 @@ class Dashboard extends StatefulWidget {
   CalculatorOutcome outcome;
   int state;
   Function() updateImages;
+  Function() addPhoto;
   Function(CustomCameraImage) deleteFunction;
   bool recalculate;
   Dashboard(
@@ -24,6 +25,7 @@ class Dashboard extends StatefulWidget {
       required this.content,
       required this.state,
       required this.deleteFunction,
+      required this.addPhoto,
       required this.recalculate,
       required this.outcome});
   @override
@@ -177,11 +179,25 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ],
                 ),
-                Gallery(
-                    pictures: widget.imagesToDelete,
-                    deleteFunction: (element) {
-                      widget.deleteFunction(element);
-                    })
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 8,
+                      child: Gallery(
+                        pictures: widget.imagesToDelete,
+                        deleteFunction: (element) {
+                          widget.deleteFunction(element);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                        flex: 4,
+                        child: CustomButtonRow(
+                          children: [Icon(Icons.add_a_photo_outlined)],
+                          onPressed: widget.addPhoto,
+                        )),
+                  ],
+                ),
               ],
             ),
           ),

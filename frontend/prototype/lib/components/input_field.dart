@@ -80,10 +80,7 @@ class _InputFieldState extends State<InputField> {
                 widget.saveTo(text);
               });
             },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: widget.labelText,
-            ),
+            decoration: ContainerStyles.getInputStyleGreen(widget.labelText),
           ),
         ),
       ],

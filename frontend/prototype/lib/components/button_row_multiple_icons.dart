@@ -16,13 +16,14 @@ class CustomButtonRow extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         margin: ContainerStyles.getMargin(),
-        //   width: children.length * 55,
         decoration: ContainerStyles.roundetCorners(),
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-        child: Wrap(
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: children,
+        child: Center(
+          widthFactor: 1,
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: children,
+          ),
         ),
       ),
     );

@@ -119,4 +119,15 @@ class ContainerStyles {
       labelText: labelTextInput,
     );
   }
+
+  static getInputStyleGreen(String labelTextInput) {
+    return InputDecoration(
+      labelStyle: TextStyle(color: GeneralStyle.getUglyGreen()),
+      enabledBorder: const OutlineInputBorder(),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+      ),
+      labelText: labelTextInput,
+    );
+  }
 }

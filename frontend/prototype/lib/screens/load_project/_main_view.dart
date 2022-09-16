@@ -271,6 +271,58 @@ class _ProjectViewState extends State<ProjectView> {
     loadGalleryPictures();
   }
 
+  addPhoto() async {
+    await availableCameras().then(
+      (value) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CameraPage(
+            cameras: value,
+            originalGallery: galleryImages,
+            updateGallery: (images) async {
+              setState(
+                () {
+                  galleryImages.addAll(images);
+                  calculatedOutcome.aiOutcome = 0.0;
+                },
+              );
+              bool sth = await DataBase.saveImages(
+                pictures: images,
+                startId: originalLastValue + 1,
+                projectId: content.id,
+                updateState: (val) {
+                  setState(() {
+                    safingImages = true;
+                    state = val;
+                  });
+                },
+              );
+              state = 0;
+              safingImages = false;
+              loadGalleryPictures();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget addPhotoButton() {
+    return AspectRatio(
+      aspectRatio: 1 / 1,
+      child: CustomButtonRow(
+        children: [
+          Icon(
+            Icons.add_a_photo_outlined,
+          ),
+        ],
+        onPressed: () {
+          addPhoto();
+        },
+      ),
+    );
+  }
+
   Future<void> _askForProjectDelete() async {
     showDialog<void>(
       context: context,
@@ -395,6 +447,9 @@ class _ProjectViewState extends State<ProjectView> {
               Dashboard(
                 content: content,
                 imagesToDelete: galleryImagesToDelete,
+                addPhoto: () {
+                  addPhoto();
+                },
                 recalculate: recalculate,
                 outcome: calculatedOutcome,
                 galleryImages: galleryImages,
@@ -447,52 +502,7 @@ class _ProjectViewState extends State<ProjectView> {
                         },
                       ),
                     ),
-                    Expanded(
-                      flex: 4,
-                      child: CustomButtonRow(
-                        children: [
-                          Icon(
-                            Icons.add,
-                            color: GeneralStyle.getUglyGreen(),
-                          ),
-                        ],
-                        onPressed: () async {
-                          await availableCameras().then(
-                            (value) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CameraPage(
-                                  cameras: value,
-                                  originalGallery: galleryImages,
-                                  updateGallery: (images) async {
-                                    setState(
-                                      () {
-                                        galleryImages.addAll(images);
-                                        calculatedOutcome.aiOutcome = 0.0;
-                                      },
-                                    );
-                                    bool sth = await DataBase.saveImages(
-                                      pictures: images,
-                                      startId: originalLastValue + 1,
-                                      projectId: content.id,
-                                      updateState: (val) {
-                                        setState(() {
-                                          safingImages = true;
-                                          state = val;
-                                        });
-                                      },
-                                    );
-                                    state = 0;
-                                    safingImages = false;
-                                    loadGalleryPictures();
-                                  },
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    Expanded(flex: 4, child: addPhotoButton()),
                   ],
                 ),
               ),

@@ -32,9 +32,11 @@ class ValueCalculator {
     String wrongImagesString = wrongImages.toString();
     String sb = wrongImagesString.substring(1, wrongImagesString.length - 1);
     if (wrongImages.length == 1) {
-      return "Das Bild mit der id $sb ist schadhaft, bitte löschen und neues Foto machen";
+      return "Das Bild mit der id $sb ist schadhaft. Es wurde daher nicht mit in die Berechnung aufgenommen. " +
+          "Bitte löschen und neues Foto machen";
     } else {
-      return "Die Bilder mit den ids $sb sind schadhaft, bitte löschen und neues Foto machen";
+      return "Die Bilder mit den ids $sb sind schadhaft. Sie wurden daher nicht mit in die Berechnung aufgenommen. " +
+          "Bitte löschen und neue Fotos machen";
     }
   }
 
