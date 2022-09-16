@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -162,7 +164,7 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
-  Widget rowThree() {
+  Widget comment() {
     return CustomContainerBorder(
       color: GeneralStyle.getLightGray(),
       child: Column(
@@ -180,6 +182,116 @@ class _ProjectViewState extends State<ProjectView> {
           Text(content.comment),
         ],
       ),
+    );
+  }
+
+  Future<void> _askForImageDelete(CustomCameraImage element) async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: IconAndText(
+            icon: Icons.delete,
+            text: "Wirklich löschen",
+          ),
+          content: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(
+                  margin: ContainerStyles.getMarginLeftRight(),
+                  child: Image.file(
+                    File(element.image.path),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  margin: ContainerStyles.getMarginLeftRight(),
+                  child: Text(
+                      'Soll das Bild Nr. ${element.id} wirklich gelöscht werden?'),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: IconAndText(
+                  icon: Icons.cancel,
+                  text: "Abbrechen",
+                  color: GeneralStyle.getUglyGreen()),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: IconAndText(
+                icon: Icons.delete,
+                text: "Löschen",
+                color: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteImageAction(element);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  deleteImageAction(CustomCameraImage element) async {
+    setState(() {
+      element.display = false;
+    });
+    var sh = await DataBase.deleteSingleImageFromTable(content.id, element.id);
+    var sh2 =
+        await DataBase.deleteSingleImageFromDirectory(content.id, element.id);
+    loadGalleryPictures();
+  }
+
+  Future<void> _askForProjectDelete() async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: IconAndText(
+            icon: Icons.delete,
+            text: "Wirklich löschen",
+          ),
+          content: Text('Projekt "${content.projectName}" wirklich löschen?'),
+          actions: <Widget>[
+            TextButton(
+              child: IconAndText(
+                  icon: Icons.cancel,
+                  text: "Abbrechen",
+                  color: GeneralStyle.getUglyGreen()),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: IconAndText(
+                icon: Icons.delete,
+                text: "Löschen",
+                color: Colors.red,
+              ),
+              onPressed: () {
+                DataBase.deleteProject(content.id);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -291,7 +403,7 @@ class _ProjectViewState extends State<ProjectView> {
               Webshop(
                 aiValue: calculatedOutcome.aiOutcome,
               ),
-              rowThree(),
+              comment(),
 
               /*
             Text("Quadratmeter: " +
@@ -308,19 +420,8 @@ class _ProjectViewState extends State<ProjectView> {
                       flex: 8,
                       child: Gallery(
                         pictures: galleryImages,
-                        deleteFunction: (element) async {
-                          setState(() {
-                            element.display = false;
-                          });
-                          var sh = await DataBase.deleteSingleImageFromTable(
-                              content.id, element.id);
-                          var sh2 =
-                              await DataBase.deleteSingleImageFromDirectory(
-                                  content.id, element.id);
-                          loadGalleryPictures();
-
-                          print(
-                              ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${galleryImages.length.toString()}");
+                        deleteFunction: (element) {
+                          _askForImageDelete(element);
                         },
                       ),
                     ),
@@ -430,12 +531,7 @@ class _ProjectViewState extends State<ProjectView> {
                     margin: const EdgeInsets.all(5.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        DataBase.deleteProject(content.id);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home()),
-                          (Route<dynamic> route) => false,
-                        );
+                        _askForProjectDelete();
                       },
                       child: Icon(Icons.delete),
                       style: ElevatedButton.styleFrom(primary: Colors.red),

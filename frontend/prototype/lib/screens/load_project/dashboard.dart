@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/styles/general.dart';
 
 import '../../backend/helper_objects.dart';
 import '../../backend/value_calculator.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   List galleryImages;
   Content content;
   CalculatorOutcome outcome;
@@ -20,6 +21,40 @@ class Dashboard extends StatelessWidget {
       required this.state,
       required this.recalculate,
       required this.outcome});
+  @override
+  State<StatefulWidget> createState() {
+    return _DashboardState();
+  }
+}
+
+class _DashboardState extends State<Dashboard> {
+  Future<void> _showInformationDialog() async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: IconAndText(
+            icon: Icons.info,
+            text: "Info",
+          ),
+          content: Text(
+              'Bei den ermittelten Werten handelt es sich um den Materialbedarf' +
+                  ' für "SpachtelBar Classic" und andere Spachelmassen' +
+                  ' unterliegen anderen Materialbedarfsmengen'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Verstanden!'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget square({required IconData icon, required String underLine}) {
     return AspectRatio(
       aspectRatio: 1 / 1,
@@ -49,13 +84,17 @@ class Dashboard extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.topRight,
-              child: Icon(
-                Icons.info,
-                color: GeneralStyle.getLightGray(),
+              child: GestureDetector(
+                onTap: () {
+                  _showInformationDialog();
+                },
+                child: Icon(
+                  Icons.info,
+                  color: GeneralStyle.getLightGray(),
+                ),
               ),
             ),
             Column(
-              //  crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(icon),
@@ -72,7 +111,7 @@ class Dashboard extends StatelessWidget {
   }
 
   Widget displayData() {
-    if (galleryImages.isEmpty) {
+    if (widget.galleryImages.isEmpty) {
       return CustomContainerBorder(
         child: Column(
           children: [
@@ -81,9 +120,9 @@ class Dashboard extends StatelessWidget {
           ],
         ),
       );
-    } else if (recalculate) {
-      return Text("Status: $state%");
-    } else if (outcome.aiOutcome == 0.0) {
+    } else if (widget.recalculate) {
+      return Text("Status: $widget.state%");
+    } else if (widget.outcome.aiOutcome == 0.0) {
       return CustomContainerBorder(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,11 +137,11 @@ class Dashboard extends StatelessWidget {
                 "Bilder synchronisieren",
                 style: TextStyle(color: GeneralStyle.getUglyGreen()),
               ),
-            ], onPressed: updateImages),
+            ], onPressed: widget.updateImages),
           ],
         ),
       );
-    } else if (outcome.exception) {
+    } else if (widget.outcome.exception) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -122,7 +161,7 @@ class Dashboard extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 5,
-                  child: Text(outcome.exceptionText),
+                  child: Text(widget.outcome.exceptionText),
                 ),
               ],
             ),
@@ -140,12 +179,13 @@ class Dashboard extends StatelessWidget {
       children: [
         Expanded(
           child: square(
-              icon: Icons.window, underLine: "${galleryImages.length} Wände"),
+              icon: Icons.window,
+              underLine: "${widget.galleryImages.length} Wände"),
         ),
         Expanded(
           child: square(
               icon: Icons.verified_outlined,
-              underLine: "Qualität ${content.material}"),
+              underLine: "Qualität ${widget.content.material}"),
         ),
       ],
     );
@@ -159,13 +199,13 @@ class Dashboard extends StatelessWidget {
           child: squareAiValue(
               icon: Icons.colorize,
               underLine:
-                  "${outcome.aiOutcome.toStringAsFixed(2)} kg Spachtelmasse"),
+                  "${widget.outcome.aiOutcome.toStringAsFixed(2)} kg Spachtelmasse"),
         ),
         Expanded(
           child: square(
               icon: Icons.euro,
               underLine:
-                  "${outcome.totalAiPrice.toStringAsFixed(2)} € Materialkosten"),
+                  "${widget.outcome.totalAiPrice.toStringAsFixed(2)} € Materialkosten"),
         ),
       ],
     );

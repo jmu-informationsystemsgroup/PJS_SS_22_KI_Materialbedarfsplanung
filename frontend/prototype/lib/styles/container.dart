@@ -32,14 +32,15 @@ class ContainerStyles {
   static BoxDecoration getBoxDecoration(
       {Color color = const Color.fromARGB(255, 115, 115, 115)}) {
     return BoxDecoration(
-      border: Border.all(color: color, width: 2.0),
+        border: Border.all(color: color, width: 2.0),
+        borderRadius: BorderRadius.all(Radius.circular(10))
 
-      /*
+        /*
       border: Border.all(
           color: Color.fromARGB(118, 0, 0, 0),
           width: 1.0,
           style: BorderStyle.solid),*/
-    );
+        );
   }
 
   static BoxDecoration bodyDecoration() {
