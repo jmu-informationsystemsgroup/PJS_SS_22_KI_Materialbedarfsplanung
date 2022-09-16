@@ -5,7 +5,10 @@ import '../styles/container.dart';
 class CustomButtonRow extends StatelessWidget {
   List<Widget> children;
   Function() onPressed;
-  CustomButtonRow({required this.children, required this.onPressed});
+  CustomButtonRow({
+    required this.children,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

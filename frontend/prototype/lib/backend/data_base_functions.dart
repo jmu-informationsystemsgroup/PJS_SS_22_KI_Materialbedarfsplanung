@@ -230,13 +230,17 @@ class DataBase {
   /// die aufwändige KI Berechnung benutzt, indem hier nur Bilder nachgeladen werden, zu denen noch
   /// kein KI Wert bestimmt wurde
   static Future<List<CustomCameraImage>> getImages(
-      {required int projectId, bool onlyNewImages = false}) async {
+      {required int projectId,
+      bool onlyNewImages = false,
+      bool deletetableImages = false}) async {
     final db = await DataBase.getDataBase();
 
     String additionalCommand = "";
 
     if (onlyNewImages) {
       additionalCommand = "AND aiValue <= 0";
+    } else if (deletetableImages) {
+      additionalCommand = "AND aiValue < 0";
     }
 
     var path = await getFilePath;

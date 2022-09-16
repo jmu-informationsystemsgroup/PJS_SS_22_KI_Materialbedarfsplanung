@@ -44,7 +44,12 @@ class _DashboardState extends State<Dashboard> {
                   ' unterliegen anderen Materialbedarfsmengen'),
           actions: <Widget>[
             TextButton(
-              child: const Text('Verstanden!'),
+              child: Text(
+                'Verstanden!',
+                style: TextStyle(
+                  color: GeneralStyle.getUglyGreen(),
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },

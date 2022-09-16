@@ -139,18 +139,21 @@ class _ProjectViewState extends State<ProjectView> {
 
   Widget renderArchiveButton(int id) {
     if (content.statusActive == 0) {
-      return ElevatedButton(
+      return CustomButtonRow(
         onPressed: () {
           DataBase.activateProject(id);
         },
-        child: const Icon(Icons.settings_backup_restore),
+        children: [
+          Icon(Icons.settings_backup_restore),
+          Text("Projekt reaktivieren")
+        ],
       );
     } else {
-      return ElevatedButton(
+      return CustomButtonRow(
         onPressed: () {
           DataBase.archieveProject(id);
         },
-        child: const Icon(Icons.archive),
+        children: [Icon(Icons.folder_open), Text("Projekt archivieren")],
       );
     }
   }
@@ -433,10 +436,6 @@ class _ProjectViewState extends State<ProjectView> {
                             Icons.add,
                             color: GeneralStyle.getUglyGreen(),
                           ),
-                          Icon(
-                            Icons.image,
-                            color: GeneralStyle.getUglyGreen(),
-                          ),
                         ],
                         onPressed: () async {
                           await availableCameras().then(
@@ -527,19 +526,24 @@ class _ProjectViewState extends State<ProjectView> {
               ),
               Row(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.all(5.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _askForProjectDelete();
-                      },
-                      child: Icon(Icons.delete),
-                      style: ElevatedButton.styleFrom(primary: Colors.red),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: const EdgeInsets.all(5.0),
+                      child: CustomButtonRow(
+                        onPressed: () {
+                          _askForProjectDelete();
+                        },
+                        children: [Icon(Icons.delete), Text("Projekt löschen")],
+                      ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.all(5.0),
-                    child: renderArchiveButton(content.id),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: const EdgeInsets.all(5.0),
+                      child: renderArchiveButton(content.id),
+                    ),
                   ),
                 ],
               )
