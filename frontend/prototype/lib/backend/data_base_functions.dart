@@ -84,7 +84,10 @@ class DataBase {
         firstName TEXT,
         lastName TEXT,
         customerId INTEGER,
-        address TEXT
+        street TEXT,
+        houseNumber TEXT,
+        zip TEXT,
+        city TEXT
       )
       """);
   }
@@ -388,7 +391,10 @@ class DataBase {
       'firstName': data.firstName,
       'lastName': data.lastName,
       'customerId': data.customerId,
-      'address': data.address
+      'street': data.street,
+      'houseNumber': data.houseNumber,
+      'zip': data.zip,
+      'city': data.city,
     };
     final result =
         await db.update('user_data', dbData, where: "id = ?", whereArgs: [id]);
@@ -464,7 +470,10 @@ class DataBase {
       'firstName': data.firstName,
       'lastName': data.lastName,
       'customerId': data.customerId,
-      'address': data.address
+      'street': data.street,
+      'houseNumber': data.houseNumber,
+      'zip': data.zip,
+      'city': data.city,
     };
     final id = await db.insert('user_data', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);

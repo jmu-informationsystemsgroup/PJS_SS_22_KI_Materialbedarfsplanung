@@ -4,8 +4,12 @@ import 'package:prototype/components/input_field.dart';
 class AddressInput extends StatefulWidget {
   Function(Adress) updateAddress;
   Adress adress;
+  bool mandatory;
+  Function(bool)? completeAdress;
   AddressInput(
       {required this.updateAddress,
+      this.mandatory = false,
+      this.completeAdress,
       this.adress =
           const Adress(street: "", houseNumber: "", zip: "", city: "")});
 
@@ -21,6 +25,12 @@ class AddressInputState extends State<AddressInput> {
   String houseNumber = "";
   String city = "";
   String zip = "";
+  static bool streetComplete = false;
+  static bool houseNrComplete = false;
+  static bool zipComplete = false;
+  static bool cityComplete = false;
+  static bool adressComplete =
+      streetComplete && houseNrComplete && zipComplete && cityComplete;
 
   @override
   void initState() {
@@ -31,9 +41,14 @@ class AddressInputState extends State<AddressInput> {
     zip = widget.adress.zip;
   }
 
+  checkAdressComplete() {
+    if (adressComplete) {
+      widget.completeAdress!(true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       margin: const EdgeInsets.all(15.0),
       padding: const EdgeInsets.all(5.0),
@@ -44,12 +59,17 @@ class AddressInputState extends State<AddressInput> {
         runSpacing: 20, // to apply margin in the cross axis of the wrap
         children: <Widget>[
           Text("Adresse"),
-          Row(
+          Flex(
+            direction: Axis.horizontal,
             children: <Widget>[
               Expanded(
                 flex: 7,
                 child: InputField(
+                  formComplete: (formCompleteController) {
+                    streetComplete = formCompleteController;
+                  },
                   value: widget.adress.street,
+                  mandatory: widget.mandatory,
                   saveTo: (value) {
                     street = value;
                     widget.updateAddress(Adress(
@@ -64,7 +84,11 @@ class AddressInputState extends State<AddressInput> {
               Expanded(
                 flex: 3,
                 child: InputField(
+                    formComplete: (formCompleteController) {
+                      houseNrComplete = formCompleteController;
+                    },
                     value: widget.adress.houseNumber,
+                    mandatory: widget.mandatory,
                     saveTo: (value) {
                       houseNumber = value;
                       widget.updateAddress(Adress(
@@ -77,12 +101,17 @@ class AddressInputState extends State<AddressInput> {
               ),
             ],
           ),
-          Row(
+          Flex(
+            direction: Axis.horizontal,
             children: <Widget>[
               Expanded(
-                flex: 5,
+                flex: 1,
                 child: InputField(
+                    formComplete: (formCompleteController) {
+                      zipComplete = formCompleteController;
+                    },
                     value: widget.adress.zip,
+                    mandatory: widget.mandatory,
                     saveTo: (value) {
                       zip = value;
                       widget.updateAddress(Adress(
@@ -94,9 +123,13 @@ class AddressInputState extends State<AddressInput> {
                     labelText: "Postleitzahl"),
               ),
               Expanded(
-                flex: 5,
+                flex: 1,
                 child: InputField(
+                    formComplete: (formCompleteController) {
+                      cityComplete = formCompleteController;
+                    },
                     value: widget.adress.city,
+                    mandatory: widget.mandatory,
                     saveTo: (value) {
                       city = value;
                       widget.updateAddress(Adress(

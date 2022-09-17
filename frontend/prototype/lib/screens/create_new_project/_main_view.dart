@@ -21,7 +21,7 @@ import '../../backend/helper_objects.dart';
 import '../../styles/container.dart';
 import '../load_project/_main_view.dart';
 import '../../components/input_field.dart';
-import 'input_field_address.dart';
+import '../../components/input_field_address.dart';
 import 'checklist_quality.dart';
 import 'mvp_walls.dart';
 

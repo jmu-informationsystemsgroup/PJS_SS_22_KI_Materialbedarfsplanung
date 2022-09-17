@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:prototype/screens/create_new_project/input_field_address.dart';
+import 'package:prototype/components/input_field_address.dart';
 
 /// das KartenWidget erhält als Eingabe die Adresswerte die du auf dem Handy in "Projekt erstellen" bzw in "Projekt bearbeiten"
 /// einfügst. Anschauen kannst du dir die Karte bei der Ansicht "Projekt laden".

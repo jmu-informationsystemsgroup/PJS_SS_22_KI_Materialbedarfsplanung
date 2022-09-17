@@ -77,7 +77,13 @@ class _WebshopState extends State<Webshop> {
   Widget build(BuildContext context) {
     User user = User.mapToUser(User.emptyUser);
     if (userData.isNotEmpty) {
+      Map someMap = userData[0];
       userExistsVisibility = true;
+      someMap.values.forEach((element) {
+        if (element == "" || element == 0) {
+          userExistsVisibility = false;
+        }
+      });
       user = User.mapToUser(userData[0]);
     }
     return Column(
@@ -114,6 +120,8 @@ class _WebshopState extends State<Webshop> {
                           userExistsVisibility = true;
                         });
                       },
+                      allValuesMandatory: true,
+                      editUser: userDataNullCheckSafe(),
                       aiValue: widget.aiValue,
                     )
                   ],
@@ -151,6 +159,7 @@ class _WebshopState extends State<Webshop> {
                           },
                           aiValue: widget.aiValue,
                           editUser: userDataNullCheckSafe(),
+                          allValuesMandatory: true,
                         ),
                         visible: editorVisiblity,
                       ),

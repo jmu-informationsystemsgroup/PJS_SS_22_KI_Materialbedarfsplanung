@@ -107,16 +107,22 @@ class Content {
 }
 
 class User {
-  late String firstName;
-  late String lastName;
-  late int customerId;
-  late String address;
+  String firstName = "";
+  String lastName = "";
+  int customerId = 0;
+  String street = "";
+  String houseNumber = "";
+  String zip = "";
+  String city = "";
 
   static const Map<String, dynamic> emptyUser = {
     'firstName': "",
     'lastName': "",
     'customerId': 0,
-    'address': ""
+    'street': "",
+    'houseNumber': "",
+    'zip': "",
+    'city': "",
   };
 
   static Map<String, dynamic> userToMap(User user) {
@@ -124,7 +130,10 @@ class User {
       'firstName': user.firstName,
       'lastName': user.lastName,
       'customerId': user.customerId,
-      'address': user.address
+      'street': user.street,
+      'houseNumber': user.houseNumber,
+      'zip': user.zip,
+      'city': user.city,
     };
 
     return content;
@@ -136,7 +145,10 @@ class User {
     user.firstName = map["firstName"];
     user.lastName = map['lastName'];
     user.customerId = map['customerId'];
-    user.address = map['address'];
+    user.street = map['street'];
+    user.houseNumber = map['houseNumber'];
+    user.zip = map['zip'];
+    user.city = map['city'];
 
     return user;
   }

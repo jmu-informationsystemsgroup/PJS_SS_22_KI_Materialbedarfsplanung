@@ -7,7 +7,7 @@ import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
-import 'package:prototype/screens/create_new_project/input_field_address.dart';
+import 'package:prototype/components/input_field_address.dart';
 import 'package:prototype/screens/home/_main_view.dart';
 import 'package:prototype/screens/load_project/container_all_data.dart';
 import 'package:prototype/screens/load_project/dashboard.dart';

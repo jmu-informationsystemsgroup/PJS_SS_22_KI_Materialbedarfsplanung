@@ -86,7 +86,7 @@ class _ProfileState extends State<Profile> {
           Visibility(
             visible: textVisiblity,
             child: DisplayUserData(
-              user: user,
+              user: User.mapToUser(userData[0]),
             ),
           ),
           ElevatedButton(

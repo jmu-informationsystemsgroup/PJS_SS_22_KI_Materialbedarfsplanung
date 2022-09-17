@@ -26,7 +26,10 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
             " betragen würde. Gerne würde ich in einem Gespräch mit dir genaueres darüber aushandeln. Anbei meine Kundendaten: \n \n Kundennummer: " +
             user["customerId"].toString() +
             "\n Adresse: " +
-            user["address"].toString() +
+            user["street"].toString() +
+            user["houseNumber"].toString() +
+            user["zip"].toString() +
+            user["city"].toString() +
             " \n \n Mit freundlichen Grüßen \n \n" +
             user["firstName"].toString() +
             " " +
