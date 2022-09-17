@@ -74,7 +74,7 @@ class DisplayUserData extends StatelessWidget {
           textLine(label: "Vorname: ", value: user.firstName),
           textLine(label: "Nachname: ", value: user.lastName),
         ]),
-        dataLine(icon: Icons.grid_3x3, textValues: [
+        dataLine(icon: Icons.numbers, textValues: [
           textLine(label: "Kundennummer: ", value: getCustomerId()),
         ]),
         dataLine(icon: Icons.location_on_outlined, textValues: [

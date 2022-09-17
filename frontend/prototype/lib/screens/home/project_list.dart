@@ -60,9 +60,9 @@ class ProjectList extends StatelessWidget {
                           child: CustomContainerBorder(
                             //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                             child: Icon(
-                              Icons.home,
-                              color: GeneralStyle.getLightGray(),
-                              size: 80,
+                              Icons.cottage_outlined,
+                              color: GeneralStyle.getDarkGray(),
+                              size: 40,
                             ),
                           ),
                         ),

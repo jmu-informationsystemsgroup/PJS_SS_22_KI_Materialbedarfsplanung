@@ -29,30 +29,28 @@ class _InpuDateState extends State<InputDate> {
     return Container(
       margin: ContainerStyles.getMargin(),
       child: TextField(
-        controller: dateinput,
-        onTap: () async {
-          DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(1950),
-              //DateTime.now() - not to allow to choose before today.
-              lastDate: DateTime(2100));
+          controller: dateinput,
+          onTap: () async {
+            DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1950),
+                //DateTime.now() - not to allow to choose before today.
+                lastDate: DateTime(2100));
 
-          if (pickedDate != null) {
-            String formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
+            if (pickedDate != null) {
+              String formattedDate =
+                  DateFormat('dd.MM.yyyy').format(pickedDate);
 
-            setState(() {
-              dateinput.text =
-                  formattedDate; //set output date to TextField value.
-              widget.saveTo(formattedDate);
-            });
-          }
-        },
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: "Datum",
-        ),
-      ),
+              setState(() {
+                dateinput.text =
+                    formattedDate; //set output date to TextField value.
+                widget.saveTo(formattedDate);
+              });
+            }
+          },
+          decoration: ContainerStyles.getInputStyleIconGreen(
+              "Datum", Icons.calendar_month_outlined)),
     );
   }
 }

@@ -120,16 +120,46 @@ class ContainerStyles {
     );
   }
 
-  static getInputStyleGreen(String labelTextInput) {
+  static getDefaultInputStyleGreen(String labelTextInput) {
     return InputDecoration(
       isDense: true,
-      labelStyle: TextStyle(color: GeneralStyle.getLightGray()),
+
+      //  icon: ,
+      hintStyle: TextStyle(color: GeneralStyle.getLightGray()),
       //  floatingLabelStyle: MaterialStateTextStyle(),
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: GeneralStyle.getLightGray())),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
       ),
+      labelText: labelTextInput,
+    );
+  }
+
+  static getInputStyleIconGreen(String labelTextInput, IconData icon) {
+    return InputDecoration(
+      isDense: true,
+      icon: Icon(icon),
+      hintStyle: TextStyle(color: GeneralStyle.getLightGray()),
+      //  floatingLabelStyle: MaterialStateTextStyle(),
+      enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: GeneralStyle.getLightGray())),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+      ),
+      labelText: labelTextInput,
+    );
+  }
+
+  static getSearchStyleGreen(String labelTextInput) {
+    return InputDecoration(
+      isDense: true,
+      enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: GeneralStyle.getLightGray())),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+      ),
+      prefixIcon: Icon(Icons.search),
       labelText: labelTextInput,
     );
   }

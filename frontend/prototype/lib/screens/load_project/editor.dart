@@ -22,11 +22,13 @@ class EditorWidget extends StatelessWidget {
         InputField(
           saveTo: (text) => {data.projectName = text},
           labelText: "Name",
+          icon: Icons.discount_outlined,
           value: input.projectName,
         ),
         InputField(
           saveTo: (text) => {data.client = text},
-          labelText: "Auftraggeber",
+          labelText: "Kunde",
+          icon: Icons.person_pin_outlined,
           value: input.client,
         ),
         InputDate(

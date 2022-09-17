@@ -70,6 +70,7 @@ class _UserFormState extends State<UserForm> {
         InputField(
           saveTo: (text) => {cache.firstName = text},
           labelText: "Vorname",
+          icon: Icons.person,
           value: cache.firstName,
           formComplete: (formCompleteController) =>
               {preNameComplete = formCompleteController},
@@ -78,6 +79,7 @@ class _UserFormState extends State<UserForm> {
         InputField(
           saveTo: (text) => {cache.lastName = text},
           labelText: "Nachname",
+          icon: Icons.person_add,
           value: cache.lastName,
           formComplete: (formCompleteController) =>
               {familyNameComplete = formCompleteController},
@@ -86,6 +88,8 @@ class _UserFormState extends State<UserForm> {
         InputField(
           saveTo: (text) => {cache.customerId = int.parse(text)},
           labelText: "Kundennummer",
+          icon: Icons.numbers,
+          inputType: TextInputType.number,
           formComplete: (formCompleteController) =>
               {idComplete = formCompleteController},
           value: _idValue(),

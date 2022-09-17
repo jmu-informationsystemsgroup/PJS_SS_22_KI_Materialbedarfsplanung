@@ -16,12 +16,16 @@ class InputField extends StatefulWidget {
   bool mandatory;
   double maxLines;
   bool disableMargin;
+  IconData? icon;
+  TextInputType inputType;
   Function(bool)? formComplete;
   InputField(
       {required this.saveTo,
       required this.labelText,
       this.maxLines = 1,
       this.disableMargin = false,
+      this.icon,
+      this.inputType = TextInputType.text,
       this.mandatory = false,
       this.formComplete,
       this.value = ""});
@@ -71,6 +75,15 @@ class _InputFieldState extends State<InputField> {
     }
   }
 
+  getRightStyle() {
+    if (widget.icon != null) {
+      return ContainerStyles.getInputStyleIconGreen(
+          widget.labelText, widget.icon!);
+    } else {
+      return ContainerStyles.getDefaultInputStyleGreen(widget.labelText);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (textController.text.isEmpty && widget.mandatory) {
@@ -99,6 +112,7 @@ class _InputFieldState extends State<InputField> {
           //  height: widget.maxLines * 35.0,
           child: TextFormField(
             //  scrollController: _scrollController,
+            keyboardType: widget.inputType,
             controller: textController,
             maxLines: widget.maxLines.toInt(),
             onChanged: (text) {
@@ -107,7 +121,7 @@ class _InputFieldState extends State<InputField> {
                 widget.saveTo(text);
               });
             },
-            decoration: ContainerStyles.getInputStyleGreen(widget.labelText),
+            decoration: getRightStyle(),
           ),
         ),
       ],

@@ -288,7 +288,7 @@ class _NewProjectState extends State<NewProject> {
             title: "Neues Projekt",
             subTitle: [
               IconAndText(
-                text: "Aufttraggeber: ${content.client}",
+                text: "Kunde: ${content.client}",
                 icon: Icons.person_pin_circle_outlined,
                 color: Colors.black,
               ),
@@ -312,6 +312,7 @@ class _NewProjectState extends State<NewProject> {
                       }),
                     },
                     labelText: "Name",
+                    icon: Icons.discount_outlined,
                     value: content.projectName,
                   ),
 
@@ -387,7 +388,8 @@ class _NewProjectState extends State<NewProject> {
                         content.client = text;
                       }),
                     },
-                    labelText: "Auftraggeber",
+                    labelText: "Kunde",
+                    icon: Icons.person_pin_circle_outlined,
                     value: content.client,
                   ),
                   InputDate(

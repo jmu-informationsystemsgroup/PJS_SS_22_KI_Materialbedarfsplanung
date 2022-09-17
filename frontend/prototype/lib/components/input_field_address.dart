@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/components/input_field.dart';
 
 class AddressInput extends StatefulWidget {
@@ -58,7 +59,7 @@ class AddressInputState extends State<AddressInput> {
         spacing: 20, // to apply margin in the main axis of the wrap
         runSpacing: 20, // to apply margin in the cross axis of the wrap
         children: <Widget>[
-          Text("Adresse"),
+          IconAndText(icon: Icons.location_on_outlined, text: "Adresse"),
           Flex(
             direction: Axis.horizontal,
             children: <Widget>[
@@ -114,6 +115,7 @@ class AddressInputState extends State<AddressInput> {
                     },
                     value: widget.adress.zip,
                     mandatory: widget.mandatory,
+                    inputType: TextInputType.number,
                     disableMargin: true,
                     saveTo: (value) {
                       zip = value;

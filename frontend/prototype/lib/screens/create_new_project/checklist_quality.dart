@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/styles/general.dart';
 
@@ -74,10 +75,8 @@ class _QualityChecklist extends State<QualityChecklist> {
     return CustomContainerBorder(
       child: Column(
         children: <Widget>[
-          Text(
-            "Oberflächenqualität",
-            style: ContainerStyles.getTextStyle(),
-          ),
+          IconAndText(
+              icon: Icons.verified_outlined, text: "Oberflächenqualität"),
           checkBoxRow("\$ (Standard)", "Q2"),
           checkBoxRow("\$\$ (gehobene optische Ansprüche)", "Q3"),
           checkBoxRow("\$\$\$ (höchste optische Ansprüche)", "Q4"),
