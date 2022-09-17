@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prototype/styles/general.dart';
 
 import '../../components/appBar_custom.dart';
+import '../../components/button_photo.dart';
 import '../../components/icon_and_text.dart';
 import '../../components/screen_camera.dart';
 
@@ -252,7 +253,7 @@ class _NewProjectState extends State<NewProject> {
             TextButton(
               child: IconAndText(
                 icon: Icons.cancel,
-                text: "Verwerfen",
+                text: "Abbrechen",
                 color: Colors.red,
               ),
               onPressed: () {
@@ -262,7 +263,7 @@ class _NewProjectState extends State<NewProject> {
             TextButton(
               child: IconAndText(
                   icon: Icons.check,
-                  text: "Weitermachen",
+                  text: "Speichern",
                   color: GeneralStyle.getUglyGreen()),
               onPressed: () async {
                 var save = await savingProcess();
@@ -315,8 +316,8 @@ class _NewProjectState extends State<NewProject> {
                   ),
 
                   Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
+                    child: ButtonPhoto(
+                      addPhoto: () async {
                         await availableCameras().then((value) => Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -334,10 +335,9 @@ class _NewProjectState extends State<NewProject> {
                                       )),
                             ));
                       },
-                      child: Icon(Icons.camera_alt),
                     ),
                   ),
-
+/*
                   Center(
                       child: CustomButtonRow(
                     children: [
@@ -372,7 +372,7 @@ class _NewProjectState extends State<NewProject> {
                       }
                     },
                   )),
-
+*/
                   Gallery(
                     pictures: galleryPictures,
                     deleteFunction: (element) {
@@ -471,7 +471,10 @@ class _NewProjectState extends State<NewProject> {
                           ],
                           onPressed: () async {
                             Content emptyContent = Content();
-                            if (content == emptyContent) {
+                            if (Content.contentToMap(content).toString() ==
+                                    Content.contentToMap(emptyContent)
+                                        .toString() &&
+                                galleryPictures.toString() == [].toString()) {
                               _askForSaveEmptyProject();
                             } else {
                               var save = await savingProcess();

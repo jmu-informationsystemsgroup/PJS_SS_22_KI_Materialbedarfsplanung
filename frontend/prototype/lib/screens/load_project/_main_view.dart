@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prototype/backend/helper_objects.dart';
+import 'package:prototype/components/button_edit.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
@@ -90,7 +91,9 @@ class _ProjectViewState extends State<ProjectView> {
         await DataBase.getImages(projectId: content.id);
     CalculatorOutcome val =
         await ValueCalculator.getOutcomeObject(content, saveState);
-    originalLastValue = saveState.last.id;
+    if (saveState.isNotEmpty) {
+      originalLastValue = saveState.last.id;
+    }
 
     setState(() {
       galleryImages = saveState;
@@ -143,13 +146,6 @@ class _ProjectViewState extends State<ProjectView> {
     } else {
       return false;
     }
-  }
-
-  IconData getIcon() {
-    if (editorVisablity) {
-      return Icons.close;
-    } else
-      return Icons.edit_outlined;
   }
 
   Widget renderArchiveButton(int id) {
@@ -422,28 +418,13 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
               ),
               */
-              Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  child: Container(
-                    padding: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2.0,
-                          color: GeneralStyle.getDarkGray(),
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    child: Icon(
-                      getIcon(),
-                      color: GeneralStyle.getDarkGray(),
-                    ),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      editorVisablity = changeBool(editorVisablity);
-                    });
-                  },
-                ),
+              ButtonEdit(
+                textVisiblity: editorVisablity,
+                changeState: () {
+                  setState(() {
+                    editorVisablity = changeBool(editorVisablity);
+                  });
+                },
               ),
               Visibility(
                 visible: editorVisablity,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/components/button_edit.dart';
 import 'package:prototype/components/custom_container_body.dart';
 import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/screens/profile/user_data.dart';
@@ -43,13 +44,6 @@ class _ProfileState extends State<Profile> {
         }
       },
     );
-  }
-
-  IconData getIcon() {
-    if (textVisiblity) {
-      return Icons.edit;
-    } else
-      return Icons.close;
   }
 
   bool changeBool(bool input) {
@@ -114,28 +108,13 @@ class _ProfileState extends State<Profile> {
         body: CustomScaffoldContainer(
           body: SingleChildScrollView(
             child: Column(children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  child: Container(
-                    padding: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2.0,
-                          color: GeneralStyle.getDarkGray(),
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    child: Icon(
-                      getIcon(),
-                      color: GeneralStyle.getDarkGray(),
-                    ),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      textVisiblity = changeBool(textVisiblity);
-                    });
-                  },
-                ),
+              ButtonEdit(
+                textVisiblity: textVisiblity,
+                changeState: () {
+                  setState(() {
+                    textVisiblity = changeBool(textVisiblity);
+                  });
+                },
               ),
               getBody()
             ]),

@@ -6,6 +6,7 @@ import 'package:prototype/screens/profile/user_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/helper_objects.dart';
+import '../../components/button_edit.dart';
 import '../../components/button_row_multiple_icons.dart';
 import '../../components/custom_container_white.dart';
 import '../../styles/general.dart';
@@ -133,29 +134,13 @@ class _WebshopState extends State<Webshop> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          child: Container(
-                            padding: EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 2.0,
-                                  color: GeneralStyle.getDarkGray(),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: Icon(
-                              getIcon(),
-                              color: GeneralStyle.getDarkGray(),
-                            ),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              textVisiblity = changeBool(textVisiblity);
-                            });
-                          },
-                        ),
+                      ButtonEdit(
+                        textVisiblity: textVisiblity,
+                        changeState: () {
+                          setState(() {
+                            textVisiblity = changeBool(textVisiblity);
+                          });
+                        },
                       ),
                       Visibility(
                         visible: textVisiblity,
