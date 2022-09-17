@@ -8,6 +8,7 @@ import 'package:prototype/screens/home/input_field_search.dart';
 import 'package:prototype/components/navBar.dart';
 
 import 'package:prototype/screens/home/button_new_project.dart';
+import 'package:prototype/screens/profile/_main_view.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/styles/general.dart';
 import '../../backend/data_base_functions.dart';
@@ -51,17 +52,18 @@ class _HomeState extends State<Home> {
   }
 
   getUser() async {
-    DataBase.getUserData().then((loadedContent) {
-      setState(() {
-        userData = loadedContent;
-      });
-      if (userData.isNotEmpty) {
+    DataBase.getUserData().then(
+      (loadedContent) {
         setState(() {
-          user = User.mapToUser(userData[0]);
+          userData = loadedContent;
         });
-      }
-      ;
-    });
+        if (userData.isNotEmpty) {
+          setState(() {
+            user = User.mapToUser(userData[0]);
+          });
+        }
+      },
+    );
   }
 
   List<Widget> addUserData() {
@@ -73,7 +75,18 @@ class _HomeState extends State<Home> {
             color: Colors.black)
       ];
     } else {
-      return [Text("Bitte klicken um UserDaten hinzuzufügen")];
+      return [
+        GestureDetector(
+          child: Text("Bitte klicken um Nutzerdaten hinzuzufügen"),
+          onTap: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Profile()),
+              (Route<dynamic> route) => false,
+            );
+          },
+        )
+      ];
     }
   }
 
@@ -81,11 +94,11 @@ class _HomeState extends State<Home> {
     return CustomButtonRow(
       children: [
         Icon(
-          Icons.folder_open,
+          Icons.emoji_events_outlined,
           color: GeneralStyle.getUglyGreen(),
         ),
         Text(
-          "Archiv",
+          "Abgeschlossene Projekte",
           style: TextStyle(
             color: GeneralStyle.getUglyGreen(),
           ),

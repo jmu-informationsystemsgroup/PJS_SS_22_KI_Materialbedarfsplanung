@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/custom_container_body.dart';
+import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/screens/profile/user_data.dart';
 
 import '../../backend/data_base_functions.dart';
@@ -65,6 +66,18 @@ class _ProfileState extends State<Profile> {
     return User.emptyUser;
   }
 
+  addUserInformation() {
+    if (userData.isNotEmpty) {
+      return IconAndText(
+        icon: Icons.person,
+        text: "${user.firstName} ${user.lastName}",
+        color: Colors.black,
+      );
+    } else {
+      return Container();
+    }
+  }
+
   Widget getBody() {
     if (userData.isNotEmpty && textVisiblity) {
       return Column(
@@ -111,7 +124,9 @@ class _ProfileState extends State<Profile> {
           body: getBody(),
           appBar: CustomAppBar(
             title: "Mein Profil",
-            subTitle: [Text("test")],
+            subTitle: [
+              addUserInformation(),
+            ],
           ),
           navBar: NavBar(2),
         ),

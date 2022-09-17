@@ -168,7 +168,10 @@ class _ProjectViewState extends State<ProjectView> {
         onPressed: () {
           DataBase.archieveProject(id);
         },
-        children: [Icon(Icons.folder_open), Text("Projekt archivieren")],
+        children: [
+          Icon(Icons.emoji_events_outlined),
+          Text("Projekt abgeschlossen")
+        ],
       );
     }
   }
@@ -365,6 +368,36 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  Widget getClientForHeader() {
+    if (content.client != "") {
+      return IconAndText(
+        text: "${content.client}",
+        icon: Icons.person_pin_circle_outlined,
+        color: Colors.black,
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget getAdressForHeader() {
+    if (content.street != "" && content.zip != "" && content.city != "") {
+      return GestureDetector(
+        onTap: () {
+          _launchMapsLink();
+        },
+        child: IconAndText(
+          text:
+              "${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
+          icon: Icons.location_on_outlined,
+          color: Colors.black,
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print(
@@ -373,24 +406,7 @@ class _ProjectViewState extends State<ProjectView> {
       body: CustomScaffoldContainer(
         appBar: CustomAppBar(
           title: content.projectName,
-          subTitle: [
-            IconAndText(
-              text: "${content.client}",
-              icon: Icons.person_pin_circle_outlined,
-              color: Colors.black,
-            ),
-            GestureDetector(
-              onTap: () {
-                _launchMapsLink();
-              },
-              child: IconAndText(
-                text:
-                    "${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
-                icon: Icons.location_on_outlined,
-                color: Colors.black,
-              ),
-            ),
-          ],
+          subTitle: [getClientForHeader(), getAdressForHeader()],
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -563,7 +579,10 @@ class _ProjectViewState extends State<ProjectView> {
                         onPressed: () {
                           _askForProjectDelete();
                         },
-                        children: [Icon(Icons.delete), Text("Projekt löschen")],
+                        children: [
+                          Icon(Icons.delete_outline),
+                          Text("Projekt löschen")
+                        ],
                       ),
                     ),
                   ),

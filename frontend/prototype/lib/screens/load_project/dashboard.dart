@@ -133,7 +133,7 @@ class _DashboardState extends State<Dashboard> {
         ),
       );
     } else if (widget.recalculate) {
-      return Text("Status: $widget.state%");
+      return Text("Status: ${widget.state}%");
     } else if (widget.outcome.aiOutcome == 0.0) {
       return CustomContainerBorder(
         child: Column(
@@ -232,7 +232,7 @@ class _DashboardState extends State<Dashboard> {
       children: [
         Expanded(
           child: squareAiValue(
-              icon: Icons.colorize,
+              icon: Icons.format_color_fill,
               underLine:
                   "${widget.outcome.aiOutcome.toStringAsFixed(2)} kg Spachtelmasse"),
         ),

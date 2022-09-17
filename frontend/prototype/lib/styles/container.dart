@@ -122,8 +122,10 @@ class ContainerStyles {
 
   static getInputStyleGreen(String labelTextInput) {
     return InputDecoration(
-      labelStyle: TextStyle(color: GeneralStyle.getUglyGreen()),
-      enabledBorder: const OutlineInputBorder(),
+      labelStyle: TextStyle(color: GeneralStyle.getLightGray()),
+      //  floatingLabelStyle: MaterialStateTextStyle(),
+      enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: GeneralStyle.getLightGray())),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
       ),
