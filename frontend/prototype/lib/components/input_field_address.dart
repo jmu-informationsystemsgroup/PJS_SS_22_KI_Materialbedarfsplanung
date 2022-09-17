@@ -68,6 +68,7 @@ class AddressInputState extends State<AddressInput> {
                   formComplete: (formCompleteController) {
                     streetComplete = formCompleteController;
                   },
+                  disableMargin: true,
                   value: widget.adress.street,
                   mandatory: widget.mandatory,
                   saveTo: (value) {
@@ -89,6 +90,7 @@ class AddressInputState extends State<AddressInput> {
                     },
                     value: widget.adress.houseNumber,
                     mandatory: widget.mandatory,
+                    disableMargin: true,
                     saveTo: (value) {
                       houseNumber = value;
                       widget.updateAddress(Adress(
@@ -112,6 +114,7 @@ class AddressInputState extends State<AddressInput> {
                     },
                     value: widget.adress.zip,
                     mandatory: widget.mandatory,
+                    disableMargin: true,
                     saveTo: (value) {
                       zip = value;
                       widget.updateAddress(Adress(
@@ -130,6 +133,7 @@ class AddressInputState extends State<AddressInput> {
                     },
                     value: widget.adress.city,
                     mandatory: widget.mandatory,
+                    disableMargin: true,
                     saveTo: (value) {
                       city = value;
                       widget.updateAddress(Adress(

@@ -15,11 +15,13 @@ class InputField extends StatefulWidget {
   String value;
   bool mandatory;
   double maxLines;
+  bool disableMargin;
   Function(bool)? formComplete;
   InputField(
       {required this.saveTo,
       required this.labelText,
-      this.maxLines = 2.5,
+      this.maxLines = 1,
+      this.disableMargin = false,
       this.mandatory = false,
       this.formComplete,
       this.value = ""});
@@ -32,7 +34,21 @@ class InputField extends StatefulWidget {
 
 class _InputFieldState extends State<InputField> {
   final TextEditingController textController = TextEditingController();
+//  ScrollController _scrollController = ScrollController();
   bool visibleWarning = false;
+
+  /*
+  String text = '';
+
+  scrollToCursor(String textFieldValue) {
+    final isLonger = textFieldValue.length > text.length;
+    text = textFieldValue;
+    if (isLonger)
+      _scrollController.animateTo(_scrollController.position.viewportDimension,
+          duration: Duration(milliseconds: 300), curve: Curves.ease);
+  }
+// use _scrollController.position.viewportDimension if text field is one line
+*/
 
   @override
   void initState() {
@@ -43,7 +59,16 @@ class _InputFieldState extends State<InputField> {
   @override
   void dispose() {
     textController.clear();
+    //   _scrollController.dispose();
     super.dispose();
+  }
+
+  containerMargin() {
+    if (!widget.disableMargin) {
+      return ContainerStyles.getMargin();
+    } else {
+      return EdgeInsets.all(0);
+    }
   }
 
   @override
@@ -70,12 +95,14 @@ class _InputFieldState extends State<InputField> {
           visible: visibleWarning,
         ),
         Container(
-          margin: ContainerStyles.getMargin(),
-          height: widget.maxLines * 25.0,
-          child: TextField(
+          margin: containerMargin(),
+          //  height: widget.maxLines * 35.0,
+          child: TextFormField(
+            //  scrollController: _scrollController,
             controller: textController,
             maxLines: widget.maxLines.toInt(),
             onChanged: (text) {
+              //  scrollToCursor(text);
               setState(() {
                 widget.saveTo(text);
               });

@@ -419,7 +419,7 @@ class _ProjectViewState extends State<ProjectView> {
               ),
               */
               ButtonEdit(
-                textVisiblity: editorVisablity,
+                textVisiblity: !editorVisablity,
                 changeState: () {
                   setState(() {
                     editorVisablity = changeBool(editorVisablity);

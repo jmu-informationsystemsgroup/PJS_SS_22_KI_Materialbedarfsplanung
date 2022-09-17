@@ -122,6 +122,7 @@ class ContainerStyles {
 
   static getInputStyleGreen(String labelTextInput) {
     return InputDecoration(
+      isDense: true,
       labelStyle: TextStyle(color: GeneralStyle.getLightGray()),
       //  floatingLabelStyle: MaterialStateTextStyle(),
       enabledBorder: OutlineInputBorder(
