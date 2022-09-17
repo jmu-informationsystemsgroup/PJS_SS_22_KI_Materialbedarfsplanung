@@ -372,6 +372,12 @@ class _NewProjectState extends State<NewProject> {
                         content.city = value.city;
                       });
                     },
+                    adress: Adress(
+                      street: content.street,
+                      houseNumber: content.houseNumber,
+                      zip: content.zip,
+                      city: content.city,
+                    ),
                   ),
                   InputField(
                     saveTo: (text) => {
