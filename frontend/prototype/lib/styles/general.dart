@@ -7,10 +7,10 @@ class GeneralStyle {
   }
 
   static Color getLightGray() {
-    return const Color.fromARGB(255, 196, 196, 196);
+    return Color.fromARGB(255, 196, 196, 196);
   }
 
   static Color getDarkGray() {
-    return const Color.fromARGB(255, 115, 115, 115);
+    return Color.fromARGB(255, 115, 115, 115);
   }
 }
