@@ -27,10 +27,10 @@ class AllData extends StatelessWidget {
           IconAndText(
             icon: Icons.location_on_outlined,
             text: "Adresse: " +
-                content.street +
-                content.houseNumber +
-                content.zip +
-                content.city,
+                " ${content.street}" +
+                " ${content.houseNumber}" +
+                " ${content.zip}" +
+                " ${content.city}",
             color: Colors.black,
           ),
           IconAndText(

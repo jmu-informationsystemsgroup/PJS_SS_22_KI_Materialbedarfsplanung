@@ -7,7 +7,7 @@ import 'data_base_functions.dart';
 /// TODO: singleton class? https://www.youtube.com/watch?v=noi6aYsP7Go
 class Content {
   int id = 0;
-  String projectName = "Default";
+  String projectName = "";
   String client = "";
   String date = "";
   String comment = "";

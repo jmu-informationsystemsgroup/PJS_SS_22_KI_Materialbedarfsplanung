@@ -430,6 +430,13 @@ class DataBase {
     final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     createWallsForProject(data, id);
+
+    if (data.projectName == "") {
+      data.projectName = "Projekt Nr. $id";
+    }
+
+    DataBase.updateContent(id, data);
+
     return id;
   }
 

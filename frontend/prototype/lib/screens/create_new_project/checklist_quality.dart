@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/components/custom_container_white.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
+import 'package:prototype/styles/general.dart';
 
 import '../../styles/container.dart';
 
@@ -23,7 +25,7 @@ class _QualityChecklist extends State<QualityChecklist> {
     if (states.any(interactiveStates.contains)) {
       return Colors.blue;
     }
-    return Colors.red;
+    return GeneralStyle.getUglyGreen();
   }
 
   isChecked(String quality) {
@@ -39,34 +41,37 @@ class _QualityChecklist extends State<QualityChecklist> {
   }
 
   Widget checkBoxRow(String header, String quality) {
-    return Wrap(
-      alignment: WrapAlignment.start,
+    return Flex(
+      direction: Axis.horizontal,
       children: <Widget>[
-        Text(
-          header,
-          style: ContainerStyles.getTextStyle(),
+        Expanded(
+          flex: 1,
+          child: Checkbox(
+            checkColor: Colors.white,
+            fillColor: MaterialStateProperty.resolveWith(getColor),
+            value: isChecked(quality),
+            onChanged: (bool? value) {
+              setState(() {
+                setQualityState(quality);
+                widget.changeQuality(quality);
+              });
+            },
+          ),
         ),
-        Checkbox(
-          checkColor: Colors.white,
-          fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: isChecked(quality),
-          onChanged: (bool? value) {
-            setState(() {
-              setQualityState(quality);
-              widget.changeQuality(quality);
-            });
-          },
-        )
+        Expanded(
+          flex: 5,
+          child: Text(
+            header,
+            style: ContainerStyles.getTextStyle(),
+          ),
+        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(15, 3, 15, 7),
-      decoration: ContainerStyles.getColoredBoxDecoration(),
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 25),
+    return CustomContainerBorder(
       child: Column(
         children: <Widget>[
           Text(

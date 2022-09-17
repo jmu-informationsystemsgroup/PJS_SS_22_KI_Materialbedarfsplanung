@@ -19,6 +19,19 @@ class ProjectList extends StatelessWidget {
 
   ProjectList(this.projects, this.listHasChanged, [this.status = "active"]);
 
+  informationChecker(
+      {required IconData icon, required String text, required value}) {
+    if (value == "") {
+      return Container();
+    } else {
+      return IconAndText(
+        icon: icon,
+        text: text,
+        flexLevel: 5,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -71,21 +84,18 @@ class ProjectList extends StatelessWidget {
                                       fontWeight: FontWeight.w800),
                                 ),
                               ),
-                              IconAndText(
-                                icon: Icons.person_pin_circle_outlined,
-                                text: "Kunde: ${element.client}",
-                                flexLevel: 5,
-                              ),
-                              IconAndText(
-                                icon: Icons.location_on_outlined,
-                                text: "Ort: ${element.city}",
-                                flexLevel: 5,
-                              ),
-                              IconAndText(
-                                icon: Icons.calendar_month_outlined,
-                                text: "Datum: ${element.date}",
-                                flexLevel: 5,
-                              ),
+                              informationChecker(
+                                  icon: Icons.person_pin_circle_outlined,
+                                  text: "Kunde: ${element.client}",
+                                  value: element.client),
+                              informationChecker(
+                                  icon: Icons.location_on_outlined,
+                                  text: "Ort: ${element.city}",
+                                  value: element.city),
+                              informationChecker(
+                                  icon: Icons.calendar_month_outlined,
+                                  text: "Datum: ${element.date}",
+                                  value: element.date),
                             ],
                           ),
                         ),

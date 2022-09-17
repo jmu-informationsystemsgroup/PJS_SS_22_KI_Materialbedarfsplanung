@@ -5,11 +5,11 @@ class IconAndText extends StatelessWidget {
   String text;
   IconData icon;
   Color color;
-  double flexLevel;
+  int flexLevel;
   IconAndText(
       {required this.icon,
       required this.text,
-      this.flexLevel = 0,
+      this.flexLevel = 9,
       this.color = const Color.fromARGB(255, 196, 196, 196)});
 
   @override
@@ -20,16 +20,13 @@ class IconAndText extends StatelessWidget {
       children: [
         Expanded(
           flex: 1,
-          child: Container(
-            margin: EdgeInsets.fromLTRB(0, 0, flexLevel, 0),
-            child: Icon(
-              icon,
-              color: color,
-            ),
+          child: Icon(
+            icon,
+            color: color,
           ),
         ),
         Expanded(
-          flex: 7,
+          flex: flexLevel,
           child: Text(
             text,
             style: TextStyle(
