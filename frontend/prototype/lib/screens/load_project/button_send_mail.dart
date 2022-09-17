@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ButtonSendMail extends StatefulWidget {
@@ -46,8 +47,8 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
       body = createEmailContent(user);
     }
 
-    return ElevatedButton(
-      child: Icon(Icons.mail),
+    return CustomButtonRow(
+      children: [Icon(Icons.send), Text("Abschicken")],
       onPressed: () {
         _launchUrl(
             "mailto:nicolas.wild@googlemail.com?subject=$subject&body=$body");

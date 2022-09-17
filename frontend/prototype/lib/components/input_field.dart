@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 
-import '../screens/load_project/user_form.dart';
+import '../screens/profile/user_form.dart';
 import '../styles/container.dart';
 
 /**

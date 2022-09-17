@@ -1,12 +1,19 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:prototype/screens/home/_main_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prototype/styles/general.dart';
 
-// TODO: initialflutter binding
-void main() => runApp(RootClass());
+/// idee von https://stackoverflow.com/questions/49418332/flutter-how-to-prevent-device-orientation-changes-and-force-portrait
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(RootClass());
+  });
+}
 
 class RootClass extends StatelessWidget {
   @override

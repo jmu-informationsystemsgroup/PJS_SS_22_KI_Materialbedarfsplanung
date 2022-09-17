@@ -66,7 +66,10 @@ class DisplayUserData extends StatelessWidget {
 
   Widget columnData() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text("Meine Kundendaten:"),
+        Text(""),
         dataLine(icon: Icons.person, textValues: [
           textLine(label: "Vorname: ", value: user.firstName),
           textLine(label: "Nachname: ", value: user.lastName),
@@ -74,7 +77,7 @@ class DisplayUserData extends StatelessWidget {
         dataLine(icon: Icons.grid_3x3, textValues: [
           textLine(label: "Kundennummer: ", value: getCustomerId()),
         ]),
-        dataLine(icon: Icons.local_activity_outlined, textValues: [
+        dataLine(icon: Icons.location_on_outlined, textValues: [
           textLine(
               label: "Straße, Hausnummer: ",
               value: "${user.street} ${user.houseNumber}"),

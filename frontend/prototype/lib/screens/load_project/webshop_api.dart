@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/screens/load_project/button_send_mail.dart';
-import 'package:prototype/screens/load_project/user_form.dart';
+import 'package:prototype/screens/profile/user_form.dart';
 import 'package:prototype/screens/profile/user_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,7 +26,7 @@ class Webshop extends StatefulWidget {
 class _WebshopState extends State<Webshop> {
   bool mailVisability = false;
   bool textVisiblity = true;
-  bool editorVisiblity = false;
+
   bool userExistsVisibility = false;
   List userData = [];
 //  User user = User();
@@ -51,11 +51,11 @@ class _WebshopState extends State<Webshop> {
     }
   }
 
-  Icon getIcon() {
+  IconData getIcon() {
     if (textVisiblity) {
-      return Icon(Icons.edit);
+      return Icons.edit;
     } else
-      return Icon(Icons.close);
+      return Icons.close;
   }
 
   getUser() async {
@@ -105,55 +105,73 @@ class _WebshopState extends State<Webshop> {
         ),
         Visibility(
           visible: mailVisability,
-          child: Column(
-            children: [
-              Visibility(
-                visible: !userExistsVisibility,
-                child: Column(
-                  children: [
-                    Text("Bitte gib einmalig deine Userdaten an"),
-                    UserForm(
-                      updateValues: (data) {
-                        setState(() {
-                          userData = data;
-                          user = User.mapToUser(data[0]);
-                          userExistsVisibility = true;
-                        });
-                      },
-                      allValuesMandatory: true,
-                      editUser: userDataNullCheckSafe(),
-                      aiValue: widget.aiValue,
-                    )
-                  ],
+          child: CustomContainerBorder(
+            child: Column(
+              children: [
+                Visibility(
+                  visible: !userExistsVisibility,
+                  child: Column(
+                    children: [
+                      Text("Bitte gib einmalig deine Userdaten an"),
+                      UserForm(
+                        updateValues: (data) {
+                          setState(() {
+                            userData = data;
+                            user = User.mapToUser(data[0]);
+                            userExistsVisibility = true;
+                          });
+                        },
+                        allValuesMandatory: true,
+                        editUser: userDataNullCheckSafe(),
+                        aiValue: widget.aiValue,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Visibility(
-                visible: userExistsVisibility,
-                child: CustomContainerBorder(
+                Visibility(
+                  visible: userExistsVisibility,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Visibility(
-                        visible: textVisiblity,
-                        child: DisplayUserData(
-                          user: user,
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          child: Container(
+                            padding: EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 2.0,
+                                  color: GeneralStyle.getDarkGray(),
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                            child: Icon(
+                              getIcon(),
+                              color: GeneralStyle.getDarkGray(),
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              textVisiblity = changeBool(textVisiblity);
+                            });
+                          },
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            editorVisiblity = changeBool(editorVisiblity);
-                            textVisiblity = changeBool(textVisiblity);
-                          });
-                        },
-                        child: getIcon(),
+                      Visibility(
+                        visible: textVisiblity,
+                        child: Column(
+                          children: [
+                            DisplayUserData(user: user),
+                            ButtonSendMail(widget.aiValue, userData),
+                          ],
+                        ),
                       ),
                       Visibility(
                         child: UserForm(
                           updateValues: (data) {
                             setState(() {
                               userData = data;
-                              editorVisiblity = changeBool(editorVisiblity);
+
                               textVisiblity = changeBool(textVisiblity);
                             });
                           },
@@ -161,36 +179,54 @@ class _WebshopState extends State<Webshop> {
                           editUser: userDataNullCheckSafe(),
                           allValuesMandatory: true,
                         ),
-                        visible: editorVisiblity,
+                        visible: !textVisiblity,
                       ),
-                      ButtonSendMail(widget.aiValue, userData),
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         CustomButtonRow(
-          children: [
-            Icon(
-              Icons.email_outlined,
-              color: GeneralStyle.getUglyGreen(),
-            ),
-            Text(
-              "Direkt bestellen",
-              style: TextStyle(
-                color: GeneralStyle.getUglyGreen(),
-              ),
-            ),
-          ],
+          children: getMailChildren(),
           onPressed: () {
             setState(() {
-              mailVisability = true;
+              mailVisability = changeBool(mailVisability);
             });
           },
         ),
       ],
     );
+  }
+
+  List<Widget> getMailChildren() {
+    if (!mailVisability) {
+      return [
+        Icon(
+          Icons.email_outlined,
+          color: GeneralStyle.getUglyGreen(),
+        ),
+        Text(
+          "Direkt bestellen",
+          style: TextStyle(
+            color: GeneralStyle.getUglyGreen(),
+          ),
+        ),
+      ];
+    } else {
+      return [
+        Icon(
+          Icons.cancel_outlined,
+          color: GeneralStyle.getUglyGreen(),
+        ),
+        Text(
+          "Abbrechen",
+          style: TextStyle(
+            color: GeneralStyle.getUglyGreen(),
+          ),
+        ),
+      ];
+    }
   }
 }

@@ -237,6 +237,44 @@ class _NewProjectState extends State<NewProject> {
     );
   }
 
+  Future<void> _askForSaveEmptyProject() async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: IconAndText(
+            icon: Icons.delete,
+            text: "Wirklich speichern?",
+          ),
+          content: Text("Das Projekt enthält keine Daten, wirklich speichern?"),
+          actions: <Widget>[
+            TextButton(
+              child: IconAndText(
+                icon: Icons.cancel,
+                text: "Verwerfen",
+                color: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: IconAndText(
+                  icon: Icons.check,
+                  text: "Weitermachen",
+                  color: GeneralStyle.getUglyGreen()),
+              onPressed: () async {
+                var save = await savingProcess();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     print(
@@ -432,28 +470,12 @@ class _NewProjectState extends State<NewProject> {
                             ),
                           ],
                           onPressed: () async {
-                            //    Content.reset(NewProject.cash);
-                            setState(() {
-                              showState = true;
-                            });
-
-                            NewProject.cache.pictures.removeWhere(
-                                (element) => element.display == false);
-
-                            projectId = await DataBase.createNewProject(
-                                NewProject.cache);
-
-                            bool imagesComplete = await DataBase.saveImages(
-                                pictures: NewProject.cache.pictures,
-                                projectId: projectId,
-                                updateState: (value) {
-                                  setState(() {
-                                    state = value;
-                                  });
-                                });
-
-                            NewProject.cache = Content(); //reset
-                            NewProject.goToProjectView(projectId, context);
+                            Content emptyContent = Content();
+                            if (content == emptyContent) {
+                              _askForSaveEmptyProject();
+                            } else {
+                              var save = await savingProcess();
+                            }
 
                             // goBack();
                           },
@@ -469,5 +491,29 @@ class _NewProjectState extends State<NewProject> {
         ),
       ),
     );
+  }
+
+  savingProcess() async {
+    //    Content.reset(NewProject.cash);
+    setState(() {
+      showState = true;
+    });
+
+    NewProject.cache.pictures
+        .removeWhere((element) => element.display == false);
+
+    projectId = await DataBase.createNewProject(NewProject.cache);
+
+    bool imagesComplete = await DataBase.saveImages(
+        pictures: NewProject.cache.pictures,
+        projectId: projectId,
+        updateState: (value) {
+          setState(() {
+            state = value;
+          });
+        });
+
+    NewProject.cache = Content(); //reset
+    NewProject.goToProjectView(projectId, context);
   }
 }

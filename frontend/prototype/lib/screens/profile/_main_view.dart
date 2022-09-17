@@ -8,7 +8,8 @@ import '../../backend/helper_objects.dart';
 import '../../components/appBar_custom.dart';
 import '../../components/custom_container_white.dart';
 import '../../components/navBar.dart';
-import '../load_project/user_form.dart';
+import '../../styles/general.dart';
+import 'user_form.dart';
 
 class Profile extends StatefulWidget {
   String title = "Profil";
@@ -44,11 +45,11 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Icon getIcon() {
+  IconData getIcon() {
     if (textVisiblity) {
-      return Icon(Icons.edit);
+      return Icons.edit;
     } else
-      return Icon(Icons.close);
+      return Icons.close;
   }
 
   bool changeBool(bool input) {
@@ -89,28 +90,18 @@ class _ProfileState extends State<Profile> {
               user: User.mapToUser(userData[0]),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                textVisiblity = changeBool(textVisiblity);
-              });
-            },
-            child: getIcon(),
-          ),
         ],
       );
     } else {
-      return SingleChildScrollView(
-        child: UserForm(
-          updateValues: (data) {
-            setState(() {
-              userData = data;
-              textVisiblity = changeBool(textVisiblity);
-              getUser();
-            });
-          },
-          editUser: userDataNullCheckSafe(),
-        ),
+      return UserForm(
+        updateValues: (data) {
+          setState(() {
+            userData = data;
+            textVisiblity = changeBool(textVisiblity);
+            //  getUser();
+          });
+        },
+        editUser: userDataNullCheckSafe(),
       );
     }
   }
@@ -121,7 +112,34 @@ class _ProfileState extends State<Profile> {
     return SafeArea(
       child: Scaffold(
         body: CustomScaffoldContainer(
-          body: getBody(),
+          body: SingleChildScrollView(
+            child: Column(children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  child: Container(
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2.0,
+                          color: GeneralStyle.getDarkGray(),
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Icon(
+                      getIcon(),
+                      color: GeneralStyle.getDarkGray(),
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      textVisiblity = changeBool(textVisiblity);
+                    });
+                  },
+                ),
+              ),
+              getBody()
+            ]),
+          ),
           appBar: CustomAppBar(
             title: "Mein Profil",
             subTitle: [
