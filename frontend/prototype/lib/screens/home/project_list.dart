@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -16,6 +17,7 @@ class ProjectList extends StatelessWidget {
   List<Content> projects;
   String status;
   final Function() listHasChanged;
+  int previousColor = 4;
 
   ProjectList(this.projects, this.listHasChanged, [this.status = "active"]);
 
@@ -30,6 +32,21 @@ class ProjectList extends StatelessWidget {
         flexLevel: 5,
       );
     }
+  }
+
+  randomColorPicker() {
+    int randomValue = Random().nextInt(4);
+    while (previousColor == randomValue) {
+      randomValue = Random().nextInt(4);
+    }
+    previousColor = randomValue;
+    List<Color> colors = [
+      GeneralStyle.getDarkGray(),
+      GeneralStyle.getLightGray(),
+      GeneralStyle.getUglyGreen(),
+      Colors.black
+    ];
+    return colors[randomValue];
   }
 
   @override
@@ -58,10 +75,11 @@ class ProjectList extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1 / 1,
                           child: CustomContainerBorder(
+                            color: randomColorPicker(),
                             //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                             child: Icon(
                               Icons.cottage_outlined,
-                              color: GeneralStyle.getDarkGray(),
+                              color: randomColorPicker(),
                               size: 40,
                             ),
                           ),
@@ -79,6 +97,12 @@ class ProjectList extends StatelessWidget {
                                 child: Text(
                                   element.projectName,
                                   style: TextStyle(
+                                      /*
+                                      decoration: TextDecoration.underline,
+                                      decorationThickness: 5,
+                                      decorationColor:
+                                          GeneralStyle.getUglyGreen(),
+                                          */
                                       color: Colors.black,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w800),

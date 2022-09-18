@@ -16,7 +16,7 @@ import 'package:prototype/styles/general.dart';
 import '../../components/appBar_custom.dart';
 import '../../components/button_photo.dart';
 import '../../components/icon_and_text.dart';
-import '../../components/screen_camera.dart';
+import '../camera/_main_view.dart';
 
 import '../../backend/helper_objects.dart';
 import '../../styles/container.dart';
@@ -319,22 +319,23 @@ class _NewProjectState extends State<NewProject> {
                   Center(
                     child: ButtonPhoto(
                       addPhoto: () async {
-                        await availableCameras().then((value) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CameraPage(
-                                        cameras: value,
-                                        originalGallery: galleryPictures,
-                                        updateGallery: (images) {
-                                          setState(() {
-                                            NewProject.cache.pictures
-                                                .addAll(images);
-                                            galleryPictures =
-                                                NewProject.cache.pictures;
-                                          });
-                                        },
-                                      )),
-                            ));
+                        await availableCameras().then(
+                          (value) => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CameraPage(
+                                cameras: value,
+                                originalGallery: galleryPictures,
+                                updateGallery: (images) {
+                                  setState(() {
+                                    NewProject.cache.pictures.addAll(images);
+                                    galleryPictures = NewProject.cache.pictures;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),

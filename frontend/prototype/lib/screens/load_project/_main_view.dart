@@ -24,7 +24,7 @@ import '../../backend/server_ai.dart';
 import '../../components/appBar_custom.dart';
 import '../../components/custom_container_body.dart';
 import '../../components/icon_and_text.dart';
-import '../../components/screen_camera.dart';
+import '../../screens/camera/_main_view.dart';
 import '../../backend/value_calculator.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 

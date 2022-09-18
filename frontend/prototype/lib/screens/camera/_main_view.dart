@@ -6,7 +6,7 @@ import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:flutter/services.dart';
-import '../screens/create_new_project/_main_view.dart';
+import '../create_new_project/_main_view.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
@@ -61,6 +61,7 @@ class _CameraPageState extends State<CameraPage> {
     controller = CameraController(
       widget.cameras!.first,
       ResolutionPreset.medium,
+      enableAudio: false,
     );
     controller.initialize().then((_) {
       if (!mounted) {
@@ -91,17 +92,19 @@ class _CameraPageState extends State<CameraPage> {
 
   /// TODO
   Widget addBlackBox() {
+    double coverValue = MediaQuery.of(context).size.height * 4 / 3;
+
     return Container(
-      width: 80,
-      height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(color: Color.fromARGB(69, 0, 0, 0)),
+      margin: EdgeInsets.fromLTRB(coverValue, 0, 0, 0),
+
+      //  decoration: BoxDecoration(color: Color.fromARGB(69, 0, 0, 0)),
+      decoration: BoxDecoration(color: Colors.black),
     );
   }
 
   Widget addCameraFeedback() {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      //   height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         color: Color.fromARGB(137, 255, 255, 255),
       ),
@@ -165,37 +168,46 @@ class _CameraPageState extends State<CameraPage> {
                 /// Workarround um Kamera daran zu hindern sich selbstständig zu drehen, Quelle: https://github.com/flutter/flutter/issues/16587
                 Align(
                   alignment: Alignment.centerRight,
-                  child: SizedBox(
-                      child: NativeDeviceOrientationReader(builder: (context) {
-                    NativeDeviceOrientation orientation =
-                        NativeDeviceOrientationReader.orientation(context);
+                  child: Expanded(
+                    child: Stack(
+                      children: [
+                        Container(
+                          child:
+                              NativeDeviceOrientationReader(builder: (context) {
+                            NativeDeviceOrientation orientation =
+                                NativeDeviceOrientationReader.orientation(
+                                    context);
 
-                    int turns;
-                    switch (orientation) {
-                      case NativeDeviceOrientation.landscapeLeft:
-                        turns = 0;
-                        break;
-                      case NativeDeviceOrientation.landscapeRight:
-                        turns = 2;
-                        break;
-                      case NativeDeviceOrientation.portraitDown:
-                        turns = 1;
-                        break;
-                      default:
-                        turns = -1;
-                        break;
-                    }
+                            int turns;
+                            switch (orientation) {
+                              case NativeDeviceOrientation.landscapeLeft:
+                                turns = 0;
+                                break;
+                              case NativeDeviceOrientation.landscapeRight:
+                                turns = 2;
+                                break;
+                              case NativeDeviceOrientation.portraitDown:
+                                turns = 1;
+                                break;
+                              default:
+                                turns = -1;
+                                break;
+                            }
 
-                    return RotatedBox(
-                      quarterTurns: turns,
-                      child: CameraPreview(controller),
-                    );
-                  })),
+                            return RotatedBox(
+                              quarterTurns: turns,
+                              child: CameraPreview(
+                                controller,
+                                child: addBlackBox(),
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                Align(
-                  child: addBlackBox(),
-                  alignment: Alignment.centerRight,
-                ),
+
                 Center(
                   child: Visibility(
                     visible: fotoFeedBack,
