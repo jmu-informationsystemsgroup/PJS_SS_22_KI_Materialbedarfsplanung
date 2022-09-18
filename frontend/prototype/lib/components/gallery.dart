@@ -7,6 +7,7 @@ import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/custom_container_white.dart';
 import 'package:path/path.dart';
 import 'package:file_support/file_support.dart';
+import 'package:prototype/styles/general.dart';
 
 class Gallery extends StatelessWidget {
   List<CustomCameraImage> pictures;
@@ -71,7 +72,7 @@ class Gallery extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.delete,
-                      color: Colors.red,
+                      color: GeneralStyle.getDarkGray(),
                     )),
               ],
             ),

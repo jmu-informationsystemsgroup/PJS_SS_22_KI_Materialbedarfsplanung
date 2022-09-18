@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:prototype/backend/helper_objects.dart';
+import 'package:prototype/screens/camera/button_flash.dart';
+import 'package:prototype/screens/camera/button_leave.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:flutter/services.dart';
 import '../create_new_project/_main_view.dart';
@@ -166,44 +168,38 @@ class _CameraPageState extends State<CameraPage> {
             child: Stack(
               children: [
                 /// Workarround um Kamera daran zu hindern sich selbstständig zu drehen, Quelle: https://github.com/flutter/flutter/issues/16587
-                Align(
-                  alignment: Alignment.centerRight,
+                Center(
+                  //    alignment: Alignment.centerRight,
                   child: Expanded(
-                    child: Stack(
-                      children: [
-                        Container(
-                          child:
-                              NativeDeviceOrientationReader(builder: (context) {
-                            NativeDeviceOrientation orientation =
-                                NativeDeviceOrientationReader.orientation(
-                                    context);
+                    child: NativeDeviceOrientationReader(
+                      builder: (context) {
+                        NativeDeviceOrientation orientation =
+                            NativeDeviceOrientationReader.orientation(context);
 
-                            int turns;
-                            switch (orientation) {
-                              case NativeDeviceOrientation.landscapeLeft:
-                                turns = 0;
-                                break;
-                              case NativeDeviceOrientation.landscapeRight:
-                                turns = 2;
-                                break;
-                              case NativeDeviceOrientation.portraitDown:
-                                turns = 1;
-                                break;
-                              default:
-                                turns = -1;
-                                break;
-                            }
+                        int turns;
+                        switch (orientation) {
+                          case NativeDeviceOrientation.landscapeLeft:
+                            turns = 0;
+                            break;
+                          case NativeDeviceOrientation.landscapeRight:
+                            turns = 2;
+                            break;
+                          case NativeDeviceOrientation.portraitDown:
+                            turns = 1;
+                            break;
+                          default:
+                            turns = -1;
+                            break;
+                        }
 
-                            return RotatedBox(
-                              quarterTurns: turns,
-                              child: CameraPreview(
-                                controller,
-                                child: addBlackBox(),
-                              ),
-                            );
-                          }),
-                        ),
-                      ],
+                        return RotatedBox(
+                          quarterTurns: turns,
+                          child: CameraPreview(
+                            controller,
+                            child: addBlackBox(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -216,70 +212,41 @@ class _CameraPageState extends State<CameraPage> {
                 ),
                 getPhotoButton(Alignment.centerLeft),
                 getPhotoButton(Alignment.centerRight),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 25, 0, 25),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(10),
-                        primary: Colors.red,
-                      ),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
 
-                        widget.updateGallery!(newImages);
-                      },
-                      child: Icon(Icons.close),
-                    ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 25, 30, 25),
+                  child: ButtonLeave(
+                    leave: () async {
+                      Navigator.of(context).pop();
+
+                      widget.updateGallery!(newImages);
+                    },
                   ),
                 ),
 
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 25, 100, 25),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(10),
-                      ),
-                      onPressed: () async {
-                        if (flashOn) {
-                          setState(() {
-                            flashOn = false;
-                          });
-                          controller.setFlashMode(FlashMode.off);
-                        } else {
-                          setState(() {
-                            flashOn = true;
-                          });
-                          controller.setFlashMode(FlashMode.always);
-                        }
-                      },
-                      child: getFlashIcon(),
-                    ),
+                  child: ButtonFLash(
+                    flashOn: flashOn,
+                    changeFlashMode: () async {
+                      if (flashOn) {
+                        setState(() {
+                          flashOn = false;
+                        });
+                        controller.setFlashMode(FlashMode.off);
+                      } else {
+                        setState(() {
+                          flashOn = true;
+                        });
+                        controller.setFlashMode(FlashMode.always);
+                      }
+                    },
                   ),
                 ),
               ],
             ),
           ),
         ),
-        /*
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: const EdgeInsets.all(25),
-            child: ElevatedButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-
-                widget.updateGallery!(newImages);
-              },
-              child: Icon(Icons.close),
-            ),
-          ),
-        ),
-        */
         Expanded(
           flex: 1,
           child: SingleChildScrollView(
@@ -289,13 +256,5 @@ class _CameraPageState extends State<CameraPage> {
         )
       ],
     );
-  }
-
-  Icon getFlashIcon() {
-    if (flashOn) {
-      return Icon(Icons.flash_off);
-    } else {
-      return Icon(Icons.flash_on);
-    }
   }
 }
