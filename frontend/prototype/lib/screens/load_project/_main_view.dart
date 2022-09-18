@@ -101,6 +101,56 @@ class _ProjectViewState extends State<ProjectView> {
     });
   }
 
+  Future<void> _ServerMessage() async {
+    if (ProjectView.askAgain) {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Verbindung verloren'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Flex(
+                    direction: Axis.horizontal,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Icon(
+                          Icons.satellite_alt_outlined,
+                          color: GeneralStyle.getDarkGray(),
+                          size: 50,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                            "Das Gerät konnte leider keine Verbindung zum Server herstellen. " +
+                                "Stelle bitte eine zuverlässige Verbindung zum Internet her (WLAN oder 2G+) und versuche es erneut."),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Approve'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    ProjectView.askAgain = false;
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   Future<void> _showMyDialog() async {
     if (ProjectView.askAgain) {
       return showDialog<void>(
@@ -396,8 +446,6 @@ class _ProjectViewState extends State<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>last value: $originalLastValue");
     return Scaffold(
       body: CustomScaffoldContainer(
         appBar: CustomAppBar(
@@ -466,6 +514,8 @@ class _ProjectViewState extends State<ProjectView> {
                       setState(() {
                         state = value;
                       });
+                    }, () {
+                      _ServerMessage();
                     });
                     setState(() {
                       recalculate = false;

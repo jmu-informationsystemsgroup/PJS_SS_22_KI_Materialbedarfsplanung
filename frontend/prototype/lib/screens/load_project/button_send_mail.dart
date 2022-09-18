@@ -50,8 +50,7 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
     return CustomButtonRow(
       children: [Icon(Icons.send), Text("Abschicken")],
       onPressed: () {
-        _launchUrl(
-            "mailto:nicolas.wild@googlemail.com?subject=$subject&body=$body");
+        _launchUrl("mailto:post@spachtelprofi.com?subject=$subject&body=$body");
       },
     );
   }

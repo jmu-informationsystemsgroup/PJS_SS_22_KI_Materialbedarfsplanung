@@ -528,7 +528,11 @@ class DataBase {
 
         img.Image? image = decodeImage(byteList);
 
-        img.Image resizedImage = copyResize(image!, width: 450, height: 300);
+        img.Image imageCropped = copyCrop(
+            image!, 0, 0, (image.height * 4 / 3).toInt(), image.height);
+
+        img.Image resizedImage =
+            copyResize(imageCropped, width: 400, height: 300);
 
         //   resizedImage = copyCrop(resizedImage, int x, int y, int w, int h);
 

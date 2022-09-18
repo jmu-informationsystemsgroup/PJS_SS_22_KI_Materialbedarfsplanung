@@ -17,7 +17,7 @@ class ProjectList extends StatelessWidget {
   List<Content> projects;
   String status;
   final Function() listHasChanged;
-  int previousColor = 4;
+  List<int> previousColors = [99, 99];
 
   ProjectList(this.projects, this.listHasChanged, [this.status = "active"]);
 
@@ -35,15 +35,19 @@ class ProjectList extends StatelessWidget {
   }
 
   randomColorPicker() {
-    int randomValue = Random().nextInt(4);
-    while (previousColor == randomValue) {
-      randomValue = Random().nextInt(4);
+    int randomValue = Random().nextInt(7);
+    while (previousColors.last == randomValue ||
+        previousColors[previousColors.length - 1] == randomValue) {
+      randomValue = Random().nextInt(7);
     }
-    previousColor = randomValue;
+    previousColors.add(randomValue);
     List<Color> colors = [
       GeneralStyle.getDarkGray(),
       GeneralStyle.getLightGray(),
       GeneralStyle.getUglyGreen(),
+      Colors.green[900]!,
+      Colors.green[300]!,
+      Colors.green,
       Colors.black
     ];
     return colors[randomValue];
