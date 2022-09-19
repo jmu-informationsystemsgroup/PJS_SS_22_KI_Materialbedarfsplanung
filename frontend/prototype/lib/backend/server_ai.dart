@@ -50,7 +50,7 @@ class ServerAI {
 
       try {
         http.StreamedResponse response =
-            await request.send().timeout(const Duration(seconds: 20));
+            await request.send().timeout(const Duration(seconds: 8));
         String statusCode = response.statusCode.toString();
         Uint8List aiOutcome = await response.stream.toBytes();
         String aiOutcomeString = String.fromCharCodes(aiOutcome);
