@@ -96,8 +96,8 @@ class ValueCalculator {
 
   static double getAiPrice(String material, double aiOutcome) {
     double totalPrice = 0.0;
-    Map<String, double> valueInterpreter = {"Q2": 1, "Q3": 2.85, "Q4": 5};
-    totalPrice = (aiOutcome * valueInterpreter[material]!);
+    Map<String, double> quality = {"Q2": 1, "Q3": 2.85, "Q4": 5};
+    totalPrice = (aiOutcome * 1.34 * quality[material]!);
 
     officalOutcome.totalAiPrice = totalPrice;
 

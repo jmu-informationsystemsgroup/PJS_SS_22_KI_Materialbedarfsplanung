@@ -54,11 +54,13 @@ class ServerAI {
         String statusCode = response.statusCode.toString();
         Uint8List aiOutcome = await response.stream.toBytes();
         String aiOutcomeString = String.fromCharCodes(aiOutcome);
+        print("Server Status $statusCode: ai-outcome: $aiOutcomeString");
+        List<String> result = aiOutcomeString.split('_');
+
         // double aiOutcomeDouble = double.parse(aiOutcome);
 
-        double aiValue = double.parse(aiOutcomeString);
+        double aiValue = double.parse(result[0]);
         await DataBase.updateImagesAiValue(aiValue, id, projectId);
-        print("Server Status $statusCode: ai-outcome: $aiValue");
         element.aiValue = aiValue;
         currentState = currentState + step;
         stateUpdate(currentState.toInt());
