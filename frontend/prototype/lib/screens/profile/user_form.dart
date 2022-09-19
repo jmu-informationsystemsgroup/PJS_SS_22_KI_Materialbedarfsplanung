@@ -10,14 +10,14 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../components/custom_container_white.dart';
 
 class UserForm extends StatefulWidget {
-  final Function(List list) updateValues;
+  final Function(User user) updateValues;
   double aiValue;
   bool allValuesMandatory;
-  Map<String, dynamic> editUser;
+  User? editUser;
   UserForm({
     required this.updateValues,
     this.aiValue = 0.0,
-    this.editUser = User.emptyUser,
+    this.editUser,
     this.allValuesMandatory = false,
   });
   @override
@@ -39,7 +39,9 @@ class _UserFormState extends State<UserForm> {
   @override
   void initState() {
     // TODO: implement initState
-    cache = User.mapToUser(widget.editUser);
+    if (widget.editUser != null) {
+      cache = widget.editUser!;
+    }
     if (!widget.allValuesMandatory) {
       formComplete = true;
     }
@@ -47,7 +49,7 @@ class _UserFormState extends State<UserForm> {
 
   Widget mailButtonIfComplete(bool status) {
     if (status) {
-      return ButtonSendMail(widget.aiValue, [User.userToMap(cache)]);
+      return ButtonSendMail(widget.aiValue, cache);
     } else
       return Container();
   }
@@ -116,8 +118,8 @@ class _UserFormState extends State<UserForm> {
           onPressed: () async => {
             if (formComplete)
               {
-                widget.updateValues([User.userToMap(cache)]),
-                if (widget.editUser == User.emptyUser)
+                widget.updateValues(cache),
+                if (widget.editUser == null)
                   {
                     await DataBase.createUserData(cache),
                   }

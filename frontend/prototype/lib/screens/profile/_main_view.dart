@@ -21,8 +21,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  List userData = [];
-  User user = User();
+  User? user = User();
   bool textVisiblity = true;
 
   @override
@@ -32,18 +31,18 @@ class _ProfileState extends State<Profile> {
   }
 
   getUser() async {
-    DataBase.getUserData().then(
-      (loadedContent) {
+    DataBase.getUserData().then((loadedContent) {
+      if (loadedContent == null ||
+          User.userToMap(loadedContent).toString() ==
+              User.userToMap(user!).toString()) {
         setState(() {
-          userData = loadedContent;
+          textVisiblity = false;
         });
-        if (userData.isNotEmpty) {
-          setState(() {
-            user = User.mapToUser(userData[0]);
-          });
-        }
-      },
-    );
+      }
+      setState(() {
+        user = loadedContent;
+      });
+    });
   }
 
   bool changeBool(bool input) {
@@ -54,18 +53,11 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Map<String, dynamic> userDataNullCheckSafe() {
-    if (userData.isNotEmpty) {
-      return userData[0];
-    }
-    return User.emptyUser;
-  }
-
   addUserInformation() {
-    if (userData.isNotEmpty) {
+    if (user != null && user!.firstName != "" && user!.lastName != "") {
       return IconAndText(
         icon: Icons.person,
-        text: "${user.firstName} ${user.lastName}",
+        text: "${user!.firstName} ${user!.lastName}",
         color: Colors.black,
       );
     } else {
@@ -74,14 +66,14 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget getBody() {
-    if (userData.isNotEmpty && textVisiblity) {
+    if (textVisiblity && user != null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Visibility(
             visible: textVisiblity,
             child: DisplayUserData(
-              user: User.mapToUser(userData[0]),
+              user: user!,
             ),
           ),
         ],
@@ -90,12 +82,12 @@ class _ProfileState extends State<Profile> {
       return UserForm(
         updateValues: (data) {
           setState(() {
-            userData = data;
+            user = data;
             textVisiblity = changeBool(textVisiblity);
             //  getUser();
           });
         },
-        editUser: userDataNullCheckSafe(),
+        editUser: user,
       );
     }
   }

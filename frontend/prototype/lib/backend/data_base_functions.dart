@@ -175,9 +175,17 @@ class DataBase {
     return contentList;
   }
 
-  static Future<List<dynamic>> getUserData() async {
+  static Future<User?> getUserData() async {
     final db = await DataBase.getDataBase();
-    return db.query('user_data', orderBy: "id");
+
+    List userData = await db.query('user_data', orderBy: "id");
+    User user = User();
+    if (userData.isNotEmpty) {
+      user = User.mapToUser(userData[0]);
+      return user;
+    } else {
+      return null;
+    }
   }
 
   /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück

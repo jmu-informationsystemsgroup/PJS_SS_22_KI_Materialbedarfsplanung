@@ -29,7 +29,6 @@ class _HomeState extends State<Home> {
   static List<Content> allProjects = [];
   User user = User();
   String searchTerm = "";
-  List userData = [];
 
   activateList() async {
     DataBase.getProjects(searchTerm: searchTerm).then((loadedContent) {
@@ -54,12 +53,9 @@ class _HomeState extends State<Home> {
   getUser() async {
     DataBase.getUserData().then(
       (loadedContent) {
-        setState(() {
-          userData = loadedContent;
-        });
-        if (userData.isNotEmpty) {
+        if (loadedContent != null) {
           setState(() {
-            user = User.mapToUser(userData[0]);
+            user = loadedContent;
           });
         }
       },
@@ -67,7 +63,7 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> addUserData() {
-    if (userData.isNotEmpty) {
+    if (user.firstName != "" && user.lastName != "") {
       return [
         IconAndText(
             text: "${user.firstName} ${user.lastName}",

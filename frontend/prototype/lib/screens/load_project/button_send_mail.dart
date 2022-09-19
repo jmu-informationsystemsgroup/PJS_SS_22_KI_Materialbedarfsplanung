@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../backend/helper_objects.dart';
+
 class ButtonSendMail extends StatefulWidget {
-  var aiValue;
-  var userData;
+  double aiValue;
+  User userData;
   ButtonSendMail(this.aiValue, this.userData);
   @override
   State<StatefulWidget> createState() {
@@ -21,20 +23,20 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
     }
   }
 
-  String createEmailContent(var user) {
+  String createEmailContent(User user) {
     String body =
         "Hallo Matthias von Spachtelprofi, \n \n Deine App hat ergeben, dass der optimale Spachtelmassenbedarf für mein anstehendes Bauprojekt ${widget.aiValue.toStringAsFixed(2)} kg" +
             " betragen würde. Gerne würde ich in einem Gespräch mit dir genaueres darüber aushandeln. Anbei meine Kundendaten: \n \n Kundennummer: " +
-            user["customerId"].toString() +
+            user.customerId.toString() +
             "\n Adresse: " +
-            user["street"].toString() +
-            user["houseNumber"].toString() +
-            user["zip"].toString() +
-            user["city"].toString() +
+            user.street.toString() +
+            user.houseNumber.toString() +
+            user.zip.toString() +
+            user.city.toString() +
             " \n \n Mit freundlichen Grüßen \n \n" +
-            user["firstName"].toString() +
+            user.firstName.toString() +
             " " +
-            user["lastName"].toString();
+            user.lastName.toString();
     return body;
   }
 
@@ -42,9 +44,9 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
   Widget build(BuildContext context) {
     String subject = "Interesse an Spachtelmasse";
     String body = "";
-    if (widget.userData.isNotEmpty) {
-      var user = widget.userData[0];
-      body = createEmailContent(user);
+    if (User.userToMap(widget.userData).toString() !=
+        User.userToMap(User()).toString()) {
+      body = createEmailContent(widget.userData);
     }
 
     return CustomButtonRow(

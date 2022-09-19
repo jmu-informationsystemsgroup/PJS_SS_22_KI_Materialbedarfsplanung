@@ -27,9 +27,8 @@ class Webshop extends StatefulWidget {
 class _WebshopState extends State<Webshop> {
   bool mailVisability = false;
   bool textVisiblity = true;
-
+  User user = User();
   bool userExistsVisibility = false;
-  List userData = [];
 //  User user = User();
   Future<void> _launchUrl(urlString) async {
     Uri url = Uri.parse(urlString);
@@ -61,31 +60,24 @@ class _WebshopState extends State<Webshop> {
 
   getUser() async {
     DataBase.getUserData().then((loadedContent) {
-      setState(() {
-        userData = loadedContent;
-      });
+      if (user != null) {
+        setState(() {
+          user = loadedContent!;
+        });
+      }
     });
-  }
-
-  Map<String, dynamic> userDataNullCheckSafe() {
-    if (userData.isNotEmpty) {
-      return userData[0];
-    }
-    return User.emptyUser;
   }
 
   @override
   Widget build(BuildContext context) {
-    User user = User.mapToUser(User.emptyUser);
-    if (userData.isNotEmpty) {
-      Map someMap = userData[0];
+    Map someMap = User.userToMap(user);
+    if (someMap.toString() == User.mapToUser(User.emptyUser).toString()) {
       userExistsVisibility = true;
       someMap.values.forEach((element) {
         if (element == "" || element == 0) {
           userExistsVisibility = false;
         }
       });
-      user = User.mapToUser(userData[0]);
     }
     return Column(
       children: [
@@ -117,13 +109,12 @@ class _WebshopState extends State<Webshop> {
                       UserForm(
                         updateValues: (data) {
                           setState(() {
-                            userData = data;
-                            user = User.mapToUser(data[0]);
+                            user = data;
                             userExistsVisibility = true;
                           });
                         },
                         allValuesMandatory: true,
-                        editUser: userDataNullCheckSafe(),
+                        editUser: user,
                         aiValue: widget.aiValue,
                       )
                     ],
@@ -147,7 +138,7 @@ class _WebshopState extends State<Webshop> {
                         child: Column(
                           children: [
                             DisplayUserData(user: user),
-                            ButtonSendMail(widget.aiValue, userData),
+                            ButtonSendMail(widget.aiValue, user),
                           ],
                         ),
                       ),
@@ -155,13 +146,13 @@ class _WebshopState extends State<Webshop> {
                         child: UserForm(
                           updateValues: (data) {
                             setState(() {
-                              userData = data;
+                              user = data;
 
                               textVisiblity = changeBool(textVisiblity);
                             });
                           },
                           aiValue: widget.aiValue,
-                          editUser: userDataNullCheckSafe(),
+                          editUser: user,
                           allValuesMandatory: true,
                         ),
                         visible: !textVisiblity,
