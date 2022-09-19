@@ -14,7 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prototype/styles/general.dart';
 
 import '../../components/appBar_custom.dart';
-import '../../components/button_photo.dart';
+import '../camera/button_photo.dart';
 import '../../components/icon_and_text.dart';
 import '../camera/_main_view.dart';
 

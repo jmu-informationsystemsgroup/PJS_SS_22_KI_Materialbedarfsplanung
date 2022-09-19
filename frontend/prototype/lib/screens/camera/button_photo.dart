@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../styles/general.dart';
-import 'button_row_multiple_icons.dart';
+import '../../styles/general.dart';
+import '../../components/button_row_multiple_icons.dart';
 
 class ButtonPhoto extends StatelessWidget {
   Function() addPhoto;
@@ -23,6 +23,12 @@ class ButtonPhoto extends StatelessWidget {
                 ),
               ],
               onPressed: () {
+                /// die folgende If condition ist frei nach https://flutterigniter.com/dismiss-keyboard-form-lose-focus/ und verhindert,
+                /// dass die Tastatur rumbuggt, wenn man die Kamera öffnet
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
                 addPhoto();
               },
             ),
