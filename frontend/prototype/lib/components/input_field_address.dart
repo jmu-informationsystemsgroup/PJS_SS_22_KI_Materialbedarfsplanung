@@ -59,6 +59,7 @@ class AddressInputState extends State<AddressInput> {
       margin: const EdgeInsets.all(15.0),
       padding: const EdgeInsets.all(5.0),
       decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
           border: Border.all(color: Color.fromARGB(255, 206, 206, 206))),
       child: Wrap(
         spacing: 20, // to apply margin in the main axis of the wrap

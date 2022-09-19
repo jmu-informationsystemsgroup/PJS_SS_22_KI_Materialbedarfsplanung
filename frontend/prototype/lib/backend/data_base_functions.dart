@@ -15,11 +15,12 @@ import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/backend/server_ai.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
-/// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
+/// beinhaltet sämtliche Methoden (im Besondern SQL-Befehle) zum Speichern und Laden von Daten und Bildern
 class DataBase {
-  /// für allem fürs Debugging: legt Dateien im Downloads Ordner an, sodass diese
-  /// ausgelesen und kontrolliert werden können, stellt außerdem eine Berechtigungsfrage
-  /// ans das Handy auf Speicherzugriff
+  /// legt fest an welcher Stelle auf dem Handyspeicher die Datenbanken und Bilder abgelegt werden sollen.
+  /// Durch ändern von "temDir" kann z.B. auf den Downloadsordner umgestellt werden. Da es sich beim
+  /// Downnloadspathprovider aber um eine 'depreciated version' handelt, funktioniert der Speicherprozess aber
+  /// im Downloadsordner nicht zuverläsig
   static Future<String?> get getFilePath async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -57,8 +58,8 @@ class DataBase {
       """);
   }
 
-// ToDo: Primary Key (zusammengesetzter Primärschlüssel aus WallID und projectID)
-  /// FÜR MVP: erstellt die Wandtabelle für die Datenbank
+// TODO: Primary Key (zusammengesetzter Primärschlüssel aus WallID und projectID)
+  /// FÜR MVP: erstellt ein Tablle aus manuell eingegebenen Wänden
   static Future<void> createWallTable(sql.Database database) async {
     await database.execute("""CREATE TABLE walls(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -69,9 +70,9 @@ class DataBase {
       """);
   }
 
-  /// erstellt die Tabelle mit Verweisen auf die Fotos für die Datenbank
-  /// die Fotos slebst werden nicht in der Datenbank abgelegt, stattdessen werden hier Verweise auf die Lokation
-  /// der Fotoas abgelegt
+  /// erstellt die Tabelle mit Verweisen auf die Fotos für die Datenbank sowie ihren dazugehörigen
+  /// KI-Werten
+  /// die Fotos selbst werden nicht in der Datenbank abgelegt
   static Future<void> createImageTable(sql.Database database) async {
     await database.execute("""CREATE TABLE images(
         projectId INTEGER,
@@ -83,6 +84,7 @@ class DataBase {
       """);
   }
 
+  /// erstellt eine Tabelle mit NutzerDaten
   static Future<void> createUserTable(sql.Database database) async {
     await database.execute("""CREATE TABLE user_data(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -97,7 +99,8 @@ class DataBase {
       """);
   }
 
-  /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
+  /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden, um die Datenbank in einem anderen
+  /// Ordner zu speichern, ändere den Pfad in der "openDatabase" Funktion
   static Future<sql.Database> getDataBase() async {
     String? tempPath = await getFilePath;
 
@@ -119,7 +122,7 @@ class DataBase {
   /// ####################################################################################################################################
 
   /// gibt eine Liste aller aktiven Projekte zurück
-  /// @Params: term = Suchfilter, orderParameter = Begriff nach welchem geordnet wird
+  /// @Params: term = Suchfilter, orderParameter = nach welchem Parameter geordnet wird
   static Future<List<Content>> getProjects(
       {String searchTerm = "",
       String orderByParamter = "id",
@@ -131,22 +134,11 @@ class DataBase {
         where:
             "(statusActive = $statusActive) AND (projectName LIKE '%$searchTerm%' OR client LIKE '%$searchTerm%' OR street LIKE '%$searchTerm%' OR city LIKE '%$searchTerm%' OR zip LIKE '%$searchTerm%' OR comment LIKE '%$searchTerm%')");
 
-    // List allImages = await getAllImages();
-
     List<Content> contentList = [];
     Content contentElement;
     listOfMaps.forEach(
       (element) => {
         contentElement = Content.mapToContent(element),
-        /*
-        allImages.forEach(
-          (pictureObject) {
-            if (pictureObject["projectId"] == contentElement.id) {
-              contentElement.pictures.add(pictureObject["image"]);
-            }
-          },
-        ),
-        */
         contentList.add(contentElement),
       },
     );
@@ -159,22 +151,11 @@ class DataBase {
     List listOfMaps =
         await db.query('projects', orderBy: "id", where: "statusActive = 0");
 
-    //  List allImages = await getAllImages();
-
     List<Content> contentList = [];
     Content contentElement;
     listOfMaps.forEach(
       (element) => {
         contentElement = Content.mapToContent(element),
-        /*
-        allImages.forEach(
-          (pictureObject) {
-            if (pictureObject["projectId"] == contentElement.id) {
-              contentElement.pictures.add(pictureObject["image"]);
-            }
-          },
-        ),
-        */
         contentList.add(contentElement),
       },
     );
@@ -219,6 +200,7 @@ class DataBase {
     return contentElement;
   }
 
+  /// lädt ALLE Bilder (war vor allem für das ursprüngliche Dashboard nützlich)
   static Future<List> getAllImages() async {
     final db = await DataBase.getDataBase();
 
@@ -243,9 +225,10 @@ class DataBase {
     return list;
   }
 
-  /// gibt alle Bilder zu einer projectId als CustomCameraImage Liste zurück, onlyNewImages wird für
-  /// die aufwändige KI Berechnung benutzt, indem hier nur Bilder nachgeladen werden, zu denen noch
-  /// kein KI Wert bestimmt wurde
+  /// gibt alle Bilder zu einer projectId als CustomCameraImage Liste zurück
+  /// "onlyNewImages" wird für die aufwändige KI Berechnung benutzt, indem hier nur Bilder nachgeladen werden, zu denen noch
+  /// kein KI Wert bestimmt wurde,
+  /// "deletableImages" wird genutzt um die Bilder für den Nutzer laden zu können, die er Löschen muss
   static Future<List<CustomCameraImage>> getImages(
       {required int projectId,
       bool onlyNewImages = false,
@@ -289,7 +272,7 @@ class DataBase {
   /// ############## Daten löschen
   /// ####################################################################################################################################
 
-  /// löscht das Projekt aus der Datenbank
+  /// löscht das Projekt, samt seiner Fotos und hinterlegten Wände aus der Datenbank
   static deleteProject(int id) async {
     final db = await DataBase.getDataBase();
     try {
@@ -302,6 +285,8 @@ class DataBase {
     deleteWalls(id);
   }
 
+  /// löscht zum einen die Bildverweise aus der Datenbank, als auch die Bilddateien aus dem material
+  /// images Ordner
   static deleteImages(int projectId) async {
     final db = await DataBase.getDataBase();
 

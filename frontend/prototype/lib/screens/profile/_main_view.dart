@@ -97,6 +97,7 @@ class _ProfileState extends State<Profile> {
     // TODO: implement build
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: CustomScaffoldContainer(
           body: SingleChildScrollView(
             child: Column(children: [

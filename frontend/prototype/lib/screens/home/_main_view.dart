@@ -145,38 +145,41 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScaffoldContainer(
-        appBar: CustomAppBar(
-          title: "Alle Projekte",
-          subTitle: addUserData(),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              InputSearch(
-                  onSearchTermChange: (String term, List<Content> list) => {
-                        setState(() {
-                          searchTerm = term;
-                          allProjects = list;
-                        })
-                      }),
-              ButtonsOrderBy(
-                searchTerm: searchTerm,
-                orderChanged: (List<Content> list) => {
-                  setState(() {
-                    allProjects = list;
-                  })
-                },
-              ),
-              ProjectList(allProjects, activateList),
-              projectMessage(),
-              AddProjectButton(),
-              archieveButton(),
-            ],
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: CustomScaffoldContainer(
+          appBar: CustomAppBar(
+            title: "Alle Projekte",
+            subTitle: addUserData(),
           ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                InputSearch(
+                    onSearchTermChange: (String term, List<Content> list) => {
+                          setState(() {
+                            searchTerm = term;
+                            allProjects = list;
+                          })
+                        }),
+                ButtonsOrderBy(
+                  searchTerm: searchTerm,
+                  orderChanged: (List<Content> list) => {
+                    setState(() {
+                      allProjects = list;
+                    })
+                  },
+                ),
+                ProjectList(allProjects, activateList),
+                projectMessage(),
+                AddProjectButton(),
+                archieveButton(),
+              ],
+            ),
+          ),
+          navBar: NavBar(0),
         ),
-        navBar: NavBar(0),
       ),
     );
   }

@@ -4,7 +4,7 @@ import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/styles/general.dart';
 
-import '../../styles/container.dart';
+import '../styles/container.dart';
 
 class QualityChecklist extends StatefulWidget {
   Function(String) changeQuality;

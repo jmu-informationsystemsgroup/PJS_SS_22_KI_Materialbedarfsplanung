@@ -16,7 +16,8 @@ class CustomScaffoldContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Flex(
+      direction: Axis.vertical,
       children: [
         Expanded(
           flex: 2,

@@ -23,7 +23,7 @@ import '../../styles/container.dart';
 import '../load_project/_main_view.dart';
 import '../../components/input_field.dart';
 import '../../components/input_field_address.dart';
-import 'checklist_quality.dart';
+import '../../components/checklist_quality.dart';
 import 'mvp_walls.dart';
 
 class NewProject extends StatefulWidget {
@@ -283,6 +283,7 @@ class _NewProjectState extends State<NewProject> {
     // TODO: implement build
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: CustomScaffoldContainer(
           appBar: CustomAppBar(
             title: "Neues Projekt",

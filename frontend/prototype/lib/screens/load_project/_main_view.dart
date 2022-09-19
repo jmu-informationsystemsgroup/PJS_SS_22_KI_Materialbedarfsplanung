@@ -458,16 +458,18 @@ class _ProjectViewState extends State<ProjectView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScaffoldContainer(
-        appBar: CustomAppBar(
-          title: content.projectName,
-          subTitle: [getClientForHeader(), getAdressForHeader()],
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              /*
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: CustomScaffoldContainer(
+          appBar: CustomAppBar(
+            title: content.projectName,
+            subTitle: [getClientForHeader(), getAdressForHeader()],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                /*
               Center(
                 child: ProjectMap(
                   adress: Adress(
@@ -478,97 +480,97 @@ class _ProjectViewState extends State<ProjectView> {
                 ),
               ),
               */
-              ButtonEdit(
-                textVisiblity: !editorVisablity,
-                changeState: () {
-                  setState(() {
-                    editorVisablity = changeBool(editorVisablity);
-                  });
-                },
-              ),
-              Visibility(
-                visible: editorVisablity,
-                child: CustomContainerBorder(
-                  child: EditorWidget(
-                    input: content,
-                    route: ((data) {
-                      setState(() {
-                        content = data;
-                        editorVisablity = false;
-                      });
-                      loadGalleryPictures();
-                    }),
+                ButtonEdit(
+                  textVisiblity: !editorVisablity,
+                  changeState: () {
+                    setState(() {
+                      editorVisablity = changeBool(editorVisablity);
+                    });
+                  },
+                ),
+                Visibility(
+                  visible: editorVisablity,
+                  child: CustomContainerBorder(
+                    child: EditorWidget(
+                      input: content,
+                      route: ((data) {
+                        setState(() {
+                          content = data;
+                          editorVisablity = false;
+                        });
+                        loadGalleryPictures();
+                      }),
+                    ),
                   ),
                 ),
-              ),
-              Visibility(
-                visible: !editorVisablity,
-                child: Column(
-                  children: [
-                    Dashboard(
-                      content: content,
-                      imagesToDelete: galleryImagesToDelete,
-                      addPhoto: () {
-                        addPhoto();
-                      },
-                      recalculate: recalculate,
-                      outcome: calculatedOutcome,
-                      galleryImages: galleryImages,
-                      state: state,
-                      deleteFunction: (element) {
-                        _askForImageDelete(element);
-                      },
-                      updateImages: () async {
-                        setState(() {
-                          state = 0;
-                          recalculate = true;
-                        });
-                        List<CustomCameraImage> replaceList = [];
-                        if (galleryImagesNotYetCalculated.isNotEmpty) {
-                          replaceList = await ServerAI.getAiValuesFromServer(
-                              galleryImagesNotYetCalculated, (value) {
-                            setState(() {
-                              state = value;
-                            });
-                          }, () {
-                            _ServerMessage();
-                          });
+                Visibility(
+                  visible: !editorVisablity,
+                  child: Column(
+                    children: [
+                      Dashboard(
+                        content: content,
+                        imagesToDelete: galleryImagesToDelete,
+                        addPhoto: () {
+                          addPhoto();
+                        },
+                        recalculate: recalculate,
+                        outcome: calculatedOutcome,
+                        galleryImages: galleryImages,
+                        state: state,
+                        deleteFunction: (element) {
+                          _askForImageDelete(element);
+                        },
+                        updateImages: () async {
                           setState(() {
-                            recalculate = false;
+                            state = 0;
+                            recalculate = true;
                           });
-                        }
-                        loadGalleryPictures();
-                      },
-                    ),
-                    Webshop(
-                      aiValue: calculatedOutcome.aiOutcome,
-                    ),
-                    comment(),
+                          List<CustomCameraImage> replaceList = [];
+                          if (galleryImagesNotYetCalculated.isNotEmpty) {
+                            replaceList = await ServerAI.getAiValuesFromServer(
+                                galleryImagesNotYetCalculated, (value) {
+                              setState(() {
+                                state = value;
+                              });
+                            }, () {
+                              _ServerMessage();
+                            });
+                            setState(() {
+                              recalculate = false;
+                            });
+                          }
+                          loadGalleryPictures();
+                        },
+                      ),
+                      Webshop(
+                        aiValue: calculatedOutcome.aiOutcome,
+                      ),
+                      comment(),
 
-                    /*
+                      /*
             Text("Quadratmeter: " +
                     calculatedOutcome["totalSquareMeters"].toString()),
            Text("Preis: " + calculatedOutcome["totalPrice"].toString()),
 */
-                    Container(
-                      margin: const EdgeInsets.all(10.0),
-                    ),
-                    CustomContainerBorder(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 8,
-                            child: Gallery(
-                              pictures: galleryImages,
-                              deleteFunction: (element) {
-                                _askForImageDelete(element);
-                              },
-                            ),
-                          ),
-                          Expanded(flex: 4, child: addPhotoButton()),
-                        ],
+                      Container(
+                        margin: const EdgeInsets.all(10.0),
                       ),
-                    ),
+                      CustomContainerBorder(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 8,
+                              child: Gallery(
+                                pictures: galleryImages,
+                                deleteFunction: (element) {
+                                  _askForImageDelete(element);
+                                },
+                              ),
+                            ),
+                            Expanded(flex: 4, child: addPhotoButton()),
+                          ],
+                        ),
+                      ),
 
 /*
           CustomButton(
@@ -608,44 +610,45 @@ class _ProjectViewState extends State<ProjectView> {
           ),
           */
 
-                    Visibility(
-                      visible: safingImages,
-                      child: Text("Speichere Bilder $state %"),
-                    ),
-                    AllData(content: content),
-                  ],
+                      Visibility(
+                        visible: safingImages,
+                        child: Text("Speichere Bilder $state %"),
+                      ),
+                      AllData(content: content),
+                    ],
+                  ),
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      margin: const EdgeInsets.all(5.0),
-                      child: CustomButtonRow(
-                        onPressed: () {
-                          _askForProjectDelete();
-                        },
-                        children: [
-                          Icon(Icons.delete_outline),
-                          Text("Projekt löschen")
-                        ],
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        margin: const EdgeInsets.all(5.0),
+                        child: CustomButtonRow(
+                          onPressed: () {
+                            _askForProjectDelete();
+                          },
+                          children: [
+                            Icon(Icons.delete_outline),
+                            Text("Projekt löschen")
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      margin: const EdgeInsets.all(5.0),
-                      child: renderArchiveButton(content.id),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        margin: const EdgeInsets.all(5.0),
+                        child: renderArchiveButton(content.id),
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
+          navBar: NavBar(99),
         ),
-        navBar: NavBar(99),
       ),
     );
   }
