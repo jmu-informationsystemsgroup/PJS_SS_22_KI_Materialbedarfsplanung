@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:prototype/backend/data_base_functions.dart';
-import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/custom_container_border.dart';
 import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/screens/load_project/_main_view.dart';

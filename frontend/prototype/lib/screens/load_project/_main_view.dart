@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/button_edit.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
-import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/custom_container_border.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/components/input_field_address.dart';
 import 'package:prototype/screens/home/_main_view.dart';

@@ -32,6 +32,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         CustomButtonColumn(
+          enableShaddow: false,
           children: [
             Icon(
               Icons.person_pin_circle_outlined,
@@ -56,6 +57,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
           },
         ),
         CustomButtonColumn(
+          enableShaddow: false,
           children: [
             Icon(
               Icons.location_on_outlined,
@@ -80,6 +82,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
           },
         ),
         CustomButtonColumn(
+          enableShaddow: false,
           children: [
             Icon(
               Icons.calendar_month_outlined,

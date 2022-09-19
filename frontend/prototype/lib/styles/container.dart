@@ -20,27 +20,44 @@ class ContainerStyles {
     );
   }
 
-  static BoxDecoration roundetCorners(
-      {Color color = const Color.fromARGB(255, 8, 173, 11)}) {
+  static BoxShadow sameShaddow(bool enableShaddow) {
+    if (enableShaddow) {
+      return BoxShadow(
+        color: Colors.grey.withOpacity(0.3),
+        spreadRadius: 1,
+        blurRadius: 2,
+        offset: Offset(1, 2), // changes position of shadow
+      );
+    } else {
+      return BoxShadow(color: Colors.white);
+    }
+  }
+
+  static BoxDecoration roundetCorners({
+    Color color = const Color.fromARGB(255, 8, 173, 11),
+    bool enableShaddow = true,
+  }) {
     return BoxDecoration(
       border: Border.all(color: color, width: 2.0),
       borderRadius: BorderRadius.all(Radius.circular(8)),
-      color: Colors.transparent,
+      boxShadow: [sameShaddow(enableShaddow)],
+      color: Colors.white,
     );
   }
 
   static BoxDecoration getBoxDecoration(
       {Color color = const Color.fromARGB(255, 115, 115, 115)}) {
     return BoxDecoration(
-        border: Border.all(color: color, width: 2.0),
-        borderRadius: BorderRadius.all(Radius.circular(10))
+      border: Border.all(color: color, width: 2.0),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      color: Colors.white,
 
-        /*
+      /*
       border: Border.all(
           color: Color.fromARGB(118, 0, 0, 0),
           width: 1.0,
           style: BorderStyle.solid),*/
-        );
+    );
   }
 
   static BoxDecoration bodyDecoration() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
-import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/custom_container_border.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/styles/general.dart';

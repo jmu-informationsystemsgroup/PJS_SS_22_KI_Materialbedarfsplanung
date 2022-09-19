@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/custom_container_border.dart';
 import 'package:prototype/components/icon_and_text.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/styles/general.dart';

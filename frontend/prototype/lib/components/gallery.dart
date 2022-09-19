@@ -4,7 +4,7 @@ import 'package:prototype/backend/data_base_functions.dart';
 import 'dart:io';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:prototype/backend/helper_objects.dart';
-import 'package:prototype/components/custom_container_white.dart';
+import 'package:prototype/components/custom_container_border.dart';
 import 'package:path/path.dart';
 import 'package:file_support/file_support.dart';
 import 'package:prototype/styles/general.dart';

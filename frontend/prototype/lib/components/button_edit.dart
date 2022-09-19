@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../styles/container.dart';
 import '../styles/general.dart';
 
 class ButtonEdit extends StatelessWidget {
@@ -26,6 +27,8 @@ class ButtonEdit extends StatelessWidget {
                 width: 2.0,
                 color: GeneralStyle.getDarkGray(),
               ),
+              color: Colors.white,
+              boxShadow: [ContainerStyles.sameShaddow(true)],
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Icon(
             getIcon(),

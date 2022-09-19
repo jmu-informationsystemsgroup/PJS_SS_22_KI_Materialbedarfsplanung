@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/icon_and_text.dart';
 
-import '../../components/custom_container_white.dart';
+import '../../components/custom_container_border.dart';
 import '../../styles/general.dart';
 
 class AllData extends StatelessWidget {

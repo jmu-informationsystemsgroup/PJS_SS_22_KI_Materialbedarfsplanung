@@ -7,7 +7,7 @@ import 'package:prototype/screens/load_project/button_send_mail.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../components/custom_container_white.dart';
+import '../../components/custom_container_border.dart';
 
 class UserForm extends StatefulWidget {
   final Function(User user) updateValues;

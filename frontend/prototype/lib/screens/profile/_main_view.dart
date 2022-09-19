@@ -7,7 +7,7 @@ import 'package:prototype/screens/profile/user_data.dart';
 import '../../backend/data_base_functions.dart';
 import '../../backend/helper_objects.dart';
 import '../../components/appBar_custom.dart';
-import '../../components/custom_container_white.dart';
+import '../../components/custom_container_border.dart';
 import '../../components/navBar.dart';
 import '../../styles/general.dart';
 import 'user_form.dart';

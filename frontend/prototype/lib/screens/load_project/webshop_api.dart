@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../backend/helper_objects.dart';
 import '../../components/button_edit.dart';
 import '../../components/button_row_multiple_icons.dart';
-import '../../components/custom_container_white.dart';
+import '../../components/custom_container_border.dart';
 import '../../styles/general.dart';
 
 class Webshop extends StatefulWidget {
