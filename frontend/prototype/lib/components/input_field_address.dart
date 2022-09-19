@@ -30,8 +30,7 @@ class AddressInputState extends State<AddressInput> {
   static bool houseNrComplete = false;
   static bool zipComplete = false;
   static bool cityComplete = false;
-  static bool adressComplete =
-      streetComplete && houseNrComplete && zipComplete && cityComplete;
+  static bool adressComplete = false;
 
   @override
   void initState() {
@@ -40,12 +39,18 @@ class AddressInputState extends State<AddressInput> {
     houseNumber = widget.adress.houseNumber;
     city = widget.adress.city;
     zip = widget.adress.zip;
+    checkAdressComplete();
   }
 
   checkAdressComplete() {
+    adressComplete =
+        streetComplete && houseNrComplete && zipComplete && cityComplete;
     if (adressComplete) {
       widget.completeAdress!(true);
     }
+    print(
+      "----------------------------------street-$streetComplete--nr-$houseNrComplete--zip-$zipComplete--city-$cityComplete---->adresscompete-$adressComplete",
+    );
   }
 
   @override
@@ -68,6 +73,8 @@ class AddressInputState extends State<AddressInput> {
                 child: InputField(
                   formComplete: (formCompleteController) {
                     streetComplete = formCompleteController;
+
+                    checkAdressComplete();
                   },
                   disableMargin: true,
                   value: widget.adress.street,
@@ -88,6 +95,8 @@ class AddressInputState extends State<AddressInput> {
                 child: InputField(
                     formComplete: (formCompleteController) {
                       houseNrComplete = formCompleteController;
+
+                      checkAdressComplete();
                     },
                     value: widget.adress.houseNumber,
                     mandatory: widget.mandatory,
@@ -112,6 +121,8 @@ class AddressInputState extends State<AddressInput> {
                 child: InputField(
                     formComplete: (formCompleteController) {
                       zipComplete = formCompleteController;
+
+                      checkAdressComplete();
                     },
                     value: widget.adress.zip,
                     mandatory: widget.mandatory,
@@ -132,6 +143,8 @@ class AddressInputState extends State<AddressInput> {
                 child: InputField(
                     formComplete: (formCompleteController) {
                       cityComplete = formCompleteController;
+
+                      checkAdressComplete();
                     },
                     value: widget.adress.city,
                     mandatory: widget.mandatory,

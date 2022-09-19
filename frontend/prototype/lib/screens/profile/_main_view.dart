@@ -104,6 +104,7 @@ class _ProfileState extends State<Profile> {
                 textVisiblity: textVisiblity,
                 changeState: () {
                   setState(() {
+                    getUser();
                     textVisiblity = changeBool(textVisiblity);
                   });
                 },

@@ -43,6 +43,7 @@ class ProjectView extends StatefulWidget {
 class _ProjectViewState extends State<ProjectView> {
   CalculatorOutcome calculatedOutcome = CalculatorOutcome();
   bool editorVisablity = false;
+
   Content content = Content();
 
   /// eine Liste sämtlicher Bildobjekte zu dem Projekt
@@ -84,8 +85,8 @@ class _ProjectViewState extends State<ProjectView> {
   loadGalleryPictures() async {
     galleryImagesNotYetCalculated =
         await DataBase.getImages(projectId: content.id, onlyNewImages: true);
-    galleryImagesToDelete =
-        await DataBase.getImages(projectId: content.id, onlyNewImages: true);
+    galleryImagesToDelete = await DataBase.getImages(
+        projectId: content.id, deletetableImages: true);
     List<CustomCameraImage> saveState =
         await DataBase.getImages(projectId: content.id);
     CalculatorOutcome val =
@@ -200,8 +201,11 @@ class _ProjectViewState extends State<ProjectView> {
   Widget renderArchiveButton(int id) {
     if (content.statusActive == 0) {
       return CustomButtonRow(
-        onPressed: () {
-          DataBase.activateProject(id);
+        onPressed: () async {
+          await DataBase.activateProject(id);
+          setState(() {
+            content.statusActive = 1;
+          });
         },
         children: [
           Icon(Icons.settings_backup_restore),
@@ -210,8 +214,11 @@ class _ProjectViewState extends State<ProjectView> {
       );
     } else {
       return CustomButtonRow(
-        onPressed: () {
-          DataBase.archieveProject(id);
+        onPressed: () async {
+          await DataBase.archieveProject(id);
+          setState(() {
+            content.statusActive = 0;
+          });
         },
         children: [
           Icon(Icons.emoji_events_outlined),
@@ -494,70 +501,74 @@ class _ProjectViewState extends State<ProjectView> {
                   ),
                 ),
               ),
-              Dashboard(
-                content: content,
-                imagesToDelete: galleryImagesToDelete,
-                addPhoto: () {
-                  addPhoto();
-                },
-                recalculate: recalculate,
-                outcome: calculatedOutcome,
-                galleryImages: galleryImages,
-                state: state,
-                deleteFunction: (element) {
-                  _askForImageDelete(element);
-                },
-                updateImages: () async {
-                  setState(() {
-                    state = 0;
-                    recalculate = true;
-                  });
-                  List<CustomCameraImage> replaceList = [];
-                  if (galleryImagesNotYetCalculated.isNotEmpty) {
-                    replaceList = await ServerAI.getAiValuesFromServer(
-                        galleryImagesNotYetCalculated, (value) {
-                      setState(() {
-                        state = value;
-                      });
-                    }, () {
-                      _ServerMessage();
-                    });
-                    setState(() {
-                      recalculate = false;
-                    });
-                  }
-                  loadGalleryPictures();
-                },
-              ),
-              Webshop(
-                aiValue: calculatedOutcome.aiOutcome,
-              ),
-              comment(),
+              Visibility(
+                visible: !editorVisablity,
+                child: Column(
+                  children: [
+                    Dashboard(
+                      content: content,
+                      imagesToDelete: galleryImagesToDelete,
+                      addPhoto: () {
+                        addPhoto();
+                      },
+                      recalculate: recalculate,
+                      outcome: calculatedOutcome,
+                      galleryImages: galleryImages,
+                      state: state,
+                      deleteFunction: (element) {
+                        _askForImageDelete(element);
+                      },
+                      updateImages: () async {
+                        setState(() {
+                          state = 0;
+                          recalculate = true;
+                        });
+                        List<CustomCameraImage> replaceList = [];
+                        if (galleryImagesNotYetCalculated.isNotEmpty) {
+                          replaceList = await ServerAI.getAiValuesFromServer(
+                              galleryImagesNotYetCalculated, (value) {
+                            setState(() {
+                              state = value;
+                            });
+                          }, () {
+                            _ServerMessage();
+                          });
+                          setState(() {
+                            recalculate = false;
+                          });
+                        }
+                        loadGalleryPictures();
+                      },
+                    ),
+                    Webshop(
+                      aiValue: calculatedOutcome.aiOutcome,
+                    ),
+                    comment(),
 
-              /*
+                    /*
             Text("Quadratmeter: " +
                     calculatedOutcome["totalSquareMeters"].toString()),
            Text("Preis: " + calculatedOutcome["totalPrice"].toString()),
 */
-              Container(
-                margin: const EdgeInsets.all(10.0),
-              ),
-              CustomContainerBorder(
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 8,
-                      child: Gallery(
-                        pictures: galleryImages,
-                        deleteFunction: (element) {
-                          _askForImageDelete(element);
-                        },
+                    Container(
+                      margin: const EdgeInsets.all(10.0),
+                    ),
+                    CustomContainerBorder(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 8,
+                            child: Gallery(
+                              pictures: galleryImages,
+                              deleteFunction: (element) {
+                                _askForImageDelete(element);
+                              },
+                            ),
+                          ),
+                          Expanded(flex: 4, child: addPhotoButton()),
+                        ],
                       ),
                     ),
-                    Expanded(flex: 4, child: addPhotoButton()),
-                  ],
-                ),
-              ),
 
 /*
           CustomButton(
@@ -597,13 +608,13 @@ class _ProjectViewState extends State<ProjectView> {
           ),
           */
 
-              Visibility(
-                visible: safingImages,
-                child: Text("Speichere Bilder $state %"),
-              ),
-              Visibility(
-                visible: !editorVisablity,
-                child: AllData(content: content),
+                    Visibility(
+                      visible: safingImages,
+                      child: Text("Speichere Bilder $state %"),
+                    ),
+                    AllData(content: content),
+                  ],
+                ),
               ),
               Row(
                 children: [

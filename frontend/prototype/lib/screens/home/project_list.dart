@@ -34,6 +34,7 @@ class ProjectList extends StatelessWidget {
     }
   }
 
+/*
   randomColorPicker() {
     int randomValue = Random().nextInt(7);
     while (previousColors.last == randomValue ||
@@ -52,6 +53,7 @@ class ProjectList extends StatelessWidget {
     ];
     return colors[randomValue];
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -79,11 +81,11 @@ class ProjectList extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1 / 1,
                           child: CustomContainerBorder(
-                            color: randomColorPicker(),
+                            color: GeneralStyle.getUglyGreen(),
                             //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                             child: Icon(
                               Icons.cottage_outlined,
-                              color: randomColorPicker(),
+                              color: Colors.black,
                               size: 40,
                             ),
                           ),

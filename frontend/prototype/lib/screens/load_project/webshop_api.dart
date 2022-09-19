@@ -93,7 +93,8 @@ class _WebshopState extends State<Webshop> {
             ),
           ],
           onPressed: () {
-            _launchUrl("https://spachtelprofi.com/shop/");
+            _launchUrl(
+                "https://spachtelprofi.com/shop/schneller-strong-spachteln-strong/verbrauchs-shy-materialien/");
           },
         ),
         Visibility(
@@ -114,7 +115,6 @@ class _WebshopState extends State<Webshop> {
                           });
                         },
                         allValuesMandatory: true,
-                        editUser: user,
                         aiValue: widget.aiValue,
                       )
                     ],
@@ -147,7 +147,6 @@ class _WebshopState extends State<Webshop> {
                           updateValues: (data) {
                             setState(() {
                               user = data;
-
                               textVisiblity = changeBool(textVisiblity);
                             });
                           },

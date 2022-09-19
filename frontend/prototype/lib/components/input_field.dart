@@ -87,14 +87,14 @@ class _InputFieldState extends State<InputField> {
   @override
   Widget build(BuildContext context) {
     if (textController.text.isEmpty && widget.mandatory) {
+      widget.formComplete!(false);
       setState(() {
-        widget.formComplete!(false);
         visibleWarning = true;
       });
     }
     if (textController.text.isNotEmpty && widget.mandatory) {
+      widget.formComplete!(true);
       setState(() {
-        widget.formComplete!(true);
         visibleWarning = false;
       });
     }

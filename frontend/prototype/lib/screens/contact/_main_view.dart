@@ -97,7 +97,7 @@ class Contact extends StatelessWidget {
                     color: GeneralStyle.getUglyGreen(),
                   ),
                   Text(
-                    "Jezt mehr erfahren",
+                    "Jetzt mehr erfahren",
                     style: TextStyle(
                       color: GeneralStyle.getUglyGreen(),
                     ),

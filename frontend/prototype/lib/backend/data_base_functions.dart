@@ -26,9 +26,12 @@ class DataBase {
       await Permission.storage.request();
     }
 
-// Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
+/*
+ Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
+ String? tempPath = tempDir?.path;
+ */
     Directory? tempDir = await getApplicationDocumentsDirectory();
-    String? tempPath = tempDir?.path;
+    String? tempPath = tempDir.path;
     return tempPath;
   }
 

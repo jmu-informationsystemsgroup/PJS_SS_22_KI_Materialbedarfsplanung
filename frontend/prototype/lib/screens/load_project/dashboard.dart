@@ -9,7 +9,7 @@ import '../../backend/helper_objects.dart';
 import '../../backend/value_calculator.dart';
 
 class Dashboard extends StatefulWidget {
-  List galleryImages;
+  List<CustomCameraImage> galleryImages;
   List<CustomCameraImage> imagesToDelete;
   Content content;
   CalculatorOutcome outcome;
@@ -134,7 +134,8 @@ class _DashboardState extends State<Dashboard> {
       );
     } else if (widget.recalculate) {
       return Text("Status: ${widget.state}%");
-    } else if (widget.outcome.aiOutcome == 0.0 && !widget.outcome.exception) {
+    } else if (widget.outcome.aiOutcome == 0.0 &&
+        widget.galleryImages.length != widget.imagesToDelete.length) {
       return CustomContainerBorder(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -66,6 +66,7 @@ class ServerAI {
         stateUpdate(currentState.toInt());
       } catch (e) {
         connectionHandler();
+        break;
       }
     }
     return images;

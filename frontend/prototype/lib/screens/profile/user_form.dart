@@ -33,8 +33,14 @@ class _UserFormState extends State<UserForm> {
   static bool addressComplete = false;
   static bool idComplete = false;
 
-  static bool formComplete =
-      (preNameComplete && familyNameComplete && addressComplete && idComplete);
+  static bool formComplete = false;
+
+  checkFormComplete() {
+    formComplete = (preNameComplete &&
+        familyNameComplete &&
+        addressComplete &&
+        idComplete);
+  }
 
   @override
   void initState() {
@@ -42,6 +48,8 @@ class _UserFormState extends State<UserForm> {
     if (widget.editUser != null) {
       cache = widget.editUser!;
     }
+    checkFormComplete();
+
     if (!widget.allValuesMandatory) {
       formComplete = true;
     }
@@ -74,8 +82,10 @@ class _UserFormState extends State<UserForm> {
           labelText: "Vorname",
           icon: Icons.person,
           value: cache.firstName,
-          formComplete: (formCompleteController) =>
-              {preNameComplete = formCompleteController},
+          formComplete: (formCompleteController) => {
+            preNameComplete = formCompleteController,
+            checkFormComplete(),
+          },
           mandatory: widget.allValuesMandatory,
         ),
         InputField(
@@ -83,8 +93,10 @@ class _UserFormState extends State<UserForm> {
           labelText: "Nachname",
           icon: Icons.person_add,
           value: cache.lastName,
-          formComplete: (formCompleteController) =>
-              {familyNameComplete = formCompleteController},
+          formComplete: (formCompleteController) => {
+            familyNameComplete = formCompleteController,
+            checkFormComplete(),
+          },
           mandatory: widget.allValuesMandatory,
         ),
         InputField(
@@ -92,8 +104,10 @@ class _UserFormState extends State<UserForm> {
           labelText: "Kundennummer",
           icon: Icons.numbers,
           inputType: TextInputType.number,
-          formComplete: (formCompleteController) =>
-              {idComplete = formCompleteController},
+          formComplete: (formCompleteController) => {
+            idComplete = formCompleteController,
+            checkFormComplete(),
+          },
           value: _idValue(),
           mandatory: widget.allValuesMandatory,
         ),
@@ -111,8 +125,10 @@ class _UserFormState extends State<UserForm> {
             city: cache.city,
           ),
           mandatory: widget.allValuesMandatory,
-          completeAdress: (formCompleteController) =>
-              {addressComplete = formCompleteController},
+          completeAdress: (formCompleteController) => {
+            addressComplete = formCompleteController,
+            checkFormComplete(),
+          },
         ),
         ElevatedButton(
           onPressed: () async => {

@@ -29,6 +29,7 @@ class _HomeState extends State<Home> {
   static List<Content> allProjects = [];
   User user = User();
   String searchTerm = "";
+  int statusActive = 1;
 
   activateList() async {
     DataBase.getProjects(searchTerm: searchTerm).then((loadedContent) {
@@ -67,7 +68,7 @@ class _HomeState extends State<Home> {
       return [
         IconAndText(
             text: "${user.firstName} ${user.lastName}",
-            icon: Icons.quick_contacts_mail_outlined,
+            icon: Icons.person,
             color: Colors.black)
       ];
     } else {
@@ -86,24 +87,51 @@ class _HomeState extends State<Home> {
     }
   }
 
+  changeStatus() {
+    if (statusActive == 0) {
+      setState(() {
+        statusActive = 1;
+      });
+    } else {
+      statusActive = 0;
+    }
+  }
+
+  String getArchievedText() {
+    if (statusActive == 0) {
+      return "Zurück";
+    } else {
+      return "Abgeschlossene Projekte";
+    }
+  }
+
+  IconData getIcon() {
+    if (statusActive == 0) {
+      return Icons.arrow_circle_left_outlined;
+    } else {
+      return Icons.emoji_events_outlined;
+    }
+  }
+
   Widget archieveButton() {
     return CustomButtonRow(
       children: [
         Icon(
-          Icons.emoji_events_outlined,
+          getIcon(),
           color: GeneralStyle.getUglyGreen(),
         ),
         Text(
-          "Abgeschlossene Projekte",
+          getArchievedText(),
           style: TextStyle(
             color: GeneralStyle.getUglyGreen(),
           ),
         )
       ],
       onPressed: () async {
+        changeStatus();
         List<Content> newOrderList = await DataBase.getProjects(
           searchTerm: searchTerm,
-          statusActive: 0,
+          statusActive: statusActive,
         );
         setState(
           () {
