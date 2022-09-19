@@ -15,7 +15,6 @@ import 'package:prototype/screens/load_project/dashboard.dart';
 import 'package:prototype/screens/load_project/editor.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
-import 'package:prototype/screens/load_project/projectMap.dart';
 import 'package:prototype/screens/load_project/webshop_api.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/styles/container.dart';

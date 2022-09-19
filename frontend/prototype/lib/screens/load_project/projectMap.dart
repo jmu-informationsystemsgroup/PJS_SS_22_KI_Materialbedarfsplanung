@@ -45,6 +45,11 @@ class ProjectMap extends StatelessWidget {
       child: Container(
         child: Container(
           margin: const EdgeInsets.all(10.0),
+          child: Container(),
+
+// Abgestellt da nicht Apple kompatibel
+
+          /*
           child: FlutterMap(
             options: MapOptions(center: point, zoom: 16),
             layers: [
@@ -63,6 +68,7 @@ class ProjectMap extends StatelessWidget {
               ])
             ],
           ),
+          */
           width: 350,
           height: 200,
         ),
