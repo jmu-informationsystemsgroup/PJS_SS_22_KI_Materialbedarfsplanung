@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:camera/camera.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/backend/server_ai.dart';
@@ -25,7 +26,8 @@ class DataBase {
       await Permission.storage.request();
     }
 
-    Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
+// Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
+    Directory? tempDir = await getApplicationDocumentsDirectory();
     String? tempPath = tempDir?.path;
     return tempPath;
   }
@@ -96,8 +98,9 @@ class DataBase {
   static Future<sql.Database> getDataBase() async {
     String? tempPath = await getFilePath;
 
+//  '$tempPath/spachtlerData.db',
     return sql.openDatabase(
-      '$tempPath/spachtlerData.db',
+      'spachtlerData.db',
       version: 1,
       onCreate: (sql.Database database, int version) async {
         await createProjectTable(database);
