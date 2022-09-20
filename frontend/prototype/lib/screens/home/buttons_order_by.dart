@@ -113,10 +113,13 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Sortieren nach:",
-            style: TextStyle(
-              color: GeneralStyle.getLightGray(),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: Text(
+              "Sortieren nach:",
+              style: TextStyle(
+                color: GeneralStyle.getLightGray(),
+              ),
             ),
           ),
           buttonrow,

@@ -8,6 +8,7 @@ import 'package:prototype/screens/camera/button_flash.dart';
 import 'package:prototype/screens/camera/button_leave.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:flutter/services.dart';
+import 'package:prototype/styles/general.dart';
 import '../create_new_project/_main_view.dart';
 
 class CameraPage extends StatefulWidget {
@@ -69,9 +70,9 @@ class _CameraPageState extends State<CameraPage> {
       if (!mounted) {
         return;
       }
+      controller.setFlashMode(FlashMode.off);
       setState(() {});
     });
-    controller.setFlashMode(FlashMode.off);
 
     for (var element in widget.originalGallery) {
       if (element.display) {
@@ -108,7 +109,7 @@ class _CameraPageState extends State<CameraPage> {
     return Container(
       //   height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
-        color: Color.fromARGB(137, 255, 255, 255),
+        color: GeneralStyle.getLightGray(),
       ),
     );
   }
@@ -136,7 +137,7 @@ class _CameraPageState extends State<CameraPage> {
             setState(() {
               fotoFeedBack = true;
             });
-            var bla = await Future.delayed(Duration(milliseconds: 30));
+            var bla = await Future.delayed(Duration(milliseconds: 45));
             setState(() {
               fotoFeedBack = false;
             });

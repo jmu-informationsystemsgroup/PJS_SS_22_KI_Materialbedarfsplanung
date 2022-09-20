@@ -77,9 +77,9 @@ class _QualityChecklist extends State<QualityChecklist> {
         children: <Widget>[
           IconAndText(
               icon: Icons.verified_outlined, text: "Oberflächenqualität"),
-          checkBoxRow("\$ (Standard)", "Q2"),
-          checkBoxRow("\$\$ (gehobene optische Ansprüche)", "Q3"),
-          checkBoxRow("\$\$\$ (höchste optische Ansprüche)", "Q4"),
+          checkBoxRow("Q2 (Standard)", "Q2"),
+          checkBoxRow("Q3 (gehobene optische Ansprüche)", "Q3"),
+          checkBoxRow("Q4 (höchste optische Ansprüche)", "Q4"),
         ],
       ),
     );

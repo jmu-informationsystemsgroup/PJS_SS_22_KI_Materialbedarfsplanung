@@ -21,7 +21,7 @@ class EditorWidget extends StatelessWidget {
       children: [
         InputField(
           saveTo: (text) => {data.projectName = text},
-          labelText: "Name",
+          labelText: "Projektname",
           icon: Icons.discount_outlined,
           value: input.projectName,
         ),

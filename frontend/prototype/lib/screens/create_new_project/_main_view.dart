@@ -248,7 +248,8 @@ class _NewProjectState extends State<NewProject> {
             icon: Icons.delete,
             text: "Wirklich speichern?",
           ),
-          content: Text("Das Projekt enthält keine Daten, wirklich speichern?"),
+          content: Text(
+              "Das Projekt enthält weder Daten noch Bilder, wirklich speichern?"),
           actions: <Widget>[
             TextButton(
               child: IconAndText(
@@ -312,7 +313,7 @@ class _NewProjectState extends State<NewProject> {
                         content.projectName = text;
                       }),
                     },
-                    labelText: "Name",
+                    labelText: "Porjektname",
                     icon: Icons.discount_outlined,
                     value: content.projectName,
                   ),

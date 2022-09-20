@@ -20,7 +20,7 @@ class ButtonLeave extends StatelessWidget {
               ),
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Icon(
-            Icons.close,
+            Icons.check,
             color: GeneralStyle.getLightGray(),
           ),
         ),

@@ -138,9 +138,21 @@ class _DashboardState extends State<Dashboard> {
         widget.galleryImages.length != widget.imagesToDelete.length) {
       return CustomContainerBorder(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Um den Bedarf zu ermitteln synchronisiere deine Bilddaten"),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Jetzt Bedarf ermitteln? ",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  WidgetSpan(
+                    child: Icon(Icons.format_color_fill),
+                  ),
+                ],
+              ),
+            ),
             CustomButtonRow(children: [
               Icon(
                 Icons.sync,

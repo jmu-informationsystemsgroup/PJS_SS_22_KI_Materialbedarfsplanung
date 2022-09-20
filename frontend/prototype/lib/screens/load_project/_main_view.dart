@@ -556,6 +556,7 @@ class _ProjectViewState extends State<ProjectView> {
                         margin: const EdgeInsets.all(10.0),
                       ),
                       CustomContainerBorder(
+                        color: GeneralStyle.getLightGray(),
                         child: Row(
                           children: [
                             Expanded(

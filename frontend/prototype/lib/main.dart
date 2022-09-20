@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:prototype/screens/home/_main_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prototype/styles/general.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 /// idee von https://stackoverflow.com/questions/49418332/flutter-how-to-prevent-device-orientation-changes-and-force-portrait
 void main() {
@@ -19,6 +20,14 @@ class RootClass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('de', ''),
+      ],
       theme: ThemeData(
         textTheme: GoogleFonts.openSansTextTheme(),
         scaffoldBackgroundColor: GeneralStyle.getLightGray(),

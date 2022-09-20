@@ -81,22 +81,6 @@ class _WebshopState extends State<Webshop> {
     }
     return Column(
       children: [
-        CustomButtonRow(
-          children: [
-            Icon(
-              Icons.shopping_cart_outlined,
-              color: GeneralStyle.getUglyGreen(),
-            ),
-            Text(
-              "Zum Webshop",
-              style: TextStyle(color: GeneralStyle.getUglyGreen()),
-            ),
-          ],
-          onPressed: () {
-            _launchUrl(
-                "https://spachtelprofi.com/shop/schneller-strong-spachteln-strong/verbrauchs-shy-materialien/");
-          },
-        ),
         Visibility(
           visible: mailVisability,
           child: CustomContainerBorder(
@@ -163,13 +147,40 @@ class _WebshopState extends State<Webshop> {
             ),
           ),
         ),
-        CustomButtonRow(
-          children: getMailChildren(),
-          onPressed: () {
-            setState(() {
-              mailVisability = changeBool(mailVisability);
-            });
-          },
+        Flex(
+          direction: Axis.horizontal,
+          children: [
+            Expanded(
+              flex: 1,
+              child: CustomButtonRow(
+                children: [
+                  Icon(
+                    Icons.shopping_cart_outlined,
+                    color: GeneralStyle.getUglyGreen(),
+                  ),
+                  Text(
+                    "zum Webshop",
+                    style: TextStyle(color: GeneralStyle.getUglyGreen()),
+                  ),
+                ],
+                onPressed: () {
+                  _launchUrl(
+                      "https://spachtelprofi.com/shop/schneller-strong-spachteln-strong/verbrauchs-shy-materialien/");
+                },
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: CustomButtonRow(
+                children: getMailChildren(),
+                onPressed: () {
+                  setState(() {
+                    mailVisability = changeBool(mailVisability);
+                  });
+                },
+              ),
+            ),
+          ],
         ),
       ],
     );

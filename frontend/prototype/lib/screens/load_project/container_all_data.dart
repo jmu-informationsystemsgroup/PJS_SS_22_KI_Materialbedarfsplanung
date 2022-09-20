@@ -11,6 +11,7 @@ class AllData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainerBorder(
+      color: GeneralStyle.getLightGray(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

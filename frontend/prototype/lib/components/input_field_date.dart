@@ -32,6 +32,7 @@ class _InpuDateState extends State<InputDate> {
           controller: dateinput,
           onTap: () async {
             DateTime? pickedDate = await showDatePicker(
+                locale: Locale('de', 'DE'),
                 context: context,
                 initialDate: DateTime.now(),
                 firstDate: DateTime(1950),
