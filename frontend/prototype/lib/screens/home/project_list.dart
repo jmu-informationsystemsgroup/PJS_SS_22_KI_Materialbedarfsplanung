@@ -85,8 +85,26 @@ class _StateProjectList extends State<ProjectList> {
         size: 40,
       );
     } else {
-      return FullScreenWidget(
-          child: Image.file(File(element.profileImage!.path)));
+      return Stack(
+        children: [
+          Center(
+            child: FullScreenWidget(
+                child: Image.file(File(element.profileImage!.path))),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: GestureDetector(
+              child: Icon(Icons.delete, color: GeneralStyle.getLightGray()),
+              onTap: () async {
+                var outCome = await DataBase.deleteProfileImage(element.id);
+                setState(() {
+                  element.profileImage = null;
+                });
+              },
+            ),
+          ),
+        ],
+      );
     }
   }
 

@@ -301,6 +301,13 @@ class DataBase {
     }
   }
 
+  static deleteProfileImage(int projectId) async {
+    final path = await getFilePath;
+
+    var file = File('$path/material_images/$projectId.jpg');
+    file.delete();
+  }
+
   static deleteSingleImageFromTable(int projectId, int id) async {
     final db = await DataBase.getDataBase();
     try {
