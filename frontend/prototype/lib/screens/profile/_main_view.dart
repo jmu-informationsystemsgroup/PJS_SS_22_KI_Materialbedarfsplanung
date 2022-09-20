@@ -79,15 +79,20 @@ class _ProfileState extends State<Profile> {
         ],
       );
     } else {
-      return UserForm(
-        updateValues: (data) {
-          setState(() {
-            user = data;
-            textVisiblity = changeBool(textVisiblity);
-            //  getUser();
-          });
-        },
-        editUser: user,
+      return Column(
+        children: [
+          UserForm(
+            updateValues: (data) {
+              setState(() {
+                user = data;
+                textVisiblity = changeBool(textVisiblity);
+                //  getUser();
+              });
+            },
+            editUser: user,
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height / 3),
+        ],
       );
     }
   }
