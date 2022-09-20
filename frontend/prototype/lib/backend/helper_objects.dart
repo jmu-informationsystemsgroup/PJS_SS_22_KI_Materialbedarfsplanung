@@ -17,12 +17,14 @@ class Content {
   int statusActive = 1;
   double aiValue = 41.0;
   XFile? profileImage;
+  String lastEdit = "";
 
   String street = "";
   String houseNumber = "";
   String zip = "";
   String city = "";
 
+/*
   /// übersetzt Objekt aus Json Format
   set fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -42,6 +44,7 @@ class Content {
         'material': material,
         'statusActive': statusActive
       };
+      */
 
   static Map<String, dynamic> contentToMap(Content content) {
     Map<String, dynamic> map = {
@@ -55,7 +58,8 @@ class Content {
       'street': content.street,
       'houseNumber': content.houseNumber,
       'zip': content.zip,
-      'city': content.city
+      'city': content.city,
+      'lastEdit': content.lastEdit
     };
 
     return map;
@@ -89,6 +93,7 @@ class Content {
     content.houseNumber = map["houseNumber"];
     content.zip = map["zip"];
     content.city = map["city"];
+    content.lastEdit = map["lastEdit"];
     return content;
   }
 

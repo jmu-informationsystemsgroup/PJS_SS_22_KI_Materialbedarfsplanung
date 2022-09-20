@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:intl/intl.dart' as intl;
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +53,8 @@ class DataBase {
         street TEXT,
         houseNumber TEXT,
         zip TEXT,
-        city TEXT
+        city TEXT,
+        lastEdit TEXT
       )
       """);
   }
@@ -365,6 +366,8 @@ class DataBase {
   }
 
   static updateContent(int id, Content content) async {
+    String date = getActualDate();
+
     final db = await DataBase.getDataBase();
     final data = {
       'projectName': content.projectName,
@@ -375,7 +378,8 @@ class DataBase {
       'houseNumber': content.houseNumber,
       'zip': content.zip,
       'city': content.city,
-      'material': content.material
+      'material': content.material,
+      'lastEdit': date
     };
 
     final result =
@@ -416,8 +420,16 @@ class DataBase {
   /// ############## Daten anlegen
   /// ####################################################################################################################################
 
+  static String getActualDate() {
+    DateTime now = DateTime.now();
+    String formattedDate = intl.DateFormat('dd.MM.yyyy').format(now);
+
+    return formattedDate;
+  }
+
   /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {
+    String date = getActualDate();
     final dbData = {
       'projectName': data.projectName,
       'client': data.client,
@@ -428,7 +440,8 @@ class DataBase {
       'street': data.street,
       'houseNumber': data.houseNumber,
       'zip': data.zip,
-      'city': data.city
+      'city': data.city,
+      'lastEdit': date
     };
 
     final db = await DataBase.getDataBase();

@@ -245,15 +245,14 @@ class _DashboardState extends State<Dashboard> {
       children: [
         Expanded(
           child: squareAiValue(
-              icon: Icons.format_color_fill,
-              underLine:
-                  "${widget.outcome.aiOutcome.toStringAsFixed(2)} kg Spachtelmasse"),
-        ),
-        Expanded(
-          child: square(
               icon: Icons.euro,
               underLine:
                   "${widget.outcome.totalAiPrice.toStringAsFixed(2)} € Materialkosten"),
+        ),
+        Expanded(
+          child: square(
+              icon: Icons.calendar_month_outlined,
+              underLine: "Zuletzt bearbeitet: ${widget.content.lastEdit}"),
         ),
       ],
     );
