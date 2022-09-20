@@ -133,32 +133,26 @@ class DataBase {
         orderBy: "$orderByParamter COLLATE NOCASE",
         where:
             "(statusActive = $statusActive) AND (projectName LIKE '%$searchTerm%' OR client LIKE '%$searchTerm%' OR street LIKE '%$searchTerm%' OR city LIKE '%$searchTerm%' OR zip LIKE '%$searchTerm%' OR comment LIKE '%$searchTerm%')");
+    var path = await getFilePath;
 
     List<Content> contentList = [];
     Content contentElement;
-    listOfMaps.forEach(
-      (element) => {
-        contentElement = Content.mapToContent(element),
-        contentList.add(contentElement),
-      },
-    );
-    return contentList;
-  }
 
-  /// gibt eine Liste der archivierten Projekte zurück
-  static Future<List<Content>> getAllArchivedProjects() async {
-    final db = await DataBase.getDataBase();
-    List listOfMaps =
-        await db.query('projects', orderBy: "id", where: "statusActive = 0");
+    for (var element in listOfMaps) {
+      {
+        contentElement = Content.mapToContent(element);
 
-    List<Content> contentList = [];
-    Content contentElement;
-    listOfMaps.forEach(
-      (element) => {
-        contentElement = Content.mapToContent(element),
-        contentList.add(contentElement),
-      },
-    );
+        if (await File('$path/material_images/${contentElement.id}.jpg')
+            .exists()) {
+          XFile profile =
+              XFile('$path/material_images/${contentElement.id}.jpg');
+
+          contentElement.profileImage = profile;
+        }
+
+        contentList.add(contentElement);
+      }
+    }
     return contentList;
   }
 
@@ -305,6 +299,13 @@ class DataBase {
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }
+  }
+
+  static deleteProfileImage(int projectId) async {
+    final path = await getFilePath;
+
+    var file = File('$path/material_images/$projectId.jpg');
+    file.delete();
   }
 
   static deleteSingleImageFromTable(int projectId, int id) async {
@@ -478,6 +479,30 @@ class DataBase {
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
   }
 
+  static saveProfileImage(XFile picture, int projectId) async {
+    final path = await getFilePath;
+
+    /// neuen ordner erstellen, falls noch nicht vorhanden
+    var dir = await Directory('$path/material_images').create(recursive: true);
+
+    Uint8List prefine = await picture.readAsBytes();
+    List<int> byteList = [];
+    for (var element in prefine) {
+      byteList.add(element);
+    }
+
+    img.Image? image = decodeImage(byteList);
+
+    img.Image resizedImage = copyResize(image!,
+        width: (image.width / 2).toInt(), height: (image.height / 2).toInt());
+
+    //   resizedImage = copyCrop(resizedImage, int x, int y, int w, int h);
+
+    File file = await File('${dir.path}/$projectId.jpg').create();
+
+    file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
+  }
+
   /// die Fotos werden im Ordner "material images hinterlegt"
   static Future<bool> saveImages(
       {required List<CustomCameraImage> pictures,
@@ -487,7 +512,8 @@ class DataBase {
     final db = await DataBase.getDataBase();
 
     final path = await getFilePath;
-    // neuen ordner erstellen, falls noch nicht vorhanden
+
+    /// neuen ordner erstellen, falls noch nicht vorhanden
     var dir = await Directory('$path/material_images').create(recursive: true);
 
     var fileloc = dir.path;
