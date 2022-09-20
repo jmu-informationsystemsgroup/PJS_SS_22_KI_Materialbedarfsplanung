@@ -27,12 +27,12 @@ class DataBase {
       await Permission.storage.request();
     }
 
+    Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
+    String? tempPath = tempDir?.path;
 /*
- Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
- String? tempPath = tempDir?.path;
- */
     Directory? tempDir = await getApplicationDocumentsDirectory();
     String? tempPath = tempDir.path;
+    */
     return tempPath;
   }
 
@@ -485,22 +485,9 @@ class DataBase {
     /// neuen ordner erstellen, falls noch nicht vorhanden
     var dir = await Directory('$path/material_images').create(recursive: true);
 
-    Uint8List prefine = await picture.readAsBytes();
-    List<int> byteList = [];
-    for (var element in prefine) {
-      byteList.add(element);
-    }
-
-    img.Image? image = decodeImage(byteList);
-
-    img.Image resizedImage = copyResize(image!,
-        width: (image.width / 2).toInt(), height: (image.height / 2).toInt());
-
     //   resizedImage = copyCrop(resizedImage, int x, int y, int w, int h);
 
-    File file = await File('${dir.path}/$projectId.jpg').create();
-
-    file.writeAsBytesSync(encodeJpg(resizedImage, quality: 100));
+    await picture.saveTo('${dir.path}/$projectId.jpg');
   }
 
   /// die Fotos werden im Ordner "material images hinterlegt"

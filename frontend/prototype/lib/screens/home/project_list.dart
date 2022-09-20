@@ -69,6 +69,8 @@ class _StateProjectList extends State<ProjectList> {
     // Pick an image
 
     final XFile? image = await _picker.pickImage(
+      maxHeight: 480,
+      maxWidth: 640,
       source: ImageSource.camera,
     );
     var outCome = await DataBase.saveProfileImage(image!, element.id);
