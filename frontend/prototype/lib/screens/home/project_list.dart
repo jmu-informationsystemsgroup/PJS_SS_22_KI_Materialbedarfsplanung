@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/components/custom_container_border.dart';
@@ -13,7 +15,7 @@ import 'package:relative_scale/relative_scale.dart';
 import '../../backend/helper_objects.dart';
 import '../../components/gallery.dart';
 
-class ProjectList extends StatelessWidget {
+class ProjectList extends StatefulWidget {
   List<Content> projects;
   String status;
   final Function() listHasChanged;
@@ -21,6 +23,13 @@ class ProjectList extends StatelessWidget {
 
   ProjectList(this.projects, this.listHasChanged, [this.status = "active"]);
 
+  @override
+  State<StatefulWidget> createState() {
+    return _StateProjectList();
+  }
+}
+
+class _StateProjectList extends State<ProjectList> {
   informationChecker(
       {required IconData icon, required String text, required value}) {
     if (value == "") {
@@ -55,13 +64,39 @@ class ProjectList extends StatelessWidget {
   }
   */
 
+  openImagePicker(Content element) async {
+    final ImagePicker _picker = ImagePicker();
+    // Pick an image
+
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.camera,
+    );
+    var outCome = await DataBase.saveProfileImage(image!, element.id);
+    setState(() {
+      element.profileImage = image;
+    });
+  }
+
+  getProfile(Content element) {
+    if (element.profileImage == null) {
+      return Icon(
+        Icons.cottage_outlined,
+        color: Colors.black,
+        size: 40,
+      );
+    } else {
+      return FullScreenWidget(
+          child: Image.file(File(element.profileImage!.path)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     print("meldung");
 
     return Column(
-      children: projects
+      children: widget.projects
           .map(
             (element) => Card(
               child: InkWell(
@@ -78,16 +113,29 @@ class ProjectList extends StatelessWidget {
                     children: <Widget>[
                       Expanded(
                         flex: 3,
-                        child: AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: CustomContainerBorder(
-                            color: GeneralStyle.getUglyGreen(),
-                            //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
-                            child: Icon(
-                              Icons.cottage_outlined,
-                              color: Colors.black,
-                              size: 40,
-                            ),
+                        child: GestureDetector(
+                          onTap: () {
+                            openImagePicker(element);
+                          },
+                          child: Stack(
+                            children: [
+                              AspectRatio(
+                                aspectRatio: 1 / 1,
+                                child: CustomContainerBorder(
+                                  color: GeneralStyle.getUglyGreen(),
+                                  //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                                  child: getProfile(element),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(0, 15, 15, 0),
+                                  child: Icon(Icons.add_a_photo,
+                                      color: GeneralStyle.getLightGray()),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

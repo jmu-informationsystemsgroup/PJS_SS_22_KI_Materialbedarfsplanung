@@ -16,6 +16,7 @@ class Content {
   String material = "Q2";
   int statusActive = 1;
   double aiValue = 41.0;
+  XFile? profileImage;
 
   String street = "";
   String houseNumber = "";
