@@ -543,7 +543,7 @@ class _ProjectViewState extends State<ProjectView> {
                         },
                       ),
                       Webshop(
-                        aiValue: calculatedOutcome.aiOutcome,
+                        outcome: calculatedOutcome,
                       ),
                       comment(),
 

@@ -215,6 +215,7 @@ class _NewProjectState extends State<NewProject> {
               onPressed: () {
                 NewProject.cache = Content();
                 content = Content();
+                galleryPictures = [];
 
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -313,11 +314,18 @@ class _NewProjectState extends State<NewProject> {
                         content.projectName = text;
                       }),
                     },
-                    labelText: "Porjektname",
+                    labelText: "Projektname",
                     icon: Icons.discount_outlined,
                     value: content.projectName,
                   ),
-
+                  Center(
+                    child: Text(
+                      "Erinnerung: Ein Foto pro Wand",
+                      style: TextStyle(
+                        color: GeneralStyle.getLightGray(),
+                      ),
+                    ),
+                  ),
                   Center(
                     child: ButtonPhoto(
                       addPhoto: () async {

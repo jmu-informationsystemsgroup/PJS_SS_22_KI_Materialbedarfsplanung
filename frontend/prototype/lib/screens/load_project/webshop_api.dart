@@ -6,6 +6,7 @@ import 'package:prototype/screens/profile/user_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/helper_objects.dart';
+import '../../backend/value_calculator.dart';
 import '../../components/button_edit.dart';
 import '../../components/button_row_multiple_icons.dart';
 import '../../components/custom_container_border.dart';
@@ -14,8 +15,8 @@ import '../../styles/general.dart';
 class Webshop extends StatefulWidget {
   /// dies sollte ein double value sein, allerdings kann es zu ladeverzögerungen und damit
   /// zusammenhängenden Fehlermeldungen kommen
-  double aiValue;
-  Webshop({required this.aiValue});
+  CalculatorOutcome outcome;
+  Webshop({required this.outcome});
 
   @override
   State<StatefulWidget> createState() {
@@ -101,7 +102,7 @@ class _WebshopState extends State<Webshop> {
                           });
                         },
                         allValuesMandatory: true,
-                        aiValue: widget.aiValue,
+                        outcome: widget.outcome,
                       )
                     ],
                   ),
@@ -124,7 +125,8 @@ class _WebshopState extends State<Webshop> {
                         child: Column(
                           children: [
                             DisplayUserData(user: user),
-                            ButtonSendMail(widget.aiValue, user),
+                            ButtonSendMail(
+                                outcome: widget.outcome, userData: user),
                           ],
                         ),
                       ),
@@ -136,7 +138,7 @@ class _WebshopState extends State<Webshop> {
                               textVisiblity = changeBool(textVisiblity);
                             });
                           },
-                          aiValue: widget.aiValue,
+                          outcome: widget.outcome,
                           editUser: user,
                           allValuesMandatory: true,
                         ),

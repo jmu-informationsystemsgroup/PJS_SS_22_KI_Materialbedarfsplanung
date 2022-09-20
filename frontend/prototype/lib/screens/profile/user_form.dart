@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/backend/helper_objects.dart';
+import 'package:prototype/backend/value_calculator.dart';
 import 'package:prototype/components/input_field.dart';
 import 'package:prototype/components/input_field_address.dart';
 import 'package:prototype/screens/load_project/button_send_mail.dart';
@@ -11,12 +12,12 @@ import '../../components/custom_container_border.dart';
 
 class UserForm extends StatefulWidget {
   final Function(User user) updateValues;
-  double aiValue;
+  CalculatorOutcome? outcome;
   bool allValuesMandatory;
   User? editUser;
   UserForm({
     required this.updateValues,
-    this.aiValue = 0.0,
+    this.outcome,
     this.editUser,
     this.allValuesMandatory = false,
   });
@@ -56,8 +57,8 @@ class _UserFormState extends State<UserForm> {
   }
 
   Widget mailButtonIfComplete(bool status) {
-    if (status) {
-      return ButtonSendMail(widget.aiValue, cache);
+    if (status && widget.outcome != null) {
+      return ButtonSendMail(outcome: widget.outcome!, userData: cache);
     } else
       return Container();
   }
