@@ -59,26 +59,28 @@ class _WebshopState extends State<Webshop> {
   }
 
   getUser() async {
-    DataBase.getUserData().then((loadedContent) {
-      if (user != null) {
-        setState(() {
-          user = loadedContent!;
-        });
+    User? loadedContent = await DataBase.getUserData();
+
+    if (loadedContent != null) {
+      setState(() {
+        user = loadedContent;
+        userExistsVisibility = true;
+      });
+    } else {
+      userExistsVisibility = false;
+    }
+
+    Map someMap = User.userToMap(user);
+
+    for (var element in someMap.values) {
+      if (element == "" || element == 0) {
+        textVisiblity = false;
       }
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Map someMap = User.userToMap(user);
-    if (someMap.toString() == User.mapToUser(User.emptyUser).toString()) {
-      userExistsVisibility = true;
-      someMap.values.forEach((element) {
-        if (element == "" || element == 0) {
-          userExistsVisibility = false;
-        }
-      });
-    }
     return Column(
       children: [
         Visibility(
