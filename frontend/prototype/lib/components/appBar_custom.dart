@@ -45,7 +45,7 @@ class CustomAppBar extends StatelessWidget {
               child: getSubTitle(),
             )),
         Positioned(
-          top: 0,
+          top: 20,
           right: 0,
           child: SizedBox(
             width: 50,
