@@ -28,6 +28,7 @@ class Webshop extends StatefulWidget {
 class _WebshopState extends State<Webshop> {
   bool mailVisability = false;
   bool textVisiblity = true;
+  bool userComplete = true;
   User user = User();
   bool userExistsVisibility = false;
 //  User user = User();
@@ -76,6 +77,7 @@ class _WebshopState extends State<Webshop> {
     for (var element in someMap.values) {
       if (element == "" || element == 0) {
         textVisiblity = false;
+        userComplete = false;
       }
     }
   }
@@ -99,6 +101,7 @@ class _WebshopState extends State<Webshop> {
                           setState(() {
                             user = data;
                             userExistsVisibility = true;
+                            userComplete = true;
                           });
                         },
                         allValuesMandatory: true,
@@ -115,9 +118,12 @@ class _WebshopState extends State<Webshop> {
                       ButtonEdit(
                         textVisiblity: textVisiblity,
                         changeState: () {
-                          setState(() {
-                            textVisiblity = changeBool(textVisiblity);
-                          });
+                          if (userComplete) {
+                            setState(() {
+                              textVisiblity = changeBool(textVisiblity);
+                            });
+                          }
+                          getUser();
                         },
                       ),
                       Visibility(
@@ -136,6 +142,7 @@ class _WebshopState extends State<Webshop> {
                             setState(() {
                               user = data;
                               textVisiblity = changeBool(textVisiblity);
+                              userComplete = true;
                             });
                           },
                           outcome: widget.outcome,

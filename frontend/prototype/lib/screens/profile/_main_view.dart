@@ -32,9 +32,7 @@ class _ProfileState extends State<Profile> {
 
   getUser() async {
     DataBase.getUserData().then((loadedContent) {
-      if (loadedContent == null ||
-          User.userToMap(loadedContent).toString() ==
-              User.userToMap(user!).toString()) {
+      if (loadedContent == null) {
         setState(() {
           textVisiblity = false;
         });
