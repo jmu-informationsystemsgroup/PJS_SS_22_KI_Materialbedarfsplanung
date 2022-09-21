@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:intl/intl.dart' as intl;
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,24 +9,30 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:camera/camera.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/backend/server_ai.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
-/// beinhaltet sämtliche Methoden zum Speichern und Laden von Daten
+/// beinhaltet sämtliche Methoden (im Besondern SQL-Befehle) zum Speichern und Laden von Daten und Bildern
 class DataBase {
-  /// für allem fürs Debugging: legt Dateien im Downloads Ordner an, sodass diese
-  /// ausgelesen und kontrolliert werden können, stellt außerdem eine Berechtigungsfrage
-  /// ans das Handy auf Speicherzugriff
+  /// legt fest an welcher Stelle auf dem Handyspeicher die Datenbanken und Bilder abgelegt werden sollen.
+  /// Durch ändern von "temDir" kann z.B. auf den Downloadsordner umgestellt werden. Da es sich beim
+  /// Downnloadspathprovider aber um eine 'depreciated version' handelt, funktioniert der Speicherprozess aber
+  /// im Downloadsordner nicht zuverläsig
   static Future<String?> get getFilePath async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
     }
 
+/*
     Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
     String? tempPath = tempDir?.path;
+    */
+    Directory? tempDir = await getApplicationDocumentsDirectory();
+    String? tempPath = tempDir.path;
     return tempPath;
   }
 
@@ -47,13 +53,14 @@ class DataBase {
         street TEXT,
         houseNumber TEXT,
         zip TEXT,
-        city TEXT
+        city TEXT,
+        lastEdit TEXT
       )
       """);
   }
 
-// ToDo: Primary Key (zusammengesetzter Primärschlüssel aus WallID und projectID)
-  /// FÜR MVP: erstellt die Wandtabelle für die Datenbank
+// TODO: Primary Key (zusammengesetzter Primärschlüssel aus WallID und projectID)
+  /// FÜR MVP: erstellt ein Tablle aus manuell eingegebenen Wänden
   static Future<void> createWallTable(sql.Database database) async {
     await database.execute("""CREATE TABLE walls(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -64,9 +71,9 @@ class DataBase {
       """);
   }
 
-  /// erstellt die Tabelle mit Verweisen auf die Fotos für die Datenbank
-  /// die Fotos slebst werden nicht in der Datenbank abgelegt, stattdessen werden hier Verweise auf die Lokation
-  /// der Fotoas abgelegt
+  /// erstellt die Tabelle mit Verweisen auf die Fotos für die Datenbank sowie ihren dazugehörigen
+  /// KI-Werten
+  /// die Fotos selbst werden nicht in der Datenbank abgelegt
   static Future<void> createImageTable(sql.Database database) async {
     await database.execute("""CREATE TABLE images(
         projectId INTEGER,
@@ -78,23 +85,29 @@ class DataBase {
       """);
   }
 
+  /// erstellt eine Tabelle mit NutzerDaten
   static Future<void> createUserTable(sql.Database database) async {
     await database.execute("""CREATE TABLE user_data(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         firstName TEXT,
         lastName TEXT,
         customerId INTEGER,
-        address TEXT
+        street TEXT,
+        houseNumber TEXT,
+        zip TEXT,
+        city TEXT
       )
       """);
   }
 
-  /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden
+  /// gibt die Datenbank zurück oder erstellt eine neue, falls noch nicht vorhanden, um die Datenbank in einem anderen
+  /// Ordner zu speichern, ändere den Pfad in der "openDatabase" Funktion
   static Future<sql.Database> getDataBase() async {
     String? tempPath = await getFilePath;
 
+//  '$tempPath/spachtlerData.db',
     return sql.openDatabase(
-      '$tempPath/spachtlerData.db',
+      'spachtlerData.db',
       version: 1,
       onCreate: (sql.Database database, int version) async {
         await createProjectTable(database);
@@ -110,7 +123,7 @@ class DataBase {
   /// ####################################################################################################################################
 
   /// gibt eine Liste aller aktiven Projekte zurück
-  /// @Params: term = Suchfilter, orderParameter = Begriff nach welchem geordnet wird
+  /// @Params: term = Suchfilter, orderParameter = nach welchem Parameter geordnet wird
   static Future<List<Content>> getProjects(
       {String searchTerm = "",
       String orderByParamter = "id",
@@ -121,60 +134,40 @@ class DataBase {
         orderBy: "$orderByParamter COLLATE NOCASE",
         where:
             "(statusActive = $statusActive) AND (projectName LIKE '%$searchTerm%' OR client LIKE '%$searchTerm%' OR street LIKE '%$searchTerm%' OR city LIKE '%$searchTerm%' OR zip LIKE '%$searchTerm%' OR comment LIKE '%$searchTerm%')");
-
-    // List allImages = await getAllImages();
-
-    List<Content> contentList = [];
-    Content contentElement;
-    listOfMaps.forEach(
-      (element) => {
-        contentElement = Content.mapToContent(element),
-        /*
-        allImages.forEach(
-          (pictureObject) {
-            if (pictureObject["projectId"] == contentElement.id) {
-              contentElement.pictures.add(pictureObject["image"]);
-            }
-          },
-        ),
-        */
-        contentList.add(contentElement),
-      },
-    );
-    return contentList;
-  }
-
-  /// gibt eine Liste der archivierten Projekte zurück
-  static Future<List<Content>> getAllArchivedProjects() async {
-    final db = await DataBase.getDataBase();
-    List listOfMaps =
-        await db.query('projects', orderBy: "id", where: "statusActive = 0");
-
-    //  List allImages = await getAllImages();
+    var path = await getFilePath;
 
     List<Content> contentList = [];
     Content contentElement;
-    listOfMaps.forEach(
-      (element) => {
-        contentElement = Content.mapToContent(element),
-        /*
-        allImages.forEach(
-          (pictureObject) {
-            if (pictureObject["projectId"] == contentElement.id) {
-              contentElement.pictures.add(pictureObject["image"]);
-            }
-          },
-        ),
-        */
-        contentList.add(contentElement),
-      },
-    );
+
+    for (var element in listOfMaps) {
+      {
+        contentElement = Content.mapToContent(element);
+
+        if (await File('$path/material_images/${contentElement.id}.jpg')
+            .exists()) {
+          XFile profile =
+              XFile('$path/material_images/${contentElement.id}.jpg');
+
+          contentElement.profileImage = profile;
+        }
+
+        contentList.add(contentElement);
+      }
+    }
     return contentList;
   }
 
-  static Future<List<dynamic>> getUserData() async {
+  static Future<User?> getUserData() async {
     final db = await DataBase.getDataBase();
-    return db.query('user_data', orderBy: "id");
+
+    List userData = await db.query('user_data', orderBy: "id");
+    User user = User();
+    if (userData.isNotEmpty) {
+      user = User.mapToUser(userData[0]);
+      return user;
+    } else {
+      return null;
+    }
   }
 
   /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück
@@ -202,6 +195,7 @@ class DataBase {
     return contentElement;
   }
 
+  /// lädt ALLE Bilder (war vor allem für das ursprüngliche Dashboard nützlich)
   static Future<List> getAllImages() async {
     final db = await DataBase.getDataBase();
 
@@ -226,17 +220,22 @@ class DataBase {
     return list;
   }
 
-  /// gibt alle Bilder zu einer projectId als CustomCameraImage Liste zurück, onlyNewImages wird für
-  /// die aufwändige KI Berechnung benutzt, indem hier nur Bilder nachgeladen werden, zu denen noch
-  /// kein KI Wert bestimmt wurde
+  /// gibt alle Bilder zu einer projectId als CustomCameraImage Liste zurück
+  /// "onlyNewImages" wird für die aufwändige KI Berechnung benutzt, indem hier nur Bilder nachgeladen werden, zu denen noch
+  /// kein KI Wert bestimmt wurde,
+  /// "deletableImages" wird genutzt um die Bilder für den Nutzer laden zu können, die er Löschen muss
   static Future<List<CustomCameraImage>> getImages(
-      {required int projectId, bool onlyNewImages = false}) async {
+      {required int projectId,
+      bool onlyNewImages = false,
+      bool deletetableImages = false}) async {
     final db = await DataBase.getDataBase();
 
     String additionalCommand = "";
 
     if (onlyNewImages) {
       additionalCommand = "AND aiValue <= 0";
+    } else if (deletetableImages) {
+      additionalCommand = "AND aiValue < 0";
     }
 
     var path = await getFilePath;
@@ -268,7 +267,7 @@ class DataBase {
   /// ############## Daten löschen
   /// ####################################################################################################################################
 
-  /// löscht das Projekt aus der Datenbank
+  /// löscht das Projekt, samt seiner Fotos und hinterlegten Wände aus der Datenbank
   static deleteProject(int id) async {
     final db = await DataBase.getDataBase();
     try {
@@ -281,6 +280,8 @@ class DataBase {
     deleteWalls(id);
   }
 
+  /// löscht zum einen die Bildverweise aus der Datenbank, als auch die Bilddateien aus dem material
+  /// images Ordner
   static deleteImages(int projectId) async {
     final db = await DataBase.getDataBase();
 
@@ -299,6 +300,13 @@ class DataBase {
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
     }
+  }
+
+  static deleteProfileImage(int projectId) async {
+    final path = await getFilePath;
+
+    var file = File('$path/material_images/$projectId.jpg');
+    file.delete();
   }
 
   static deleteSingleImageFromTable(int projectId, int id) async {
@@ -358,6 +366,8 @@ class DataBase {
   }
 
   static updateContent(int id, Content content) async {
+    String date = getActualDate();
+
     final db = await DataBase.getDataBase();
     final data = {
       'projectName': content.projectName,
@@ -368,7 +378,8 @@ class DataBase {
       'houseNumber': content.houseNumber,
       'zip': content.zip,
       'city': content.city,
-      'material': content.material
+      'material': content.material,
+      'lastEdit': date
     };
 
     final result =
@@ -384,7 +395,10 @@ class DataBase {
       'firstName': data.firstName,
       'lastName': data.lastName,
       'customerId': data.customerId,
-      'address': data.address
+      'street': data.street,
+      'houseNumber': data.houseNumber,
+      'zip': data.zip,
+      'city': data.city,
     };
     final result =
         await db.update('user_data', dbData, where: "id = ?", whereArgs: [id]);
@@ -406,8 +420,16 @@ class DataBase {
   /// ############## Daten anlegen
   /// ####################################################################################################################################
 
+  static String getActualDate() {
+    DateTime now = DateTime.now();
+    String formattedDate = intl.DateFormat('dd.MM.yyyy').format(now);
+
+    return formattedDate;
+  }
+
   /// fügt das erzeugte Datenobjekt in die Datenbank ein
   static Future<int> createNewProject(Content data) async {
+    String date = getActualDate();
     final dbData = {
       'projectName': data.projectName,
       'client': data.client,
@@ -418,7 +440,8 @@ class DataBase {
       'street': data.street,
       'houseNumber': data.houseNumber,
       'zip': data.zip,
-      'city': data.city
+      'city': data.city,
+      'lastEdit': date
     };
 
     final db = await DataBase.getDataBase();
@@ -426,6 +449,13 @@ class DataBase {
     final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     createWallsForProject(data, id);
+
+    if (data.projectName == "") {
+      data.projectName = "Projekt Nr. $id";
+    }
+
+    DataBase.updateContent(id, data);
+
     return id;
   }
 
@@ -453,10 +483,24 @@ class DataBase {
       'firstName': data.firstName,
       'lastName': data.lastName,
       'customerId': data.customerId,
-      'address': data.address
+      'street': data.street,
+      'houseNumber': data.houseNumber,
+      'zip': data.zip,
+      'city': data.city,
     };
     final id = await db.insert('user_data', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
+  }
+
+  static saveProfileImage(XFile picture, int projectId) async {
+    final path = await getFilePath;
+
+    /// neuen ordner erstellen, falls noch nicht vorhanden
+    var dir = await Directory('$path/material_images').create(recursive: true);
+
+    //   resizedImage = copyCrop(resizedImage, int x, int y, int w, int h);
+
+    await picture.saveTo('${dir.path}/$projectId.jpg');
   }
 
   /// die Fotos werden im Ordner "material images hinterlegt"
@@ -468,7 +512,8 @@ class DataBase {
     final db = await DataBase.getDataBase();
 
     final path = await getFilePath;
-    // neuen ordner erstellen, falls noch nicht vorhanden
+
+    /// neuen ordner erstellen, falls noch nicht vorhanden
     var dir = await Directory('$path/material_images').create(recursive: true);
 
     var fileloc = dir.path;
@@ -508,7 +553,11 @@ class DataBase {
 
         img.Image? image = decodeImage(byteList);
 
-        img.Image resizedImage = copyResize(image!, width: 450, height: 300);
+        img.Image imageCropped = copyCrop(
+            image!, 0, 0, (image.height * 4 / 3).toInt(), image.height);
+
+        img.Image resizedImage =
+            copyResize(imageCropped, width: 400, height: 300);
 
         //   resizedImage = copyCrop(resizedImage, int x, int y, int w, int h);
 

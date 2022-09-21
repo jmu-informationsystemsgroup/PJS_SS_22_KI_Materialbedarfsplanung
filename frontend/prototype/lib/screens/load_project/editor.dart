@@ -3,8 +3,8 @@ import 'package:prototype/backend/data_base_functions.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/input_field.dart';
 import 'package:prototype/components/input_field_date.dart';
-import 'package:prototype/screens/create_new_project/checklist_quality.dart';
-import 'package:prototype/screens/create_new_project/input_field_address.dart';
+import 'package:prototype/components/checklist_quality.dart';
+import 'package:prototype/components/input_field_address.dart';
 
 import '../create_new_project/_main_view.dart';
 
@@ -21,12 +21,14 @@ class EditorWidget extends StatelessWidget {
       children: [
         InputField(
           saveTo: (text) => {data.projectName = text},
-          labelText: "Name",
+          labelText: "Projektname",
+          icon: Icons.discount_outlined,
           value: input.projectName,
         ),
         InputField(
           saveTo: (text) => {data.client = text},
-          labelText: "Auftraggeber",
+          labelText: "Kunde",
+          icon: Icons.person_pin_outlined,
           value: input.client,
         ),
         InputDate(

@@ -32,9 +32,11 @@ class ValueCalculator {
     String wrongImagesString = wrongImages.toString();
     String sb = wrongImagesString.substring(1, wrongImagesString.length - 1);
     if (wrongImages.length == 1) {
-      return "Das Bild mit der id $sb ist schadhaft, bitte löschen und neues Foto machen";
+      return "Das Bild mit der id $sb ist schadhaft. Es wurde daher nicht mit in die Berechnung aufgenommen. " +
+          "Bitte löschen und neues Foto machen";
     } else {
-      return "Die Bilder mit den ids $sb sind schadhaft, bitte löschen und neues Foto machen";
+      return "Die Bilder mit den ids $sb sind schadhaft. Sie wurden daher nicht mit in die Berechnung aufgenommen. " +
+          "Bitte löschen und neue Fotos machen";
     }
   }
 
@@ -94,8 +96,8 @@ class ValueCalculator {
 
   static double getAiPrice(String material, double aiOutcome) {
     double totalPrice = 0.0;
-    Map<String, double> valueInterpreter = {"Q2": 1, "Q3": 2.85, "Q4": 5};
-    totalPrice = (aiOutcome * valueInterpreter[material]!);
+    Map<String, double> quality = {"Q2": 1, "Q3": 2.85, "Q4": 5};
+    totalPrice = (aiOutcome * 1.34 * quality[material]!);
 
     officalOutcome.totalAiPrice = totalPrice;
 

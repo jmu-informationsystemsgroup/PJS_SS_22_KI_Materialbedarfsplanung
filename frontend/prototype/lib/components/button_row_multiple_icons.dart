@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../styles/container.dart';
+import '../styles/general.dart';
 
 class CustomButtonRow extends StatelessWidget {
   List<Widget> children;
   Function() onPressed;
-  CustomButtonRow({required this.children, required this.onPressed});
+  Color colorOutlined;
+  Color colorContent;
+  CustomButtonRow({
+    required this.children,
+    required this.onPressed,
+    this.colorOutlined = const Color.fromARGB(255, 8, 173, 11),
+    this.colorContent = Colors.black,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +21,14 @@ class CustomButtonRow extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         margin: ContainerStyles.getMargin(),
-        //   width: children.length * 55,
-        decoration: ContainerStyles.roundetCorners(),
+        decoration: ContainerStyles.roundetCorners(color: colorOutlined),
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-        child: Wrap(
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: children,
+        child: Center(
+          widthFactor: 1,
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: children,
+          ),
         ),
       ),
     );

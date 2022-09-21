@@ -20,12 +20,28 @@ class ContainerStyles {
     );
   }
 
-  static BoxDecoration roundetCorners(
-      {Color color = const Color.fromARGB(255, 8, 173, 11)}) {
+  static BoxShadow sameShaddow(bool enableShaddow) {
+    if (enableShaddow) {
+      return BoxShadow(
+        color: Colors.grey.withOpacity(0.3),
+        spreadRadius: 1,
+        blurRadius: 2,
+        offset: Offset(1, 2), // changes position of shadow
+      );
+    } else {
+      return BoxShadow(color: Colors.white);
+    }
+  }
+
+  static BoxDecoration roundetCorners({
+    Color color = const Color.fromARGB(255, 8, 173, 11),
+    bool enableShaddow = true,
+  }) {
     return BoxDecoration(
       border: Border.all(color: color, width: 2.0),
       borderRadius: BorderRadius.all(Radius.circular(8)),
-      color: Colors.transparent,
+      boxShadow: [sameShaddow(enableShaddow)],
+      color: Colors.white,
     );
   }
 
@@ -33,6 +49,8 @@ class ContainerStyles {
       {Color color = const Color.fromARGB(255, 115, 115, 115)}) {
     return BoxDecoration(
       border: Border.all(color: color, width: 2.0),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      color: Colors.white,
 
       /*
       border: Border.all(
@@ -115,6 +133,50 @@ class ContainerStyles {
         borderSide: BorderSide(color: Colors.yellow, width: 1.0),
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
+      labelText: labelTextInput,
+    );
+  }
+
+  static getDefaultInputStyleGreen(String labelTextInput) {
+    return InputDecoration(
+      isDense: true,
+
+      //  icon: ,
+      hintStyle: TextStyle(color: GeneralStyle.getLightGray()),
+      //  floatingLabelStyle: MaterialStateTextStyle(),
+      enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: GeneralStyle.getLightGray())),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+      ),
+      labelText: labelTextInput,
+    );
+  }
+
+  static getInputStyleIconGreen(String labelTextInput, IconData icon) {
+    return InputDecoration(
+      isDense: true,
+      icon: Icon(icon),
+      hintStyle: TextStyle(color: GeneralStyle.getLightGray()),
+      //  floatingLabelStyle: MaterialStateTextStyle(),
+      enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: GeneralStyle.getLightGray())),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+      ),
+      labelText: labelTextInput,
+    );
+  }
+
+  static getSearchStyleGreen(String labelTextInput) {
+    return InputDecoration(
+      isDense: true,
+      enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: GeneralStyle.getLightGray())),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+      ),
+      prefixIcon: Icon(Icons.search),
       labelText: labelTextInput,
     );
   }

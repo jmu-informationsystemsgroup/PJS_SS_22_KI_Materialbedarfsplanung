@@ -6,10 +6,13 @@ class CustomButtonColumn extends StatelessWidget {
   List<Widget> children;
   Function() onPressed;
   Color color;
-  CustomButtonColumn(
-      {required this.children,
-      required this.onPressed,
-      this.color = Colors.transparent});
+  bool enableShaddow;
+  CustomButtonColumn({
+    required this.children,
+    required this.onPressed,
+    this.color = Colors.transparent,
+    this.enableShaddow = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,8 @@ class CustomButtonColumn extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         margin: ContainerStyles.getMargin(),
-        decoration: ContainerStyles.roundetCorners(color: this.color),
+        decoration: ContainerStyles.roundetCorners(
+            color: color, enableShaddow: enableShaddow),
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

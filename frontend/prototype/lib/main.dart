@@ -1,21 +1,50 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:prototype/screens/home/_main_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prototype/styles/general.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-// TODO: initialflutter binding
-void main() => runApp(RootClass());
+/// idee von https://stackoverflow.com/questions/49418332/flutter-how-to-prevent-device-orientation-changes-and-force-portrait
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(RootClass());
+  });
+}
 
 class RootClass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('de', ''),
+      ],
       theme: ThemeData(
         textTheme: GoogleFonts.openSansTextTheme(),
         scaffoldBackgroundColor: GeneralStyle.getLightGray(),
         primaryColor: GeneralStyle.getUglyGreen(),
+        focusColor: GeneralStyle.getUglyGreen(),
+        colorScheme: ColorScheme(
+            onPrimary: Colors.white,
+            onError: Colors.red,
+            error: Colors.red,
+            onSurface: Colors.black,
+            primary: GeneralStyle.getUglyGreen(),
+            surface: GeneralStyle.getUglyGreen(),
+            secondary: GeneralStyle.getDarkGray(),
+            onSecondary: GeneralStyle.getDarkGray(),
+            brightness: Brightness.light,
+            background: GeneralStyle.getLightGray(),
+            onBackground: GeneralStyle.getLightGray()),
         appBarTheme: appBarStyle(),
         cardTheme: CardTheme(
           shadowColor: Colors.transparent,

@@ -12,7 +12,9 @@ class ServerAI {
   /// pro Bild zurückgibt, wird auf der image Datentabelle an der passenden Stelle anhand der
   /// projectId und Bild id eingetragen.
   static Future<List<CustomCameraImage>> getAiValuesFromServer(
-      List<CustomCameraImage> images, Function(int) stateUpdate) async {
+      List<CustomCameraImage> images,
+      Function(int) stateUpdate,
+      Function() connectionHandler) async {
     double currentState = 0.0;
     double finishedState = images.length.toDouble();
     double step = 100.0 / finishedState;
@@ -22,7 +24,7 @@ class ServerAI {
       int id = element.id;
 
       // var bitlist = await uploadFIle.readAsBytes();
-      try {
+
 /*
       var response2 = await client
           .post(Uri.http('ptsv2.com', '/t/gkeu3-1662648870'), body: "test1");
@@ -35,31 +37,37 @@ class ServerAI {
       var response3 = await http.post(url, body: "test3");
 
 */
-        // Final Post
-        http.MultipartRequest request = http.MultipartRequest(
-          "POST",
-          Uri.parse("http://weller.well-city.de:5000/predict"),
-        );
-        request.fields["title"] = "test";
-        request.headers["Content-Type"] = "multiparts/form-data";
-        http.MultipartFile multipartFile =
-            await http.MultipartFile.fromPath('file', file.path);
-        request.files.add(multipartFile);
+      // Final Post
+      http.MultipartRequest request = http.MultipartRequest(
+        "POST",
+        Uri.parse("http://weller.well-city.de:5000/predict"),
+      );
+      request.fields["title"] = "test";
+      request.headers["Content-Type"] = "multiparts/form-data";
+      http.MultipartFile multipartFile =
+          await http.MultipartFile.fromPath('file', file.path);
+      request.files.add(multipartFile);
 
-        http.StreamedResponse response = await request.send();
-
+      try {
+        http.StreamedResponse response =
+            await request.send().timeout(const Duration(seconds: 8));
         String statusCode = response.statusCode.toString();
         Uint8List aiOutcome = await response.stream.toBytes();
         String aiOutcomeString = String.fromCharCodes(aiOutcome);
+        print("Server Status $statusCode: ai-outcome: $aiOutcomeString");
+        List<String> result = aiOutcomeString.split('_');
+
         // double aiOutcomeDouble = double.parse(aiOutcome);
 
-        double aiValue = double.parse(aiOutcomeString);
+        double aiValue = double.parse(result[0]);
         await DataBase.updateImagesAiValue(aiValue, id, projectId);
-        print("Server Status $statusCode: ai-outcome: $aiValue");
         element.aiValue = aiValue;
         currentState = currentState + step;
         stateUpdate(currentState.toInt());
-      } catch (e) {}
+      } catch (e) {
+        connectionHandler();
+        break;
+      }
     }
     return images;
   }

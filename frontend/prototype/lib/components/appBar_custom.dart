@@ -20,6 +20,9 @@ class CustomAppBar extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        SizedBox(
+          height: 8,
+        ),
       ],
     );
 
@@ -42,7 +45,7 @@ class CustomAppBar extends StatelessWidget {
               child: getSubTitle(),
             )),
         Positioned(
-          top: 0,
+          top: 20,
           right: 0,
           child: SizedBox(
             width: 50,

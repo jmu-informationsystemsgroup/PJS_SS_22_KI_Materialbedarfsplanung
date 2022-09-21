@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/backend/value_calculator.dart';
+import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../backend/helper_objects.dart';
+
 class ButtonSendMail extends StatefulWidget {
-  var aiValue;
-  var userData;
-  ButtonSendMail(this.aiValue, this.userData);
+  CalculatorOutcome outcome;
+  User userData;
+  ButtonSendMail({required this.outcome, required this.userData});
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -20,34 +24,34 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
     }
   }
 
-  String createEmailContent(var user) {
+  String createEmailContent(User user) {
     String body =
-        "Hallo Matthias von Spachtelprofi, \n \n Deine App hat ergeben, dass der optimale Spachtelmassenbedarf für mein anstehendes Bauprojekt ${widget.aiValue.toStringAsFixed(2)} kg" +
-            " betragen würde. Gerne würde ich in einem Gespräch mit dir genaueres darüber aushandeln. Anbei meine Kundendaten: \n \n Kundennummer: " +
-            user["customerId"].toString() +
-            "\n Adresse: " +
-            user["address"].toString() +
-            " \n \n Mit freundlichen Grüßen \n \n" +
-            user["firstName"].toString() +
-            " " +
-            user["lastName"].toString();
+        "Guten Tag Herr Schäfer von\n Sprachtelprofi, \n \n die Ermittlung innerhalb der App " +
+            "hat ergeben, dass der optimale Bedarf an Spachtelbar Classic einen Wert von ${widget.outcome.totalAiPrice.toStringAsFixed(2)} € " +
+            "für mein anstehendes Bauprojekt betragen wird. \n \n" +
+            "Gerne würde ich mit Ihnen genaueres darüber aushandeln. \n" +
+            "Anbei meine Kundendaten: \n" +
+            "- ${user.firstName} ${user.lastName} \n" +
+            "- Kundennummer ${user.customerId} \n" +
+            "- Adresse ${user.street} ${user.houseNumber}, ${user.zip} ${user.city} \n \n" +
+            "Mit freundlichen Grüßen \n \n ${user.firstName} ${user.lastName}";
+
     return body;
   }
 
   @override
   Widget build(BuildContext context) {
-    String subject = "Interesse an Spachtelmasse";
+    String subject = "App-Bedarf ermittelt: Interesse an Spachtelmasse";
     String body = "";
-    if (widget.userData.isNotEmpty) {
-      var user = widget.userData[0];
-      body = createEmailContent(user);
+    if (User.userToMap(widget.userData).toString() !=
+        User.userToMap(User()).toString()) {
+      body = createEmailContent(widget.userData);
     }
 
-    return ElevatedButton(
-      child: Icon(Icons.mail),
+    return CustomButtonRow(
+      children: [Icon(Icons.send), Text("Abschicken")],
       onPressed: () {
-        _launchUrl(
-            "mailto:nicolas.wild@googlemail.com?subject=$subject&body=$body");
+        _launchUrl("mailto:post@spachtelprofi.com?subject=$subject&body=$body");
       },
     );
   }

@@ -1,7 +1,9 @@
+
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:prototype/screens/create_new_project/input_field_address.dart';
+import 'package:prototype/components/input_field_address.dart';
 
 /// das KartenWidget erhält als Eingabe die Adresswerte die du auf dem Handy in "Projekt erstellen" bzw in "Projekt bearbeiten"
 /// einfügst. Anschauen kannst du dir die Karte bei der Ansicht "Projekt laden".
@@ -45,6 +47,11 @@ class ProjectMap extends StatelessWidget {
       child: Container(
         child: Container(
           margin: const EdgeInsets.all(10.0),
+          child: Container(),
+
+// Abgestellt da nicht Apple kompatibel
+
+          /*
           child: FlutterMap(
             options: MapOptions(center: point, zoom: 16),
             layers: [
@@ -63,6 +70,7 @@ class ProjectMap extends StatelessWidget {
               ])
             ],
           ),
+          */
           width: 350,
           height: 200,
         ),
@@ -70,3 +78,4 @@ class ProjectMap extends StatelessWidget {
     );
   }
 }
+*/

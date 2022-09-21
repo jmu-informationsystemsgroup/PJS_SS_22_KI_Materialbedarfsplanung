@@ -59,30 +59,33 @@ dependencies:
 
   # for image galery
   full_screen_image_null_safe: any
+  file_support: ^1.0.6
 
   # embedding webstore features
   url_launcher: any
 
   # adding georgraphic map component
-  flutter_map: any
-  geocoder: any
-  tuple: ^2.0.0
-  latlong: ^0.6.1
-  positioned_tap_detector_2: ^1.0.0
-  transparent_image: ^2.0.0
-  async: ^2.1.0
-  flutter_image: ^3.0.0
-  vector_math: ^2.0.0
-  proj4dart: ^2.0.0
-  collection: ^1.14.0
-  file_support: ^1.0.6
+ # flutter_map: any
+ # geocoder: any
+ # tuple: ^2.0.0
+ # latlong: ^0.6.1
+ # positioned_tap_detector_2: ^1.0.0
+ # transparent_image: ^2.0.0
+ # async: ^2.1.0
+ # flutter_image: ^3.0.0
+ # vector_math: ^2.0.0
+#  proj4dart: ^2.0.0
+#  collection: ^1.14.0
 
   # styling
   relative_scale: ^2.0.0
+  localization: ^2.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

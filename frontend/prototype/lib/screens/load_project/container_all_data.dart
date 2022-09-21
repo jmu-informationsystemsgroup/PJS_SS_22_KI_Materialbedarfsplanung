@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/icon_and_text.dart';
 
-import '../../components/custom_container_white.dart';
+import '../../components/custom_container_border.dart';
 import '../../styles/general.dart';
 
 class AllData extends StatelessWidget {
@@ -11,6 +11,7 @@ class AllData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainerBorder(
+      color: GeneralStyle.getLightGray(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -27,10 +28,10 @@ class AllData extends StatelessWidget {
           IconAndText(
             icon: Icons.location_on_outlined,
             text: "Adresse: " +
-                content.street +
-                content.houseNumber +
-                content.zip +
-                content.city,
+                " ${content.street}" +
+                " ${content.houseNumber}" +
+                " ${content.zip}" +
+                " ${content.city}",
             color: Colors.black,
           ),
           IconAndText(

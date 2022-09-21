@@ -14,14 +14,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prototype/styles/general.dart';
 
 import '../../components/appBar_custom.dart';
+import '../camera/button_photo.dart';
 import '../../components/icon_and_text.dart';
-import '../../components/screen_camera.dart';
+import '../camera/_main_view.dart';
 
 import '../../backend/helper_objects.dart';
+import '../../styles/container.dart';
 import '../load_project/_main_view.dart';
 import '../../components/input_field.dart';
-import 'input_field_address.dart';
-import 'checklist_quality.dart';
+import '../../components/input_field_address.dart';
+import '../../components/checklist_quality.dart';
 import 'mvp_walls.dart';
 
 class NewProject extends StatefulWidget {
@@ -53,12 +55,7 @@ class _NewProjectState extends State<NewProject> {
   int projectId = 0;
   List<CustomCameraImage> galleryPictures = [];
   int state = 0;
-  String street = "";
-  String houseNumber = "";
-  String zip = "";
-  String city = "";
-  String projectName = "";
-  String client = "";
+  Content content = NewProject.cache;
 
   @override
   void initState() {
@@ -69,12 +66,6 @@ class _NewProjectState extends State<NewProject> {
       DeviceOrientation.portraitDown,
     ]);
     galleryPictures = NewProject.cache.pictures;
-    street = NewProject.cache.street;
-    houseNumber = NewProject.cache.houseNumber;
-    zip = NewProject.cache.zip;
-    city = NewProject.cache.city;
-    projectName = NewProject.cache.projectName;
-    client = NewProject.cache.client;
   }
 
   Future<void> _showMyDialog() async {
@@ -144,6 +135,149 @@ class _NewProjectState extends State<NewProject> {
     );
   }
 
+  Future<void> _askForImageDelete(CustomCameraImage element) async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: IconAndText(
+            icon: Icons.delete,
+            text: "Wirklich löschen",
+          ),
+          content: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(
+                  margin: ContainerStyles.getMarginLeftRight(),
+                  child: Image.file(
+                    File(element.image.path),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  margin: ContainerStyles.getMarginLeftRight(),
+                  child: Text(
+                      'Soll das Bild Nr. ${element.id} wirklich gelöscht werden?'),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: IconAndText(
+                  icon: Icons.cancel,
+                  text: "Abbrechen",
+                  color: GeneralStyle.getUglyGreen()),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: IconAndText(
+                icon: Icons.delete,
+                text: "Löschen",
+                color: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  element.display = false;
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _askForProjectCancellation() async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: IconAndText(
+            icon: Icons.delete,
+            text: "Wirklich abbrechen?",
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: IconAndText(
+                icon: Icons.cancel,
+                text: "Verwerfen",
+                color: Colors.red,
+              ),
+              onPressed: () {
+                NewProject.cache = Content();
+                content = Content();
+                galleryPictures = [];
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
+            TextButton(
+              child: IconAndText(
+                  icon: Icons.check,
+                  text: "Weitermachen",
+                  color: GeneralStyle.getUglyGreen()),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _askForSaveEmptyProject() async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: IconAndText(
+            icon: Icons.delete,
+            text: "Wirklich speichern?",
+          ),
+          content: Text(
+              "Das Projekt enthält weder Daten noch Bilder, wirklich speichern?"),
+          actions: <Widget>[
+            TextButton(
+              child: IconAndText(
+                icon: Icons.cancel,
+                text: "Abbrechen",
+                color: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: IconAndText(
+                  icon: Icons.check,
+                  text: "Speichern",
+                  color: GeneralStyle.getUglyGreen()),
+              onPressed: () async {
+                var save = await savingProcess();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     print(
@@ -151,17 +285,19 @@ class _NewProjectState extends State<NewProject> {
     // TODO: implement build
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: CustomScaffoldContainer(
           appBar: CustomAppBar(
             title: "Neues Projekt",
             subTitle: [
               IconAndText(
-                text: "Aufttraggeber: $client",
+                text: "Kunde: ${content.client}",
                 icon: Icons.person_pin_circle_outlined,
                 color: Colors.black,
               ),
               IconAndText(
-                text: "Adresse: $street $houseNumber $zip $city",
+                text:
+                    "Adresse: ${content.street} ${content.houseNumber} ${content.zip} ${content.city}",
                 icon: Icons.location_on_outlined,
                 color: Colors.black,
               ),
@@ -175,37 +311,45 @@ class _NewProjectState extends State<NewProject> {
                     saveTo: (text) => {
                       setState(() {
                         NewProject.cache.projectName = text;
-                        projectName = text;
+                        content.projectName = text;
                       }),
                     },
-                    labelText: "Name",
-                    value: projectName,
+                    labelText: "Projektname",
+                    icon: Icons.discount_outlined,
+                    value: content.projectName,
                   ),
-
                   Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await availableCameras().then((value) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CameraPage(
-                                        cameras: value,
-                                        originalGallery: galleryPictures,
-                                        updateGallery: (images) {
-                                          setState(() {
-                                            NewProject.cache.pictures
-                                                .addAll(images);
-                                            galleryPictures =
-                                                NewProject.cache.pictures;
-                                          });
-                                        },
-                                      )),
-                            ));
-                      },
-                      child: Icon(Icons.camera_alt),
+                    child: Text(
+                      "Erinnerung: Ein Foto pro Wand",
+                      style: TextStyle(
+                        color: GeneralStyle.getLightGray(),
+                      ),
                     ),
                   ),
-
+                  Center(
+                    child: ButtonPhoto(
+                      addPhoto: () async {
+                        await availableCameras().then(
+                          (value) => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CameraPage(
+                                cameras: value,
+                                originalGallery: galleryPictures,
+                                updateGallery: (images) {
+                                  setState(() {
+                                    NewProject.cache.pictures.addAll(images);
+                                    galleryPictures = NewProject.cache.pictures;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+/*
                   Center(
                       child: CustomButtonRow(
                     children: [
@@ -240,13 +384,11 @@ class _NewProjectState extends State<NewProject> {
                       }
                     },
                   )),
-
+*/
                   Gallery(
                     pictures: galleryPictures,
                     deleteFunction: (element) {
-                      setState(() {
-                        element.display = false;
-                      });
+                      _askForImageDelete(element);
                     },
                     //  creationMode: true,
                   ),
@@ -254,14 +396,19 @@ class _NewProjectState extends State<NewProject> {
                     saveTo: (text) => {
                       setState(() {
                         NewProject.cache.client = text;
-                        client = text;
+                        content.client = text;
                       }),
                     },
-                    labelText: "Auftraggeber",
-                    value: client,
+                    labelText: "Kunde",
+                    icon: Icons.person_pin_circle_outlined,
+                    value: content.client,
                   ),
                   InputDate(
-                    saveTo: (text) => {NewProject.cache.date = text},
+                    saveTo: (text) => {
+                      NewProject.cache.date = text,
+                      content.date = text,
+                    },
+                    value: content.date,
                   ),
                   AddressInput(
                     updateAddress: (value) {
@@ -270,15 +417,25 @@ class _NewProjectState extends State<NewProject> {
                       NewProject.cache.zip = value.zip;
                       NewProject.cache.city = value.city;
                       setState(() {
-                        street = value.street;
-                        houseNumber = value.houseNumber;
-                        zip = value.zip;
-                        city = value.city;
+                        content.street = value.street;
+                        content.houseNumber = value.houseNumber;
+                        content.zip = value.zip;
+                        content.city = value.city;
                       });
                     },
+                    adress: Adress(
+                      street: content.street,
+                      houseNumber: content.houseNumber,
+                      zip: content.zip,
+                      city: content.city,
+                    ),
                   ),
                   InputField(
-                    saveTo: (text) => {NewProject.cache.comment = text},
+                    saveTo: (text) => {
+                      NewProject.cache.comment = text,
+                      content.comment = text,
+                    },
+                    value: content.comment,
                     labelText: "Kommentar",
                     maxLines: 6,
                   ),
@@ -286,44 +443,61 @@ class _NewProjectState extends State<NewProject> {
                   QualityChecklist(
                     changeQuality: (qualitString) => {
                       NewProject.cache.material = qualitString,
+                      content.material = qualitString,
                     },
+                    value: content.material,
                   ),
                   //    preview(),
                   Visibility(
                     child: Text("wird gespeichert ($state %)"),
                     visible: showState,
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ElevatedButton(
-                      child: const Text('Projekt speichern und berechnen'),
-                      onPressed: () async {
-                        //    Content.reset(NewProject.cash);
-                        setState(() {
-                          showState = true;
-                        });
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: CustomButtonRow(
+                            colorOutlined: Colors.black,
+                            children: [
+                              Icon(Icons.delete_outline, color: Colors.red),
+                              Text("Verwerfen",
+                                  style: TextStyle(color: Colors.red))
+                            ],
+                            //   color: Colors.red,
+                            onPressed: () {
+                              _askForProjectCancellation();
+                            }),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: CustomButtonRow(
+                          colorOutlined: Colors.black,
+                          children: [
+                            Icon(Icons.save_outlined,
+                                color: GeneralStyle.getUglyGreen()),
+                            Text(
+                              'Speichern',
+                              style: TextStyle(
+                                color: GeneralStyle.getUglyGreen(),
+                              ),
+                            ),
+                          ],
+                          onPressed: () async {
+                            Content emptyContent = Content();
+                            if (Content.contentToMap(content).toString() ==
+                                    Content.contentToMap(emptyContent)
+                                        .toString() &&
+                                galleryPictures.toString() == [].toString()) {
+                              _askForSaveEmptyProject();
+                            } else {
+                              var save = await savingProcess();
+                            }
 
-                        NewProject.cache.pictures
-                            .removeWhere((element) => element.display == false);
-
-                        projectId =
-                            await DataBase.createNewProject(NewProject.cache);
-
-                        bool imagesComplete = await DataBase.saveImages(
-                            pictures: NewProject.cache.pictures,
-                            projectId: projectId,
-                            updateState: (value) {
-                              setState(() {
-                                state = value;
-                              });
-                            });
-
-                        NewProject.cache = Content(); //reset
-                        NewProject.goToProjectView(projectId, context);
-
-                        // goBack();
-                      },
-                    ),
+                            // goBack();
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -333,5 +507,29 @@ class _NewProjectState extends State<NewProject> {
         ),
       ),
     );
+  }
+
+  savingProcess() async {
+    //    Content.reset(NewProject.cash);
+    setState(() {
+      showState = true;
+    });
+
+    NewProject.cache.pictures
+        .removeWhere((element) => element.display == false);
+
+    projectId = await DataBase.createNewProject(NewProject.cache);
+
+    bool imagesComplete = await DataBase.saveImages(
+        pictures: NewProject.cache.pictures,
+        projectId: projectId,
+        updateState: (value) {
+          setState(() {
+            state = value;
+          });
+        });
+
+    NewProject.cache = Content(); //reset
+    NewProject.goToProjectView(projectId, context);
   }
 }

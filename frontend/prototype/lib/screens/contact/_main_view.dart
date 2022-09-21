@@ -63,7 +63,7 @@ class Contact extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Spachtelprofi",
+                  "Matthias Schäfer",
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 Text(""),
@@ -97,7 +97,7 @@ class Contact extends StatelessWidget {
                     color: GeneralStyle.getUglyGreen(),
                   ),
                   Text(
-                    "Jezt mehr erfahren",
+                    "Webseite besuchen",
                     style: TextStyle(
                       color: GeneralStyle.getUglyGreen(),
                     ),

@@ -7,7 +7,7 @@ import 'data_base_functions.dart';
 /// TODO: singleton class? https://www.youtube.com/watch?v=noi6aYsP7Go
 class Content {
   int id = 0;
-  String projectName = "Default";
+  String projectName = "";
   String client = "";
   String date = "";
   String comment = "";
@@ -16,12 +16,15 @@ class Content {
   String material = "Q2";
   int statusActive = 1;
   double aiValue = 41.0;
+  XFile? profileImage;
+  String lastEdit = "";
 
   String street = "";
   String houseNumber = "";
   String zip = "";
   String city = "";
 
+/*
   /// übersetzt Objekt aus Json Format
   set fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -41,6 +44,7 @@ class Content {
         'material': material,
         'statusActive': statusActive
       };
+      */
 
   static Map<String, dynamic> contentToMap(Content content) {
     Map<String, dynamic> map = {
@@ -54,7 +58,8 @@ class Content {
       'street': content.street,
       'houseNumber': content.houseNumber,
       'zip': content.zip,
-      'city': content.city
+      'city': content.city,
+      'lastEdit': content.lastEdit
     };
 
     return map;
@@ -88,6 +93,7 @@ class Content {
     content.houseNumber = map["houseNumber"];
     content.zip = map["zip"];
     content.city = map["city"];
+    content.lastEdit = map["lastEdit"];
     return content;
   }
 
@@ -107,16 +113,22 @@ class Content {
 }
 
 class User {
-  late String firstName;
-  late String lastName;
-  late int customerId;
-  late String address;
+  String firstName = "";
+  String lastName = "";
+  int customerId = 0;
+  String street = "";
+  String houseNumber = "";
+  String zip = "";
+  String city = "";
 
   static const Map<String, dynamic> emptyUser = {
     'firstName': "",
     'lastName': "",
     'customerId': 0,
-    'address': ""
+    'street': "",
+    'houseNumber': "",
+    'zip': "",
+    'city': "",
   };
 
   static Map<String, dynamic> userToMap(User user) {
@@ -124,7 +136,10 @@ class User {
       'firstName': user.firstName,
       'lastName': user.lastName,
       'customerId': user.customerId,
-      'address': user.address
+      'street': user.street,
+      'houseNumber': user.houseNumber,
+      'zip': user.zip,
+      'city': user.city,
     };
 
     return content;
@@ -136,7 +151,10 @@ class User {
     user.firstName = map["firstName"];
     user.lastName = map['lastName'];
     user.customerId = map['customerId'];
-    user.address = map['address'];
+    user.street = map['street'];
+    user.houseNumber = map['houseNumber'];
+    user.zip = map['zip'];
+    user.city = map['city'];
 
     return user;
   }

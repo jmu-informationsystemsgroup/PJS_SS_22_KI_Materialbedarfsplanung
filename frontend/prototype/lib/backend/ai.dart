@@ -1,6 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+
+/// ursprüngliche Funktion, der Klasse: Einbetten der KI in das Frontend Framework, da wir uns aber doch
+/// für die flask Lösung entschieden haben ist die Klasse obsolet, sie ist nur noch für etwaige Nutzung
+/// inder Doku dageblieben
+
 /*
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
