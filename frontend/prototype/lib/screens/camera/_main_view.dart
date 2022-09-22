@@ -57,7 +57,6 @@ class _CameraPageState extends State<CameraPage> {
       id = widget.originalGallery.last.id + 1;
     }
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
     ]);
 
@@ -71,6 +70,7 @@ class _CameraPageState extends State<CameraPage> {
         return;
       }
       controller.setFlashMode(FlashMode.off);
+      controller.lockCaptureOrientation(DeviceOrientation.landscapeLeft);
       setState(() {});
     });
 
@@ -173,7 +173,11 @@ class _CameraPageState extends State<CameraPage> {
                   children: [
                     /// Workarround um Kamera daran zu hindern sich selbstständig zu drehen, Quelle: https://github.com/flutter/flutter/issues/16587
                     Center(
-                      //    alignment: Alignment.centerRight,
+                      child: CameraPreview(
+                        controller,
+                        child: addBlackBox(),
+                      ),
+                      /*
                       child: Expanded(
                         child: NativeDeviceOrientationReader(
                           builder: (context) {
@@ -207,6 +211,7 @@ class _CameraPageState extends State<CameraPage> {
                           },
                         ),
                       ),
+                      */
                     ),
 
                     Center(
