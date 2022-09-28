@@ -439,7 +439,7 @@ class _NewProjectState extends State<NewProject> {
                     labelText: "Kommentar",
                     maxLines: 6,
                   ),
-                  // MVPWalls(),
+                  MVPWalls(),
                   QualityChecklist(
                     changeQuality: (qualitString) => {
                       NewProject.cache.material = qualitString,

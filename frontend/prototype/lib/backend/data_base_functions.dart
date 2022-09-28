@@ -26,13 +26,12 @@ class DataBase {
     if (!status.isGranted) {
       await Permission.storage.request();
     }
-
-/*
-    Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
-    String? tempPath = tempDir?.path;
-    */
     Directory? tempDir = await getApplicationDocumentsDirectory();
+    String? tempPath = tempDir?.path;
+/*
+     Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
     String? tempPath = tempDir.path;
+    */
     return tempPath;
   }
 
@@ -79,6 +78,7 @@ class DataBase {
         projectId INTEGER,
         id INTEGER NOT NULL,
         aiValue REAL,
+        aiValueEdges REAL,
         PRIMARY KEY (id, projectId),
         FOREIGN KEY (projectId) REFERENCES projects (id)
       )
@@ -107,7 +107,7 @@ class DataBase {
 
 //  '$tempPath/spachtlerData.db',
     return sql.openDatabase(
-      'spachtlerData.db',
+      '$tempPath/spachtlerData.db',
       version: 1,
       onCreate: (sql.Database database, int version) async {
         await createProjectTable(database);
@@ -249,13 +249,18 @@ class DataBase {
       String imageId = element["id"].toString();
       String aiValue = element["aiValue"].toString();
       String projectId = element["projectId"].toString();
+      String aiValueEdges = element["aiValueEdges"].toString();
 
       CustomCameraImage imageObject = CustomCameraImage(
         id: int.parse(imageId),
         image: XFile('$path/material_images/${projectId}_$imageId.jpg'),
         aiValue: double.parse(aiValue),
+        aiValueEdges: double.parse(aiValueEdges),
         projectId: int.parse(projectId),
       );
+
+      print(
+          "||>>>>>>>>>>>>>>>>>>>>>>>>>>${imageObject.id}    ${imageObject.projectId}     ${imageObject.aiValueEdges}");
 
       list.add(imageObject);
     }
@@ -526,7 +531,12 @@ class DataBase {
     double step = 100.0 / finishedState;
 
     for (var picture in pictures) {
-      final dbData = {'projectId': projectId, 'id': id, 'aiValue': 0.0};
+      final dbData = {
+        'projectId': projectId,
+        'id': id,
+        'aiValue': 0.0,
+        'aiValueEdges': 0.0
+      };
 
       final id2 = await db.insert('images', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);

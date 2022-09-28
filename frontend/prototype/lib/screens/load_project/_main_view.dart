@@ -136,12 +136,9 @@ class _ProjectViewState extends State<ProjectView> {
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('Approve'),
+                child: const Text('Verstanden'),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  setState(() {
-                    ProjectView.askAgain = false;
-                  });
                 },
               ),
             ],

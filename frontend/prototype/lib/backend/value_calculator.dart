@@ -12,10 +12,13 @@ class ValueCalculator {
   static Future<CalculatorOutcome> getOutcomeObject(
       Content content, List<CustomCameraImage> images) async {
     resetOfficialOutcome();
-    double aiOutcome = await getAIOutcome(content.id, images);
+    List<double> outcomes = await getAIOutcome(content.id, images);
+    double aiOutcome = outcomes[0];
+    double aiEdgeOutcome = outcomes[1];
     double totalSquareMeters = await getSquareMeter(content.id);
     double totalPrice = getPrice(content.material, totalSquareMeters);
-    double totalAiPrice = getAiPrice(content.material, aiOutcome);
+    getAiPrice(content.material, aiOutcome);
+    getEdgePrice(aiEdgeOutcome);
     if (officalOutcome.exception) {
       officalOutcome.exceptionText = createExceptionText();
     }
@@ -46,24 +49,27 @@ class ValueCalculator {
   /// Wenn zu einem Bild ein ungültiger KI Wert ermittelt wurde (< 0) wird das Bild aus der Berechnung
   /// herausgenommen und der Nutzer wird aufgfordert, dieses nochmal nachzufotografieren. Der Rechenprozess
   /// kann aber trotzdem weiter fortgesetzt werden
-  static Future<double> getAIOutcome(
+  static Future<List<double>> getAIOutcome(
       int id, List<CustomCameraImage> images) async {
     double aiOutcome = 0.0;
+    double aiEdgeOutcome = 0.0;
 
     for (CustomCameraImage element in images) {
-      if (element.aiValue == 0.0) {
-        return 0.0;
-      } else if (element.aiValue < 0.0) {
+      print("aiValue: ${element.aiValue}  edge vlaue: ${element.aiValueEdges}");
+      if (element.aiValue == 0.0 || element.aiValueEdges == 0.0) {
+        return [0.0, 0.0];
+      } else if (element.aiValue < 0.0 || element.aiValueEdges < 0.0) {
         wrongImages.add(element.id);
         officalOutcome.exception = true;
         continue;
       } else {
         aiOutcome = aiOutcome + element.aiValue;
+        aiEdgeOutcome = aiEdgeOutcome + element.aiValueEdges;
       }
     }
 
     officalOutcome.aiOutcome = aiOutcome / 1000;
-    return aiOutcome / 1000;
+    return [aiOutcome / 1000, aiEdgeOutcome / 1000];
   }
 
   static Future<double> getSquareMeter(int id) async {
@@ -94,14 +100,19 @@ class ValueCalculator {
     return totalPrice;
   }
 
-  static double getAiPrice(String material, double aiOutcome) {
+  static getAiPrice(String material, double aiOutcome) {
     double totalPrice = 0.0;
     Map<String, double> quality = {"Q2": 1, "Q3": 2.85, "Q4": 5};
     totalPrice = (aiOutcome * 1.34 * quality[material]!);
 
-    officalOutcome.totalAiPrice = totalPrice;
+    officalOutcome.totalAiPrice += totalPrice;
+    print(
+        "first run >>>>>>>>>>>>>>>>>>>>>>>>>> ${officalOutcome.totalAiPrice}");
+  }
 
-    return totalPrice;
+  static getEdgePrice(double aiOutcome) {
+    officalOutcome.totalAiPrice += (aiOutcome * 0.26);
+    print("scd run >>>>>>>>>>>>>>>>>>>>>>>>>> ${officalOutcome.totalAiPrice}");
   }
 }
 
