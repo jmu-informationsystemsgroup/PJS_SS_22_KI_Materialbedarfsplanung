@@ -3,6 +3,7 @@ from flask import Flask, request
 import os
 import tensorflow as tf
 import cv2
+import numpy as np
 import warnings
 
 
@@ -22,33 +23,69 @@ def model_load():
     print('material_model_tape geladen')
 
 
-def preprocess_image(img):
+def preprocess_image_putty(img):
     """
     Hilfsfunktion um die Bilder vorzubearbeiten
     """
     # Prüft auf die richtige Bildgröße
     img_height = img.shape[0]
     img_width = img.shape[1]
-    print("Bild Inputshape: "+str(img.shape))
+    print("Bild zur Berechnung der Spachtelmasse - Inputshape: "+str(img.shape))
     # Falls das Bild das falsche Format hat wird ein resize durchgeführt
     if (img_width != 400 or img_height != 300):
         img = cv2.resize(img, (400, 300), interpolation = cv2.INTER_AREA)
-        print("Resize wurde durchgeführt.")
-        print("Bild Outputshape: "+str(img.shape))
+        print("Bild zur Berechnung der Spachtelmasse - Resize wurde durchgeführt.")
+    else:
+        print("Bild zur Berechnung der Spachtelmasse - kein Resize notwendig.")
+    print("Bild zur Berechnung der Spachtelmasse - Outputshape: "+str(img.shape))
+    #Führt die Standardisierung durch
+    img = np.array(img, dtype=np.int64)
+    imgst = (img - np.mean(img)) / np.std(img)
+    img = imgst
+    print("Bild zur Berechnung der Spachtelmasse - Standardisierung wurde durchgeführt")
     # Fügt eine vierte Dimension (Batch des Trainings) für die Vorhersage des Modells hinzu
     img = tf.expand_dims(img,axis=0)
     return img
 
 
+
+def preprocess_image_tape(img):
+    """
+    Hilfsfunktion um die Bilder vorzubearbeiten
+    """
+    # Prüft auf die richtige Bildgröße
+    img_height = img.shape[0]
+    img_width = img.shape[1]
+    print("Bild zur Berechnung der Fugendeckstreifen - Inputshape: "+str(img.shape))
+    # Falls das Bild das falsche Format hat wird ein resize durchgeführt
+    if (img_width != 200 or img_height != 150):
+        img = cv2.resize(img, (200, 150), interpolation = cv2.INTER_AREA)
+        print("Bild zur Berechnung der Fugendeckstreifen - Resize wurde durchgeführt.")
+    else:
+        print("Bild zur Berechnung der Fugendeckstreifen - kein Resize notwendig.")
+    print("Bild zur Berechnung der Fugendeckstreifen - Bild Outputshape: "+str(img.shape))
+    #Führt die Normalisierung durch
+    img = img/255
+    print("Bild zur Berechnung der Fugendeckstreifen - Normalisierung wurde durchgeführt")
+    # Fügt eine vierte Dimension (Batch des Trainings) für die Vorhersage des Modells hinzu
+    img = tf.expand_dims(img,axis=0)
+    return img
+
+
+
+
 # Methode die den Materialbedarf berechnet
 def material_predict(img):
-    # Ruft die Methode preproces_image auf
-    img = preprocess_image(img)
-    # Das Bild wird in das Model geladen und als Rückgabe wird die Vorhersage erhalten
-    print("Berechne Materialbedarf:")
+
     pred_material = []
-    pred_putty = model_putty.predict(img)
-    pred_tape = model_tape.predict(img)
+
+    img_putty = preprocess_image_putty(img)
+    img_tape = preprocess_image_tape(img)
+
+    print("Berechne Materialbedarf:")
+    pred_putty = model_putty.predict(img_putty)
+    pred_tape = model_tape.predict(img_tape)
+
     pred_material.append(pred_putty[0][0])
     pred_material.append(pred_tape[0][0])  
     return pred_material
@@ -62,7 +99,6 @@ app = Flask(__name__)
 def predict():
     if request.method == 'POST':
 
-    
         # Liest die übermittelte Datei
         file = request.files['file']
         # Liest den Dateinamen aus
@@ -80,7 +116,6 @@ def predict():
             pred_material = material_predict(img) 
         except:
             return {"message": "Nicht unterstütztes Dateiformat. Bitte Datei in .jpg hochladen"}, 500
-
 
         print("Vorhergesagter Materialbedarf für Spachtelmasse in g: "+str(pred_material[0]))
         print("Vorhergesagter Materialbedarf für Fugendeckstreifen in mm: "+str(pred_material[1]))
