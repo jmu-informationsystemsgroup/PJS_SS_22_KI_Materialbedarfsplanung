@@ -95,6 +95,7 @@ class _CameraPageState extends State<CameraPage> {
 
   /// TODO
   Widget addBlackBox() {
+    // Formel um die Displayhöhe herauszufinden auf https://stackoverflow.com/questions/55610742/proper-way-to-get-widget-height-in-safearea
     final availableHeight = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;

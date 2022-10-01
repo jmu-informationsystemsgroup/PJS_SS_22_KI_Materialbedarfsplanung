@@ -65,7 +65,8 @@ class DataBase {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         projectId INTEGER,
         width REAL,
-        height REAL
+        height REAL,
+        type INTEGER
       )
       """);
   }
@@ -171,11 +172,24 @@ class DataBase {
   }
 
   /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück
-  static getWalls(int id) async {
+  static Future<List<Wall>> getWalls(int id) async {
     final db = await DataBase.getDataBase();
 
-    return db
+    List<Map<String, dynamic>> loadedWalls = await db
         .query('walls', orderBy: "id", where: "projectId = ?", whereArgs: [id]);
+
+    List<Wall> finishedWalls = [];
+
+    loadedWalls.forEach((element) {
+      Wall wall = Wall();
+      wall.width = element["width"];
+      wall.height = element["height"];
+      wall.id = element["id"];
+      wall.type = element["type"];
+      finishedWalls.add(wall);
+    });
+
+    return finishedWalls;
   }
 
   static Future<Content> getSpecificProject(int id) async {
@@ -469,13 +483,14 @@ class DataBase {
   static createWallsForProject(Content data, int projectId) async {
     final db = await DataBase.getDataBase();
 
-    Iterable<Wall> squareMeters = data.squareMeters.values;
+    List walls = data.walls;
 
-    squareMeters.forEach((element) async {
+    walls.forEach((element) async {
       final dbData = {
         'projectId': projectId,
         'width': element.width,
-        'height': element.height
+        'height': element.height,
+        'type': element.type,
       };
       final id = await db.insert('walls', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);

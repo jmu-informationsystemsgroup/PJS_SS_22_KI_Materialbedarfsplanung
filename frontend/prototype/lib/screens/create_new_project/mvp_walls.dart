@@ -3,11 +3,18 @@ import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype/backend/helper_objects.dart';
+import 'package:prototype/components/custom_container_border.dart';
+import 'package:prototype/components/input_field.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 
+import '../../components/button_row_multiple_icons.dart';
 import '../../styles/container.dart';
 
 class MVPWalls extends StatefulWidget {
+  Function(List<Wall>) outcomeWalls;
+  List<Wall> editWalls;
+  MVPWalls({required this.outcomeWalls, this.editWalls = const []});
+
   @override
   _MVPWalls createState() {
     return _MVPWalls();
@@ -16,88 +23,130 @@ class MVPWalls extends StatefulWidget {
 
 class _MVPWalls extends State<MVPWalls> {
   final TextEditingController nameController = TextEditingController();
-
+  bool addVisabilty = false;
   Map<int, Widget> walls = {};
+  List<Wall> safeList = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    safeList = widget.editWalls;
+    setUpWidgetMap();
+    getWallsVisability();
+  }
+
+  setUpWidgetMap() {
+    widget.editWalls.forEach((element) {
+      setState(() {
+        walls[element.id] = newWall(element.id);
+      });
+    });
+  }
+
+  getWallsVisability() {
+    if (walls.length == 0) {
+      setState(() {
+        addVisabilty = false;
+      });
+    } else {
+      setState(() {
+        addVisabilty = true;
+      });
+    }
+  }
+
+  switchVisablity() {
+    if (addVisabilty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  safeWall(Wall wall) {
+    if (wall.height != 0.0 && wall.width != 0.0) {
+      safeList.add(wall);
+    }
+    safeList.removeWhere(
+        (element) => (element.width == 0.0 || element.height == 0.0));
+
+    widget.outcomeWalls(safeList);
+
+    //test
+    print(
+        "-------------------------> current wall: ${wall.id} safeListLength ${safeList.length}");
+    safeList.forEach((element) {
+      print(
+          "------------------------->id: ${element.id} width: ${element.width} height: ${element.height}");
+    });
+  }
+
+  removeWall(int id) {
+    safeList.removeWhere((element) => element.id == id);
+  }
 
   Widget newWall(int widgetId) {
     Wall newWall = Wall();
-    int wallTitle = widgetId + 1;
+    newWall.id = widgetId;
 
-    Container container = Container(
-      margin: const EdgeInsets.fromLTRB(15, 3, 15, 7),
-      decoration: ContainerStyles.getColoredBoxDecoration(),
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 25),
-      child: Wrap(
-        spacing: 20, // to apply margin in the main axis of the wrap
-        runSpacing: 20, // to apply margin in the cross axis of the wrap
-        children: <Widget>[
-          Text(
-            "Wand $wallTitle",
-            style: ContainerStyles.getTextStyle(),
-          ),
-          Row(
-            children: <Widget>[
-              Flexible(
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  onChanged: (value) {
-                    setState(
-                      () {
-                        newWall.width = double.parse(value);
+    Flex container = Flex(
+      direction: Axis.horizontal,
+      children: <Widget>[
+        Expanded(
+            child: Text(
+          "Wand ${widgetId}",
+          style: ContainerStyles.getTextStyle(),
+        )),
+        Expanded(
+          flex: 2,
+          child: InputField(
+              inputType: TextInputType.number,
+              disableMargin: true,
+              saveTo: (text) => {
+                    if (text == "")
+                      {newWall.height = 0.0}
+                    else
+                      {
+                        newWall.width = double.parse(text),
                       },
-                    );
+                    safeWall(newWall),
+                    safeWall(newWall),
                   },
-                  decoration: ContainerStyles.getInputStyle("Breite"),
-                ),
-              ),
-              SizedBox(width: 10),
-              Flexible(
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  onChanged: (value) {
-                    setState(
-                      () {
-                        newWall.height = double.parse(value);
+              labelText: "Breite"),
+        ),
+        Expanded(
+          flex: 2,
+          child: InputField(
+              inputType: TextInputType.number,
+              disableMargin: true,
+              saveTo: (text) => {
+                    if (text == "")
+                      {newWall.height = 0.0}
+                    else
+                      {
+                        newWall.height = double.parse(text),
                       },
-                    );
-                    print(newWall.toString());
+                    safeWall(newWall),
                   },
-                  decoration: ContainerStyles.getInputStyle("Höhe"),
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.red),
-                    onPressed: () {
-                      setState(
-                        () {
-                          walls.removeWhere((key, value) => key == widgetId);
-                          NewProject.cache.squareMeters
-                              .removeWhere((key, value) => key == widgetId);
-                        },
-                      );
-                    },
-                    child: const Text("Löschen"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(
-                        () {
-                          NewProject.cache.squareMeters[widgetId] = newWall;
-                        },
-                      );
-                    },
-                    child: const Text("Speichern"),
-                  ),
-                ],
-              )
-            ],
+              labelText: "Höhe"),
+        ),
+        Expanded(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.red),
+            onPressed: () {
+              setState(
+                () {
+                  walls.removeWhere((key, value) => key == widgetId);
+                  getWallsVisability();
+                },
+              );
+              removeWall(widgetId);
+            },
+            child: Icon(Icons.delete),
           ),
-        ],
-      ),
+        ),
+      ],
     );
     return container;
   }
@@ -105,23 +154,42 @@ class _MVPWalls extends State<MVPWalls> {
   int i = 0;
   @override
   Widget build(BuildContext context) {
-    print("Safe area ---------------------------------------" +
-        NewProject.cache.squareMeters.toString());
     return Column(
       children: <Widget>[
-        ElevatedButton(
-          onPressed: () {
-            setState(
-              () {
-                walls[i] = newWall(i);
-                i += 1;
-              },
-            );
-          },
-          child: const Text("Wand hinzufügen"),
+        Visibility(
+          visible: addVisabilty,
+          child: CustomContainerBorder(
+            child: Column(
+              children: [
+                Column(
+                  children: walls.values.toList(),
+                ),
+                CustomButtonRow(
+                    children: [Icon(Icons.add)],
+                    onPressed: () {
+                      setState(() {
+                        walls[i] = newWall(i);
+                        i += 1;
+                      });
+                    }),
+              ],
+            ),
+          ),
         ),
-        Column(
-          children: walls.values.toList(),
+        Visibility(
+          visible: switchVisablity(),
+          child: ElevatedButton(
+            onPressed: () {
+              setState(
+                () {
+                  walls[i] = newWall(i);
+                  i += 1;
+                  getWallsVisability();
+                },
+              );
+            },
+            child: const Text("Wand hinzufügen"),
+          ),
         ),
       ],
     );

@@ -16,7 +16,7 @@ class ValueCalculator {
     double aiOutcome = outcomes[0];
     double aiEdgeOutcome = outcomes[1];
     double totalSquareMeters = await getSquareMeter(content.id);
-    double totalPrice = getPrice(content.material, totalSquareMeters);
+    getManualPrice(content.material, totalSquareMeters);
     getAiPrice(content.material, aiOutcome);
     getEdgePrice(aiEdgeOutcome);
     if (officalOutcome.exception) {
@@ -67,24 +67,17 @@ class ValueCalculator {
       }
     }
 
-    officalOutcome.aiOutcome = aiOutcome / 1000;
-    officalOutcome.aiEdgesOutcome = aiEdgeOutcome / 1000;
+    officalOutcome.material = aiOutcome / 1000;
+    officalOutcome.edges = aiEdgeOutcome / 1000;
     return [aiOutcome / 1000, aiEdgeOutcome / 1000];
   }
 
   static Future<double> getSquareMeter(int id) async {
     double totalSquareMeters = 0.0;
-    var walls = await DataBase.getWalls(id);
+    List<Wall> walls = await DataBase.getWalls(id);
 
     walls.forEach((element) {
-      double width = 0.0;
-      double height = 0.0;
-      try {
-        width = element["width"];
-        height = element["height"];
-      } catch (e) {}
-
-      double actualSquareMeters = width * height;
+      double actualSquareMeters = element.width * element.height;
 
       totalSquareMeters = totalSquareMeters + actualSquareMeters;
     });
@@ -92,12 +85,12 @@ class ValueCalculator {
     return totalSquareMeters;
   }
 
-  static double getPrice(String material, double totalSquareMeters) {
+  static getManualPrice(String material, double totalSquareMeters) {
     double totalPrice = 0.0;
     Map<String, double> valueInterpreter = {"Q2": 0.7, "Q3": 2, "Q4": 3.5};
     totalPrice = totalSquareMeters * valueInterpreter[material]!;
 
-    return totalPrice;
+    officalOutcome.priceMaterial += totalPrice;
   }
 
   static getAiPrice(String material, double aiOutcome) {
@@ -105,30 +98,26 @@ class ValueCalculator {
     Map<String, double> quality = {"Q2": 1, "Q3": 2.85, "Q4": 5};
     totalPrice = (aiOutcome * 1.34 * quality[material]!);
 
-    officalOutcome.totalAiPrice += totalPrice;
+    officalOutcome.priceMaterial += totalPrice;
   }
 
   static getEdgePrice(double aiOutcome) {
-    officalOutcome.totalEdgesPrice += (aiOutcome * 0.26);
+    officalOutcome.priceEdges += (aiOutcome * 0.26);
   }
 }
 
 class CalculatorOutcome {
-  double aiOutcome;
-  double totalAiPrice;
-  double aiEdgesOutcome;
-  double totalEdgesPrice;
-  double totalSquareMeters;
-  double totalPrice;
+  double material;
+  double priceMaterial;
+  double edges;
+  double priceEdges;
   bool exception;
   String exceptionText;
   CalculatorOutcome(
-      {this.aiOutcome = 0.0,
-      this.totalSquareMeters = 0.0,
-      this.aiEdgesOutcome = 0.0,
-      this.totalPrice = 0.0,
-      this.totalEdgesPrice = 0.0,
-      this.totalAiPrice = 0.0,
+      {this.material = 0.0,
+      this.edges = 0.0,
+      this.priceEdges = 0.0,
+      this.priceMaterial = 0.0,
       this.exception = false,
       this.exceptionText = ""});
 }

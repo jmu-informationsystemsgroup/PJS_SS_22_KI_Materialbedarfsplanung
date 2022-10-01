@@ -392,6 +392,11 @@ class _NewProjectState extends State<NewProject> {
                     },
                     //  creationMode: true,
                   ),
+                  MVPWalls(
+                    outcomeWalls: (walls) {
+                      NewProject.cache.walls = walls;
+                    },
+                  ),
                   InputField(
                     saveTo: (text) => {
                       setState(() {
@@ -439,7 +444,7 @@ class _NewProjectState extends State<NewProject> {
                     labelText: "Kommentar",
                     maxLines: 6,
                   ),
-                  MVPWalls(),
+
                   QualityChecklist(
                     changeQuality: (qualitString) => {
                       NewProject.cache.material = qualitString,

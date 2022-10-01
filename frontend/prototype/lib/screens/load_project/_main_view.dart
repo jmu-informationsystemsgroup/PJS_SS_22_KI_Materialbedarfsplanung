@@ -335,7 +335,7 @@ class _ProjectViewState extends State<ProjectView> {
               setState(
                 () {
                   galleryImages.addAll(images);
-                  calculatedOutcome.aiOutcome = 0.0;
+                  calculatedOutcome.material = 0.0;
                 },
               );
               bool sth = await DataBase.saveImages(

@@ -146,7 +146,7 @@ class _DashboardState extends State<Dashboard> {
       return CustomContainerBorder(
         child: Center(child: Text("Status: ${widget.state}%")),
       );
-    } else if (widget.outcome.aiOutcome == 0.0 &&
+    } else if (widget.outcome.material == 0.0 &&
         widget.galleryImages.length != widget.imagesToDelete.length) {
       return CustomContainerBorder(
         child: Column(
@@ -187,7 +187,7 @@ class _DashboardState extends State<Dashboard> {
         Expanded(
           child: square(
               icon: Icons.window,
-              underLine: "${widget.galleryImages.length} Wände"),
+              underLine: "${widget.galleryImages.length} Wände und Decken"),
         ),
         Expanded(
           child: square(
@@ -262,17 +262,17 @@ class _DashboardState extends State<Dashboard> {
           child: squareAiValue(
               icon: Icons.format_color_fill,
               underLineProduct:
-                  "${widget.outcome.aiOutcome.toStringAsFixed(2)} kg Spachtelmasse",
+                  "${widget.outcome.material.toStringAsFixed(2)} kg Spachtelmasse",
               underLinePrice:
-                  "(${widget.outcome.totalAiPrice.toStringAsFixed(2)} €)"),
+                  "(${widget.outcome.priceMaterial.toStringAsFixed(2)} €)"),
         ),
         Expanded(
           child: squareAiValue(
               icon: Icons.format_paint_outlined,
               underLineProduct:
-                  "${widget.outcome.aiEdgesOutcome.toStringAsFixed(2)} m Fugendeckstreifen",
+                  "${widget.outcome.edges.toStringAsFixed(2)} m Fugenstreifen",
               underLinePrice:
-                  "(${widget.outcome.totalEdgesPrice.toStringAsFixed(2)} €)"),
+                  "(${widget.outcome.priceEdges.toStringAsFixed(2)} €)"),
         )
       ],
     );
