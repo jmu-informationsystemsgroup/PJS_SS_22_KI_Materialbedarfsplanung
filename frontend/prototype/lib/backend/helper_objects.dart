@@ -165,9 +165,7 @@ class Wall {
   double width = 0.0;
   double height = 0.0;
   int id = 0;
-
-  /// 0 = Wand, 1 = Decke
-  int type = 0;
+  String name = "";
 }
 
 class CustomCameraImage {

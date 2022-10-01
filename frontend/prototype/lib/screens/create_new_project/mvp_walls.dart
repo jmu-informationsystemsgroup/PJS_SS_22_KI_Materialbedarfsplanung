@@ -6,6 +6,7 @@ import 'package:prototype/backend/helper_objects.dart';
 import 'package:prototype/components/custom_container_border.dart';
 import 'package:prototype/components/input_field.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
+import 'package:prototype/styles/general.dart';
 
 import '../../components/button_row_multiple_icons.dart';
 import '../../styles/container.dart';
@@ -25,21 +26,32 @@ class _MVPWalls extends State<MVPWalls> {
   final TextEditingController nameController = TextEditingController();
   bool addVisabilty = false;
   Map<int, Widget> walls = {};
-  List<Wall> safeList = [];
+  Map<int, Wall> safeList = {};
+  int startId = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    safeList = widget.editWalls;
-    setUpWidgetMap();
+    if (widget.editWalls.isNotEmpty) {
+      startId = widget.editWalls.last.id;
+
+      setUpWidgetMap();
+    }
+
     getWallsVisability();
   }
 
   setUpWidgetMap() {
     widget.editWalls.forEach((element) {
       setState(() {
-        walls[element.id] = newWall(element.id);
+        safeList[element.id] = element;
+        walls[element.id] = newWall(
+          widgetId: element.id,
+          width: element.width,
+          height: element.height,
+          name: element.name,
+        );
       });
     });
   }
@@ -56,7 +68,7 @@ class _MVPWalls extends State<MVPWalls> {
     }
   }
 
-  switchVisablity() {
+  bool switchVisablity() {
     if (addVisabilty) {
       return false;
     } else {
@@ -66,92 +78,121 @@ class _MVPWalls extends State<MVPWalls> {
 
   safeWall(Wall wall) {
     if (wall.height != 0.0 && wall.width != 0.0) {
-      safeList.add(wall);
+      setState(() {
+        safeList[wall.id] = wall;
+      });
     }
     safeList.removeWhere(
-        (element) => (element.width == 0.0 || element.height == 0.0));
+        (key, element) => (element.width == 0.0 || element.height == 0.0));
 
-    widget.outcomeWalls(safeList);
+    widget.outcomeWalls(safeList.values.toList());
 
     //test
     print(
         "-------------------------> current wall: ${wall.id} safeListLength ${safeList.length}");
-    safeList.forEach((element) {
+    safeList.values.toList().forEach((element) {
       print(
-          "------------------------->id: ${element.id} width: ${element.width} height: ${element.height}");
+          "------------------------->id: ${element.id} width:  ${wall.width} sf ${element.width} height:  ${wall.height} sf ${element.height}");
     });
   }
 
   removeWall(int id) {
-    safeList.removeWhere((element) => element.id == id);
+    safeList.removeWhere((key, element) => element.id == id);
   }
 
-  Widget newWall(int widgetId) {
-    Wall newWall = Wall();
-    newWall.id = widgetId;
+  String setUpValue(double value) {
+    if (value == 0.0) {
+      return "";
+    } else {
+      return value.toString();
+    }
+  }
 
-    Flex container = Flex(
-      direction: Axis.horizontal,
-      children: <Widget>[
-        Expanded(
-            child: Text(
-          "Wand ${widgetId}",
-          style: ContainerStyles.getTextStyle(),
-        )),
-        Expanded(
-          flex: 2,
-          child: InputField(
-              inputType: TextInputType.number,
-              disableMargin: true,
-              saveTo: (text) => {
-                    if (text == "")
-                      {newWall.height = 0.0}
-                    else
-                      {
-                        newWall.width = double.parse(text),
-                      },
-                    safeWall(newWall),
-                    safeWall(newWall),
-                  },
-              labelText: "Breite"),
-        ),
-        Expanded(
-          flex: 2,
-          child: InputField(
-              inputType: TextInputType.number,
-              disableMargin: true,
-              saveTo: (text) => {
-                    if (text == "")
-                      {newWall.height = 0.0}
-                    else
-                      {
-                        newWall.height = double.parse(text),
-                      },
-                    safeWall(newWall),
-                  },
-              labelText: "Höhe"),
-        ),
-        Expanded(
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.red),
-            onPressed: () {
-              setState(
-                () {
-                  walls.removeWhere((key, value) => key == widgetId);
-                  getWallsVisability();
+  Widget newWall({
+    required int widgetId,
+    double width = 0.0,
+    double height = 0.0,
+    String name = "",
+  }) {
+    Wall wall = Wall();
+    wall.id = widgetId;
+
+    Container container = Container(
+      margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+      child: Flex(
+        direction: Axis.horizontal,
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: InputField(
+                value: name,
+                disableMargin: true,
+                saveTo: (text) {
+                  wall.name = text;
+                  safeWall(wall);
                 },
-              );
-              removeWall(widgetId);
-            },
-            child: Icon(Icons.delete),
+                labelText: "Name"),
           ),
-        ),
-      ],
+          Expanded(
+            flex: 3,
+            child: InputField(
+                value: setUpValue(width),
+                inputType: TextInputType.number,
+                disableMargin: true,
+                icon: Icons.sync_alt_outlined,
+                saveTo: (text) {
+                  if (text == "") {
+                    wall.width = 0.0;
+                  } else {
+                    wall.width = double.parse(text);
+                  }
+                  safeWall(wall);
+                },
+                labelText: "Breite"),
+          ),
+          Expanded(
+            flex: 3,
+            child: InputField(
+                icon: Icons.swap_vert_outlined,
+                value: setUpValue(height),
+                inputType: TextInputType.number,
+                disableMargin: true,
+                saveTo: (text) {
+                  if (text == "") {
+                    wall.height = 0.0;
+                  } else {
+                    wall.height = double.parse(text);
+                  }
+                  safeWall(wall);
+                },
+                labelText: "Höhe"),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                setState(
+                  () {
+                    walls.removeWhere((key, value) => key == widgetId);
+                    getWallsVisability();
+                  },
+                );
+                removeWall(widgetId);
+              },
+              child: Center(
+                child: Icon(
+                  Icons.delete,
+                  color: GeneralStyle.getDarkGray(),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+
     return container;
   }
 
-  int i = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -168,8 +209,8 @@ class _MVPWalls extends State<MVPWalls> {
                     children: [Icon(Icons.add)],
                     onPressed: () {
                       setState(() {
-                        walls[i] = newWall(i);
-                        i += 1;
+                        walls[startId] = newWall(widgetId: startId);
+                        startId += 1;
                       });
                     }),
               ],
@@ -182,8 +223,8 @@ class _MVPWalls extends State<MVPWalls> {
             onPressed: () {
               setState(
                 () {
-                  walls[i] = newWall(i);
-                  i += 1;
+                  walls[startId] = newWall(widgetId: startId);
+                  startId += 1;
                   getWallsVisability();
                 },
               );

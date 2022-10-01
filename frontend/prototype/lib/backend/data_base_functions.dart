@@ -185,7 +185,7 @@ class DataBase {
       wall.width = element["width"];
       wall.height = element["height"];
       wall.id = element["id"];
-      wall.type = element["type"];
+      wall.name = element["name"];
       finishedWalls.add(wall);
     });
 

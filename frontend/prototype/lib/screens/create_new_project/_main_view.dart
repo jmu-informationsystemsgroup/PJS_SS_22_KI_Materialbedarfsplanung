@@ -54,6 +54,7 @@ class _NewProjectState extends State<NewProject> {
   var showState = false;
   int projectId = 0;
   List<CustomCameraImage> galleryPictures = [];
+  List<Wall> walls = [];
   int state = 0;
   Content content = NewProject.cache;
 
@@ -65,6 +66,7 @@ class _NewProjectState extends State<NewProject> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    walls = NewProject.cache.walls;
     galleryPictures = NewProject.cache.pictures;
   }
 
@@ -393,8 +395,12 @@ class _NewProjectState extends State<NewProject> {
                     //  creationMode: true,
                   ),
                   MVPWalls(
+                    editWalls: walls,
                     outcomeWalls: (walls) {
-                      NewProject.cache.walls = walls;
+                      setState(() {
+                        NewProject.cache.walls = walls;
+                        content.walls = walls;
+                      });
                     },
                   ),
                   InputField(
