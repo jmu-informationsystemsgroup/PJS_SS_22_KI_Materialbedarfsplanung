@@ -27,10 +27,10 @@ class DataBase {
       await Permission.storage.request();
     }
     Directory? tempDir = await getApplicationDocumentsDirectory();
-    String? tempPath = tempDir?.path;
+    String? tempPath = tempDir.path;
 /*
      Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
-    String? tempPath = tempDir.path;
+    String? tempPath = tempDir?.path;
     */
     return tempPath;
   }
@@ -410,14 +410,15 @@ class DataBase {
     return result;
   }
 
-  static updateImagesAiValue(double aiValue, int id, int projectId) async {
+  static updateImagesAiValue(CustomCameraImage image) async {
     final db = await DataBase.getDataBase();
 
     final dbData = {
-      'aiValue': aiValue,
+      'aiValue': image.aiValue,
+      'aiValueEdges': image.aiValueEdges,
     };
     final result = await db.update('images', dbData,
-        where: "id = ${id} AND projectId = ${projectId}");
+        where: "id = ${image.id} AND projectId = ${image.projectId}");
     return result;
   }
 

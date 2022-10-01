@@ -55,7 +55,6 @@ class ValueCalculator {
     double aiEdgeOutcome = 0.0;
 
     for (CustomCameraImage element in images) {
-      print("aiValue: ${element.aiValue}  edge vlaue: ${element.aiValueEdges}");
       if (element.aiValue == 0.0 || element.aiValueEdges == 0.0) {
         return [0.0, 0.0];
       } else if (element.aiValue < 0.0 || element.aiValueEdges < 0.0) {
@@ -69,6 +68,7 @@ class ValueCalculator {
     }
 
     officalOutcome.aiOutcome = aiOutcome / 1000;
+    officalOutcome.aiEdgesOutcome = aiEdgeOutcome / 1000;
     return [aiOutcome / 1000, aiEdgeOutcome / 1000];
   }
 
@@ -106,27 +106,28 @@ class ValueCalculator {
     totalPrice = (aiOutcome * 1.34 * quality[material]!);
 
     officalOutcome.totalAiPrice += totalPrice;
-    print(
-        "first run >>>>>>>>>>>>>>>>>>>>>>>>>> ${officalOutcome.totalAiPrice}");
   }
 
   static getEdgePrice(double aiOutcome) {
-    officalOutcome.totalAiPrice += (aiOutcome * 0.26);
-    print("scd run >>>>>>>>>>>>>>>>>>>>>>>>>> ${officalOutcome.totalAiPrice}");
+    officalOutcome.totalEdgesPrice += (aiOutcome * 0.26);
   }
 }
 
 class CalculatorOutcome {
   double aiOutcome;
+  double totalAiPrice;
+  double aiEdgesOutcome;
+  double totalEdgesPrice;
   double totalSquareMeters;
   double totalPrice;
-  double totalAiPrice;
   bool exception;
   String exceptionText;
   CalculatorOutcome(
       {this.aiOutcome = 0.0,
       this.totalSquareMeters = 0.0,
+      this.aiEdgesOutcome = 0.0,
       this.totalPrice = 0.0,
+      this.totalEdgesPrice = 0.0,
       this.totalAiPrice = 0.0,
       this.exception = false,
       this.exceptionText = ""});

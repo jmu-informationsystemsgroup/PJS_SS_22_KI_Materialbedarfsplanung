@@ -95,10 +95,13 @@ class _CameraPageState extends State<CameraPage> {
 
   /// TODO
   Widget addBlackBox() {
-    double coverValue = MediaQuery.of(context).size.height * 4 / 3;
+    final availableHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
 
+    double previewWidth = availableHeight * 4 / 3;
     return Container(
-      margin: EdgeInsets.fromLTRB(coverValue, 0, 0, 0),
+      margin: EdgeInsets.fromLTRB(previewWidth, 0, 0, 0),
 
       //  decoration: BoxDecoration(color: Color.fromARGB(69, 0, 0, 0)),
       decoration: BoxDecoration(color: Colors.black),

@@ -87,83 +87,96 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget squareAiValue() {
+  Widget squareAiValue(
+      {required IconData icon,
+      required String underLineProduct,
+      required String underLinePrice}) {
     return AspectRatio(
       aspectRatio: 1 / 1,
       child: CustomContainerBorder(
         color: GeneralStyle.getUglyGreen(),
-        child: displayData(),
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () {
+                  _showInformationDialog();
+                },
+                child: Icon(
+                  Icons.info,
+                  color: GeneralStyle.getLightGray(),
+                ),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon),
+                Text(
+                  underLineProduct,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  underLinePrice,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget displayData() {
     if (widget.galleryImages.isEmpty) {
-      return Column(
-        children: [
-          Text(
-            "Mache Fotos um einen KI Wert ermitteln zu können",
-            textAlign: TextAlign.center,
-          ),
-          Icon(Icons.add_a_photo_outlined),
-        ],
+      return CustomContainerBorder(
+        child: Column(
+          children: [
+            Text(
+              "Mache Fotos um einen KI Wert ermitteln zu können",
+              textAlign: TextAlign.center,
+            ),
+            Icon(Icons.add_a_photo_outlined),
+          ],
+        ),
       );
     } else if (widget.recalculate) {
-      return Center(child: Text("Status: ${widget.state}%"));
+      return CustomContainerBorder(
+        child: Center(child: Text("Status: ${widget.state}%")),
+      );
     } else if (widget.outcome.aiOutcome == 0.0 &&
         widget.galleryImages.length != widget.imagesToDelete.length) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Jetzt Bedarf ermitteln? ",
-                  style: TextStyle(color: Colors.black),
-                ),
-                WidgetSpan(
-                  child: Icon(Icons.format_color_fill),
-                ),
-              ],
+      return CustomContainerBorder(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Jetzt Bedarf ermitteln? ",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  WidgetSpan(
+                    child: Icon(Icons.format_color_fill),
+                  ),
+                ],
+              ),
             ),
-          ),
-          CustomButtonRow(children: [
-            Icon(
-              Icons.sync,
-            ),
-          ], onPressed: widget.updateImages),
-        ],
+            CustomButtonRow(children: [
+              Icon(
+                Icons.sync,
+              ),
+            ], onPressed: widget.updateImages),
+          ],
+        ),
       );
     } else {
-      return Stack(
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: GestureDetector(
-              onTap: () {
-                _showInformationDialog();
-              },
-              child: Icon(
-                Icons.info,
-                color: GeneralStyle.getLightGray(),
-              ),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.euro),
-              Text(
-                "${widget.outcome.totalAiPrice.toStringAsFixed(2)} € Materialkosten",
-                textAlign: TextAlign.center,
-              ),
-            ],
-          )
-        ],
-      );
+      return displayRowTwo();
     }
   }
 
@@ -245,12 +258,22 @@ class _DashboardState extends State<Dashboard> {
     return Flex(
       direction: Axis.horizontal,
       children: [
-        Expanded(child: squareAiValue()),
         Expanded(
-          child: square(
-              icon: Icons.calendar_month_outlined,
-              underLine: "Zuletzt bearbeitet: ${widget.content.lastEdit}"),
+          child: squareAiValue(
+              icon: Icons.format_color_fill,
+              underLineProduct:
+                  "${widget.outcome.aiOutcome.toStringAsFixed(2)} kg Spachtelmasse",
+              underLinePrice:
+                  "(${widget.outcome.totalAiPrice.toStringAsFixed(2)} €)"),
         ),
+        Expanded(
+          child: squareAiValue(
+              icon: Icons.format_paint_outlined,
+              underLineProduct:
+                  "${widget.outcome.aiEdgesOutcome.toStringAsFixed(2)} m Fugendeckstreifen",
+              underLinePrice:
+                  "(${widget.outcome.totalEdgesPrice.toStringAsFixed(2)} €)"),
+        )
       ],
     );
   }
@@ -260,7 +283,7 @@ class _DashboardState extends State<Dashboard> {
     return Column(
       children: [
         rowOne(),
-        displayRowTwo(),
+        displayData(),
       ],
     );
   }
