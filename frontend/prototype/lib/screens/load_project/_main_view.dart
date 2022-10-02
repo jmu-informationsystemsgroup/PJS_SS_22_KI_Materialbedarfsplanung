@@ -15,6 +15,7 @@ import 'package:prototype/screens/load_project/dashboard.dart';
 import 'package:prototype/screens/load_project/editor.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
+import 'package:prototype/screens/load_project/walls.dart';
 import 'package:prototype/screens/load_project/webshop_api.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/styles/container.dart';
@@ -479,7 +480,7 @@ class _ProjectViewState extends State<ProjectView> {
               */
                 ButtonEdit(
                   textVisiblity: !editorVisablity,
-                  changeState: () {
+                  onClick: () {
                     setState(() {
                       editorVisablity = changeBool(editorVisablity);
                     });
@@ -613,6 +614,7 @@ class _ProjectViewState extends State<ProjectView> {
                         child: Text("Speichere Bilder $state %"),
                       ),
                       AllData(content: content),
+                      Walls(content: content),
                     ],
                   ),
                 ),

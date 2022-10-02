@@ -66,7 +66,7 @@ class DataBase {
         projectId INTEGER,
         width REAL,
         height REAL,
-        type INTEGER
+        name TEXT
       )
       """);
   }
@@ -436,6 +436,15 @@ class DataBase {
     return result;
   }
 
+  static updateWalls(List<Wall> walls, int projectId) async {
+    List<Wall> previousWalls = [];
+    previousWalls = await DataBase.getWalls(projectId);
+    if (previousWalls.isNotEmpty) {
+      await DataBase.deleteWalls(projectId);
+    }
+    await DataBase.createWallsForProject(walls, projectId);
+  }
+
   /// ####################################################################################################################################
   /// ############## Daten anlegen
   /// ####################################################################################################################################
@@ -468,7 +477,6 @@ class DataBase {
 
     final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
-    createWallsForProject(data, id);
 
     if (data.projectName == "") {
       data.projectName = "Projekt Nr. $id";
@@ -480,21 +488,22 @@ class DataBase {
   }
 
   /// FÜR MVP: Wenn es eine Wall Liste gibt, werden die Elemente dieser in den MVP Wand Tabelle eingetragen
-  static createWallsForProject(Content data, int projectId) async {
+  static Future<bool> createWallsForProject(
+      List<Wall> walls, int projectId) async {
     final db = await DataBase.getDataBase();
-
-    List walls = data.walls;
 
     walls.forEach((element) async {
       final dbData = {
         'projectId': projectId,
         'width': element.width,
         'height': element.height,
-        'type': element.type,
+        'name': element.name,
       };
       final id = await db.insert('walls', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
     });
+
+    return true;
   }
 
   static createUserData(User data) async {

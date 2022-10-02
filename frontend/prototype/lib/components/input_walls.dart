@@ -8,21 +8,21 @@ import 'package:prototype/components/input_field.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/styles/general.dart';
 
-import '../../components/button_row_multiple_icons.dart';
-import '../../styles/container.dart';
+import 'button_row_multiple_icons.dart';
+import '../styles/container.dart';
 
-class MVPWalls extends StatefulWidget {
+class InputWalls extends StatefulWidget {
   Function(List<Wall>) outcomeWalls;
   List<Wall> editWalls;
-  MVPWalls({required this.outcomeWalls, this.editWalls = const []});
+  InputWalls({required this.outcomeWalls, this.editWalls = const []});
 
   @override
-  _MVPWalls createState() {
-    return _MVPWalls();
+  _InputWalls createState() {
+    return _InputWalls();
   }
 }
 
-class _MVPWalls extends State<MVPWalls> {
+class _InputWalls extends State<InputWalls> {
   final TextEditingController nameController = TextEditingController();
   bool addVisabilty = false;
   Map<int, Widget> walls = {};
@@ -131,7 +131,7 @@ class _MVPWalls extends State<MVPWalls> {
                   wall.name = text;
                   safeWall(wall);
                 },
-                labelText: "Name"),
+                labelText: ""),
           ),
           Expanded(
             flex: 3,
@@ -148,7 +148,7 @@ class _MVPWalls extends State<MVPWalls> {
                   }
                   safeWall(wall);
                 },
-                labelText: "Breite"),
+                labelText: ""),
           ),
           Expanded(
             flex: 3,
@@ -165,7 +165,7 @@ class _MVPWalls extends State<MVPWalls> {
                   }
                   safeWall(wall);
                 },
-                labelText: "Höhe"),
+                labelText: ""),
           ),
           Expanded(
             child: GestureDetector(
@@ -199,22 +199,25 @@ class _MVPWalls extends State<MVPWalls> {
       children: <Widget>[
         Visibility(
           visible: addVisabilty,
-          child: CustomContainerBorder(
-            child: Column(
-              children: [
-                Column(
-                  children: walls.values.toList(),
-                ),
-                CustomButtonRow(
-                    children: [Icon(Icons.add)],
-                    onPressed: () {
-                      setState(() {
-                        walls[startId] = newWall(widgetId: startId);
-                        startId += 1;
-                      });
-                    }),
-              ],
-            ),
+          child: Column(
+            children: [
+              Wrap(children: [
+                Text("Bezeichnung"),
+                Text("Breite"),
+                Text("Höhe")
+              ]),
+              Column(
+                children: walls.values.toList(),
+              ),
+              CustomButtonRow(
+                  children: [Icon(Icons.add)],
+                  onPressed: () {
+                    setState(() {
+                      walls[startId] = newWall(widgetId: startId);
+                      startId += 1;
+                    });
+                  }),
+            ],
           ),
         ),
         Visibility(
@@ -229,7 +232,7 @@ class _MVPWalls extends State<MVPWalls> {
                 },
               );
             },
-            child: const Text("Wand hinzufügen"),
+            child: const Text("Fläche manuell eingeben"),
           ),
         ),
       ],
