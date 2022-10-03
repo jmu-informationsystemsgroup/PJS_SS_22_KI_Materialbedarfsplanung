@@ -27,7 +27,11 @@ class _InputWalls extends State<InputWalls> {
   bool addVisabilty = false;
 
   /// Widgetliste sorgt dafür dass die Eingabefelder für neue Wände angezeigt werden
-  Map<int, Widget> walls = {};
+  Map<int, Widget> wallWidgets = {};
+
+  /// hier werden sämtliche Daten zwischengespeichert, die der Nutzer beim Erstellungsprozess
+  /// produziert
+  Map<int, Wall> walls = {};
 
   /// Übergabeliste, enthält die Daten die später gespeichert werden sollen
   Map<int, Wall> safeList = {};
@@ -40,17 +44,27 @@ class _InputWalls extends State<InputWalls> {
     if (widget.input.isNotEmpty) {
       startId = widget.input.last.id;
 
-      setUpWidgetMap();
+      initialSetUpWidgetMap();
     }
 
     getWallsVisability();
   }
 
-  setUpWidgetMap() {
+  initialSetUpWidgetMap() {
     for (Wall element in widget.input) {
       setState(() {
         safeList[element.id] = element;
-        walls[element.id] = newWall(widgetId: element.id, wall: element);
+        walls[element.id] = element;
+        wallWidgets[element.id] = newWall(widgetId: element.id, wall: element);
+      });
+    }
+  }
+
+  updateWidgetMap() {
+    for (Wall element in walls.values) {
+      setState(() {
+        walls[element.id] = element;
+        wallWidgets[element.id] = newWall(widgetId: element.id, wall: element);
       });
     }
   }
@@ -58,7 +72,13 @@ class _InputWalls extends State<InputWalls> {
   /// sorgt dafür, dass wenn alle Wände aus der Liste gelöscht werden, stattdessen wieder der
   /// "Wand hunzufügen"-Button erscheint
   getWallsVisability() {
-    if (walls.isEmpty) {
+    int invisibleWalls = 0;
+    walls.forEach((key, value) {
+      if (value.display == false) {
+        invisibleWalls += 1;
+      }
+    });
+    if (walls.length == invisibleWalls) {
       setState(() {
         addVisabilty = false;
       });
@@ -78,15 +98,11 @@ class _InputWalls extends State<InputWalls> {
   }
 
   safeWall(Wall wall) {
-    if (wall.height != 0.0 && wall.width != 0.0) {
-      setState(() {
-        safeList[wall.id] = wall;
-      });
-    }
-    setState(() {
-      safeList.removeWhere(
-          (key, element) => (element.width == 0.0 || element.height == 0.0));
-    });
+    safeList[wall.id] = wall;
+
+    safeList.removeWhere((key, element) => (element.width == 0.0 ||
+        element.height == 0.0 ||
+        element.display == false));
 
     widget.updateValues(safeList.values.toList());
 
@@ -97,14 +113,6 @@ class _InputWalls extends State<InputWalls> {
       print(
           "------------------------->id: ${element.id} width:  ${wall.width} sf ${element.width} height:  ${wall.height} sf ${element.height}");
     });
-  }
-
-  /// entfernt die Wand wieder aus der Übergabeliste
-  removeWall(int id) {
-    setState(() {
-      safeList.removeWhere((key, element) => element.id == id);
-    });
-    widget.updateValues(safeList.values.toList());
   }
 
   /// sorgt dafür, dass das Feld anstatt mit "0.0" vorausgefüllt wird, einfach nichts im Feld drinsteht
@@ -183,8 +191,8 @@ class _InputWalls extends State<InputWalls> {
                       getWallsVisability();
                     },
                   );
-                  setUpWidgetMap();
-                  removeWall(widgetId);
+                  safeWall(wall);
+                  updateWidgetMap();
                 },
                 child: Center(
                   child: Icon(
@@ -233,15 +241,19 @@ class _InputWalls extends State<InputWalls> {
                 Expanded(child: Container(), flex: 1),
               ]),
               Column(
-                children: walls.values.toList(),
+                children: wallWidgets.values.toList(),
               ),
               CustomButtonRow(
                   children: [Icon(Icons.add)],
                   onPressed: () {
+                    Wall newWall = Wall();
+                    newWall.id = startId;
                     setState(() {
-                      walls[startId] = newWall(widgetId: startId, wall: Wall());
+                      walls[startId] = newWall;
+
                       startId += 1;
                     });
+                    updateWidgetMap();
                   }),
             ],
           ),
@@ -250,13 +262,18 @@ class _InputWalls extends State<InputWalls> {
           visible: switchVisablity(),
           child: ElevatedButton(
             onPressed: () {
+              Wall newWall = Wall();
+              newWall.id = startId;
+
               setState(
                 () {
-                  walls[startId] = newWall(widgetId: startId, wall: Wall());
+                  walls[startId] = newWall;
                   startId += 1;
                   getWallsVisability();
                 },
               );
+
+              updateWidgetMap();
             },
             child: const Text("Fläche manuell eingeben"),
           ),
