@@ -82,8 +82,8 @@ class _ProjectViewState extends State<ProjectView> {
       DeviceOrientation.portraitDown,
     ]);
     content = widget.content;
-    loadGalleryPictures();
     setUpWalls();
+    loadGalleryPictures();
   }
 
   setUpWalls() {
@@ -101,7 +101,7 @@ class _ProjectViewState extends State<ProjectView> {
         projectId: content.id, deletetableImages: true);
     List<CustomCameraImage> saveState =
         await DataBase.getImages(projectId: content.id);
-    CalculatorOutcome val = await ValueCalculator.getOutcomeObject(
+    CalculatorOutcome val = ValueCalculator.getOutcomeObject(
         content: content, images: saveState, walls: walls);
     if (saveState.isNotEmpty) {
       originalLastValue = saveState.last.id;

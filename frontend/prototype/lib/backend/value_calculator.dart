@@ -9,10 +9,10 @@ class ValueCalculator {
   /// die Methode "getPrice" hängt von den totalSquareMeters ab und kann daher nicht eigenständig
   /// aufgerufen werden, daher diese Umgehung mit dem "Ergebnis-Objekt"
   /// außerdem kann das Objekt genutzt werden um Exceptions, sowie Exceptionnachrichten nachzuliefern
-  static Future<CalculatorOutcome> getOutcomeObject(
+  static CalculatorOutcome getOutcomeObject(
       {required Content content,
       required List<CustomCameraImage> images,
-      required List<Wall> walls}) async {
+      required List<Wall> walls}) {
     resetOfficialOutcome();
     List<double> outcomes = getAIOutcome(content.id, images);
     double aiOutcome = outcomes[0];
@@ -21,8 +21,10 @@ class ValueCalculator {
     double manualMaterial = getManualMaterial(totalSquareMeters);
     double manualEdgeLength = getManualEdges(totalSquareMeters);
 
-    officalOutcome.material = aiOutcome + manualMaterial;
-    officalOutcome.edges = aiEdgeOutcome + manualEdgeLength;
+    if (aiOutcome != 0.0 && aiEdgeOutcome != 0.0) {
+      officalOutcome.material = aiOutcome + manualMaterial;
+      officalOutcome.edges = aiEdgeOutcome + manualEdgeLength;
+    }
 
     //  getManualPrice(content.material, totalSquareMeters);
     getAiPrice(content.material);
