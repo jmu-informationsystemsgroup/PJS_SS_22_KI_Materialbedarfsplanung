@@ -631,6 +631,7 @@ class _ProjectViewState extends State<ProjectView> {
                           setState(() {
                             walls = newWalls;
                           });
+                          setUpAssets();
                         },
                       ),
                     ],

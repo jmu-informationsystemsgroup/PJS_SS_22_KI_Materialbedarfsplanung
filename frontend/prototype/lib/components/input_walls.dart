@@ -56,6 +56,8 @@ class _InputWalls extends State<InputWalls> {
     }
   }
 
+  /// sorgt dafür, dass wenn alle Wände aus der Liste gelöscht werden, stattdessen wieder der
+  /// "Wand hunzufügen"-Button erscheint
   getWallsVisability() {
     if (walls.isEmpty) {
       setState(() {

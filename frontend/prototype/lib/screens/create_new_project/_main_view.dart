@@ -323,7 +323,7 @@ class _NewProjectState extends State<NewProject> {
                   ),
                   Center(
                     child: Text(
-                      "Erinnerung: Ein Foto pro Wand",
+                      "Erinnerung: Nur ein Foto pro Wand",
                       style: TextStyle(
                         color: GeneralStyle.getLightGray(),
                       ),

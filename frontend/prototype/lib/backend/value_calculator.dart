@@ -78,6 +78,7 @@ class ValueCalculator {
         aiEdgeOutcome = aiEdgeOutcome + element.aiValueEdges;
       }
     }
+    imagesNeedToBeSynced = false;
 
     return [aiOutcome / 1000, aiEdgeOutcome / 1000];
   }
