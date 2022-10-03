@@ -25,7 +25,11 @@ class InputWalls extends StatefulWidget {
 class _InputWalls extends State<InputWalls> {
   final TextEditingController nameController = TextEditingController();
   bool addVisabilty = false;
+
+  /// Widgetliste sorgt dafür dass die Eingabefelder für neue Wände angezeigt werden
   Map<int, Widget> walls = {};
+
+  /// Übergabeliste, enthält die Daten die später gespeichert werden sollen
   Map<int, Wall> safeList = {};
   int startId = 0;
 
@@ -46,12 +50,7 @@ class _InputWalls extends State<InputWalls> {
     for (Wall element in widget.input) {
       setState(() {
         safeList[element.id] = element;
-        walls[element.id] = newWall(
-          widgetId: element.id,
-          width: element.width,
-          height: element.height,
-          name: element.name,
-        );
+        walls[element.id] = newWall(widgetId: element.id, wall: element);
       });
     }
   }
@@ -100,6 +99,7 @@ class _InputWalls extends State<InputWalls> {
     });
   }
 
+  /// entfernt die Wand wieder aus der Übergabeliste
   removeWall(int id) {
     setState(() {
       safeList.removeWhere((key, element) => element.id == id);
@@ -107,6 +107,8 @@ class _InputWalls extends State<InputWalls> {
     widget.updateValues(safeList.values.toList());
   }
 
+  /// sorgt dafür, dass das Feld anstatt mit "0.0" vorausgefüllt wird, einfach nichts im Feld drinsteht
+  /// die 0.0 entsteht dadurch, dass 0.0 das Defaultmaß einer neuen Wand ist
   String setUpValue(double value) {
     if (value == 0.0) {
       return "";
@@ -117,85 +119,89 @@ class _InputWalls extends State<InputWalls> {
 
   Widget newWall({
     required int widgetId,
-    double width = 0.0,
-    double height = 0.0,
-    String name = "",
+    required Wall wall,
   }) {
-    Wall wall = Wall();
     wall.id = widgetId;
 
-    Container container = Container(
-      margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-      child: Flex(
-        direction: Axis.horizontal,
-        children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: InputField(
-                value: name,
-                disableMargin: true,
-                saveTo: (text) {
-                  wall.name = text;
-                  safeWall(wall);
-                },
-                labelText: ""),
-          ),
-          Expanded(
-            flex: 3,
-            child: InputField(
-                value: setUpValue(width),
-                inputType: TextInputType.number,
-                disableMargin: true,
-                saveTo: (text) {
-                  if (text == "") {
-                    wall.width = 0.0;
-                  } else {
-                    wall.width = double.parse(text);
-                  }
-                  safeWall(wall);
-                },
-                labelText: ""),
-          ),
-          Expanded(
-            flex: 3,
-            child: InputField(
-                value: setUpValue(height),
-                inputType: TextInputType.number,
-                disableMargin: true,
-                saveTo: (text) {
-                  if (text == "") {
-                    wall.height = 0.0;
-                  } else {
-                    wall.height = double.parse(text);
-                  }
-                  safeWall(wall);
-                },
-                labelText: ""),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(
-                  () {
-                    walls.removeWhere((key, value) => key == widgetId);
-                    getWallsVisability();
+    Container container = Container();
+
+    if (wall.display) {
+      container = Container(
+        margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+        child: Flex(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            Expanded(
+              flex: 3,
+              child: InputField(
+                  value: wall.name,
+                  disableMargin: true,
+                  saveTo: (text) {
+                    wall.name = text;
+                    safeWall(wall);
                   },
-                );
-                removeWall(widgetId);
-              },
-              child: Center(
-                child: Icon(
-                  Icons.delete,
-                  color: GeneralStyle.getDarkGray(),
+                  labelText: ""),
+            ),
+            Expanded(
+              flex: 3,
+              child: InputField(
+                  value: setUpValue(wall.width),
+                  inputType: TextInputType.number,
+                  disableMargin: true,
+                  saveTo: (text) {
+                    if (text == "") {
+                      wall.width = 0.0;
+                    } else {
+                      wall.width = double.parse(text);
+                    }
+                    safeWall(wall);
+                  },
+                  labelText: ""),
+            ),
+            Expanded(
+              flex: 3,
+              child: InputField(
+                  value: setUpValue(wall.height),
+                  inputType: TextInputType.number,
+                  disableMargin: true,
+                  saveTo: (text) {
+                    if (text == "") {
+                      wall.height = 0.0;
+                    } else {
+                      wall.height = double.parse(text);
+                    }
+                    safeWall(wall);
+                  },
+                  labelText: ""),
+            ),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  setState(
+                    () {
+                      wall.display = false;
+                      getWallsVisability();
+                    },
+                  );
+                  setUpWidgetMap();
+                  removeWall(widgetId);
+                },
+                child: Center(
+                  child: Icon(
+                    Icons.delete,
+                    color: GeneralStyle.getDarkGray(),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      );
+    }
+    return Visibility(
+      child: container,
+      visible: wall.display,
     );
-
-    return container;
   }
 
   @override
@@ -233,7 +239,7 @@ class _InputWalls extends State<InputWalls> {
                   children: [Icon(Icons.add)],
                   onPressed: () {
                     setState(() {
-                      walls[startId] = newWall(widgetId: startId);
+                      walls[startId] = newWall(widgetId: startId, wall: Wall());
                       startId += 1;
                     });
                   }),
@@ -246,7 +252,7 @@ class _InputWalls extends State<InputWalls> {
             onPressed: () {
               setState(
                 () {
-                  walls[startId] = newWall(widgetId: startId);
+                  walls[startId] = newWall(widgetId: startId, wall: Wall());
                   startId += 1;
                   getWallsVisability();
                 },

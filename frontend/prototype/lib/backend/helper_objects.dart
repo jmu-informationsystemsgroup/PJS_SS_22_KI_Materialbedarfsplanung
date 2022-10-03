@@ -166,6 +166,7 @@ class Wall {
   double height = 0.0;
   int id = 0;
   String name = "";
+  bool display = true;
 }
 
 class CustomCameraImage {
