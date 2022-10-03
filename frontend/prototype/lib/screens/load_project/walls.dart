@@ -10,7 +10,13 @@ import '../../styles/general.dart';
 
 class Walls extends StatefulWidget {
   Content content;
-  Walls({required this.content});
+  List<Wall> walls;
+  Function(List<Wall>) updateWalls;
+  Walls({
+    required this.content,
+    required this.walls,
+    required this.updateWalls,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -21,55 +27,75 @@ class Walls extends StatefulWidget {
 class _WallState extends State<Walls> {
   List<Widget> wallStrings = [];
   bool textVisiblity = false;
+
+  /// Zwei Wall-Listen, falls der Nutzer den Bearbeitungsvorgang abbricht,
+  /// die wall-Liste beinhaltet sowohl die ursprünglichen, als auch die hinzugefügten Wände
+  /// die wall-Liste wird verworfen, falls der Nutzer den Bearbeitungsvorgang abbricht
   List<Wall> walls = [];
+
+  /// originalWalls die Wände die es bereits vor Klassenaufruf gab
+  List<Wall> originalWalls = [];
 
   @override
   void initState() {
     super.initState();
-    setUpWalls();
+    if (walls.isEmpty) {
+      setUpWalls();
+    }
+  }
+
+  @override
+  void didUpdateWidget(Walls oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.walls.toString() != widget.walls.toString() &&
+        walls.isEmpty) {
+      setUpWalls();
+    }
   }
 
   setUpWalls() {
-    List<Widget> initList = [];
-    DataBase.getWalls(widget.content.id).then((List<Wall> inputWalls) {
-      if (inputWalls != null) {
-        setState(() {
-          walls = inputWalls;
-        });
-        if (inputWalls.isNotEmpty) {
-          textVisiblity = true;
-        }
-        inputWalls.forEach(
-          (element) {
-            String name = "";
-            if (element.name == "") {
-              name = "Wand ${element.id}";
-            } else {
-              name = element.name;
-            }
-            Widget widget = Text(
-                "$name: ${element.width}m Breite, ${element.height}m Höhe");
+    setState(() {
+      originalWalls = widget.walls;
+      walls = originalWalls;
+    });
 
-            initList.add(widget);
-          },
-        );
-        setState(() {
-          wallStrings.addAll(initList);
-        });
-      }
+    if (widget.walls.isNotEmpty) {
+      textVisiblity = true;
+    }
+    setState(() {
+      wallStrings = setUpStrings(widget.walls);
     });
   }
 
-  changeBool(bool value) {
-    if (value) {
-      setState(() {
-        textVisiblity = !value;
-      });
-    } else {
-      setState(() {
-        textVisiblity = value;
-      });
+  List<Widget> setUpStrings(List<Wall> objectWalls) {
+    List<Widget> strings = [];
+    for (Wall element in objectWalls) {
+      String name = "";
+      if (element.name == "") {
+        name = "Wand ${element.id}";
+      } else {
+        name = element.name;
+      }
+      Widget widget =
+          Text("$name: ${element.width}m Breite, ${element.height}m Höhe");
+
+      strings.add(widget);
     }
+    return strings;
+  }
+
+  changeBool(bool value) {
+    /*
+    if (textVisiblity == false) {
+      walls = [];
+    }
+    */
+    if (textVisiblity == false) {
+      walls = originalWalls;
+    }
+    setState(() {
+      textVisiblity = !value;
+    });
   }
 
   Widget displayText() {
@@ -93,20 +119,24 @@ class _WallState extends State<Walls> {
       return Column(
         children: [
           InputWalls(
-            outcomeWalls: (outcomeWalls) {
+            updateValues: (outcomeWalls) {
               setState(() {
                 walls = outcomeWalls;
               });
               // TODO: Database
             },
-            editWalls: walls,
+            input: walls,
           ),
           ElevatedButton(
               onPressed: () async {
-                await DataBase.updateWalls(walls, widget.content.id);
+                bool isFinished =
+                    await DataBase.updateWalls(walls, widget.content.id);
                 setState(() {
+                  wallStrings = setUpStrings(walls);
                   textVisiblity = true;
+                  originalWalls = walls;
                 });
+                widget.updateWalls(walls);
               },
               child: Icon(Icons.save))
         ],
@@ -118,10 +148,7 @@ class _WallState extends State<Walls> {
 
   @override
   Widget build(BuildContext context) {
-    print("textvisibility $textVisiblity !textvisibility ${!textVisiblity}");
-    print("object ${walls.length}");
-
-    if (walls.isEmpty) {
+    if (originalWalls.isEmpty) {
       return addContent();
     } else {
       return CustomContainerBorder(

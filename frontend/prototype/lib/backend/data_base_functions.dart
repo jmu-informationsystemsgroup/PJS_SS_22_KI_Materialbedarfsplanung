@@ -436,13 +436,14 @@ class DataBase {
     return result;
   }
 
-  static updateWalls(List<Wall> walls, int projectId) async {
+  static Future<bool> updateWalls(List<Wall> walls, int projectId) async {
     List<Wall> previousWalls = [];
     previousWalls = await DataBase.getWalls(projectId);
     if (previousWalls.isNotEmpty) {
       await DataBase.deleteWalls(projectId);
     }
     await DataBase.createWallsForProject(walls, projectId);
+    return true;
   }
 
   /// ####################################################################################################################################

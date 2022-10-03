@@ -72,6 +72,8 @@ class _ProjectViewState extends State<ProjectView> {
   /// neuhinzugefügt Bild gespeichert werden kann und zählt dann hoch
   int originalLastValue = 0;
 
+  List<Wall> walls = [];
+
   @override
   void initState() {
     super.initState();
@@ -81,6 +83,15 @@ class _ProjectViewState extends State<ProjectView> {
     ]);
     content = widget.content;
     loadGalleryPictures();
+    setUpWalls();
+  }
+
+  setUpWalls() {
+    DataBase.getWalls(widget.content.id).then((List<Wall> inputWalls) {
+      setState(() {
+        walls = inputWalls;
+      });
+    });
   }
 
   loadGalleryPictures() async {
@@ -90,8 +101,8 @@ class _ProjectViewState extends State<ProjectView> {
         projectId: content.id, deletetableImages: true);
     List<CustomCameraImage> saveState =
         await DataBase.getImages(projectId: content.id);
-    CalculatorOutcome val =
-        await ValueCalculator.getOutcomeObject(content, saveState);
+    CalculatorOutcome val = await ValueCalculator.getOutcomeObject(
+        content: content, images: saveState, walls: walls);
     if (saveState.isNotEmpty) {
       originalLastValue = saveState.last.id;
     }
@@ -506,6 +517,7 @@ class _ProjectViewState extends State<ProjectView> {
                   child: Column(
                     children: [
                       Dashboard(
+                        walls: walls,
                         content: content,
                         imagesToDelete: galleryImagesToDelete,
                         addPhoto: () {
@@ -614,7 +626,15 @@ class _ProjectViewState extends State<ProjectView> {
                         child: Text("Speichere Bilder $state %"),
                       ),
                       AllData(content: content),
-                      Walls(content: content),
+                      Walls(
+                        content: content,
+                        walls: walls,
+                        updateWalls: (newWalls) {
+                          setState(() {
+                            walls = newWalls;
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ),

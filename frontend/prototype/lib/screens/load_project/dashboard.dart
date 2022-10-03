@@ -14,6 +14,7 @@ class Dashboard extends StatefulWidget {
   Content content;
   CalculatorOutcome outcome;
   int state;
+  List<Wall> walls;
   Function() updateImages;
   Function() addPhoto;
   Function(CustomCameraImage) deleteFunction;
@@ -26,6 +27,7 @@ class Dashboard extends StatefulWidget {
       required this.state,
       required this.deleteFunction,
       required this.addPhoto,
+      required this.walls,
       required this.recalculate,
       required this.outcome});
   @override
@@ -130,7 +132,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget displayData() {
-    if (widget.galleryImages.isEmpty) {
+    if (widget.galleryImages.isEmpty && widget.walls.isEmpty) {
       return CustomContainerBorder(
         child: Column(
           children: [
@@ -178,24 +180,6 @@ class _DashboardState extends State<Dashboard> {
     } else {
       return displayRowTwo();
     }
-  }
-
-  Widget rowOne() {
-    return Flex(
-      direction: Axis.horizontal,
-      children: [
-        Expanded(
-          child: square(
-              icon: Icons.window,
-              underLine: "${widget.galleryImages.length} Wände und Decken"),
-        ),
-        Expanded(
-          child: square(
-              icon: Icons.verified_outlined,
-              underLine: "Qualität ${widget.content.material}"),
-        ),
-      ],
-    );
   }
 
   Widget displayRowTwo() {
@@ -254,6 +238,25 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  Widget rowOne() {
+    return Flex(
+      direction: Axis.horizontal,
+      children: [
+        Expanded(
+          child: square(
+              icon: Icons.window,
+              underLine:
+                  "${widget.galleryImages.length + widget.walls.length} Wände und Decken"),
+        ),
+        Expanded(
+          child: square(
+              icon: Icons.verified_outlined,
+              underLine: "Qualität ${widget.content.material}"),
+        ),
+      ],
+    );
+  }
+
   Widget rowTwo() {
     return Flex(
       direction: Axis.horizontal,
@@ -280,6 +283,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    print("---------------------------------->dashboard wurde aufgerufen");
     return Column(
       children: [
         rowOne(),

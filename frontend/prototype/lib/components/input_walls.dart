@@ -12,9 +12,9 @@ import 'button_row_multiple_icons.dart';
 import '../styles/container.dart';
 
 class InputWalls extends StatefulWidget {
-  Function(List<Wall>) outcomeWalls;
-  List<Wall> editWalls;
-  InputWalls({required this.outcomeWalls, this.editWalls = const []});
+  Function(List<Wall>) updateValues;
+  List<Wall> input;
+  InputWalls({required this.updateValues, this.input = const []});
 
   @override
   _InputWalls createState() {
@@ -33,8 +33,8 @@ class _InputWalls extends State<InputWalls> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.editWalls.isNotEmpty) {
-      startId = widget.editWalls.last.id;
+    if (widget.input.isNotEmpty) {
+      startId = widget.input.last.id;
 
       setUpWidgetMap();
     }
@@ -43,7 +43,7 @@ class _InputWalls extends State<InputWalls> {
   }
 
   setUpWidgetMap() {
-    widget.editWalls.forEach((element) {
+    for (Wall element in widget.input) {
       setState(() {
         safeList[element.id] = element;
         walls[element.id] = newWall(
@@ -53,11 +53,11 @@ class _InputWalls extends State<InputWalls> {
           name: element.name,
         );
       });
-    });
+    }
   }
 
   getWallsVisability() {
-    if (walls.length == 0) {
+    if (walls.isEmpty) {
       setState(() {
         addVisabilty = false;
       });
@@ -82,10 +82,12 @@ class _InputWalls extends State<InputWalls> {
         safeList[wall.id] = wall;
       });
     }
-    safeList.removeWhere(
-        (key, element) => (element.width == 0.0 || element.height == 0.0));
+    setState(() {
+      safeList.removeWhere(
+          (key, element) => (element.width == 0.0 || element.height == 0.0));
+    });
 
-    widget.outcomeWalls(safeList.values.toList());
+    widget.updateValues(safeList.values.toList());
 
     //test
     print(
@@ -97,7 +99,10 @@ class _InputWalls extends State<InputWalls> {
   }
 
   removeWall(int id) {
-    safeList.removeWhere((key, element) => element.id == id);
+    setState(() {
+      safeList.removeWhere((key, element) => element.id == id);
+    });
+    widget.updateValues(safeList.values.toList());
   }
 
   String setUpValue(double value) {
@@ -123,7 +128,7 @@ class _InputWalls extends State<InputWalls> {
         direction: Axis.horizontal,
         children: <Widget>[
           Expanded(
-            flex: 2,
+            flex: 3,
             child: InputField(
                 value: name,
                 disableMargin: true,
@@ -139,7 +144,6 @@ class _InputWalls extends State<InputWalls> {
                 value: setUpValue(width),
                 inputType: TextInputType.number,
                 disableMargin: true,
-                icon: Icons.sync_alt_outlined,
                 saveTo: (text) {
                   if (text == "") {
                     wall.width = 0.0;
@@ -153,7 +157,6 @@ class _InputWalls extends State<InputWalls> {
           Expanded(
             flex: 3,
             child: InputField(
-                icon: Icons.swap_vert_outlined,
                 value: setUpValue(height),
                 inputType: TextInputType.number,
                 disableMargin: true,
@@ -201,10 +204,25 @@ class _InputWalls extends State<InputWalls> {
           visible: addVisabilty,
           child: Column(
             children: [
-              Wrap(children: [
-                Text("Bezeichnung"),
-                Text("Breite"),
-                Text("Höhe")
+              Flex(direction: Axis.horizontal, children: [
+                Expanded(child: Text("Typ"), flex: 3),
+                Expanded(
+                    child: Wrap(
+                      children: [
+                        Icon(Icons.sync_alt_outlined),
+                        Text("Breite"),
+                      ],
+                    ),
+                    flex: 3),
+                Expanded(
+                    child: Wrap(
+                      children: [
+                        Icon(Icons.swap_vert_outlined),
+                        Text("Höhe"),
+                      ],
+                    ),
+                    flex: 3),
+                Expanded(child: Container(), flex: 1),
               ]),
               Column(
                 children: walls.values.toList(),

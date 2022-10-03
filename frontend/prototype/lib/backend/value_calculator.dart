@@ -10,15 +10,23 @@ class ValueCalculator {
   /// aufgerufen werden, daher diese Umgehung mit dem "Ergebnis-Objekt"
   /// außerdem kann das Objekt genutzt werden um Exceptions, sowie Exceptionnachrichten nachzuliefern
   static Future<CalculatorOutcome> getOutcomeObject(
-      Content content, List<CustomCameraImage> images) async {
+      {required Content content,
+      required List<CustomCameraImage> images,
+      required List<Wall> walls}) async {
     resetOfficialOutcome();
-    List<double> outcomes = await getAIOutcome(content.id, images);
+    List<double> outcomes = getAIOutcome(content.id, images);
     double aiOutcome = outcomes[0];
     double aiEdgeOutcome = outcomes[1];
-    double totalSquareMeters = await getSquareMeter(content.id);
-    getManualPrice(content.material, totalSquareMeters);
-    getAiPrice(content.material, aiOutcome);
-    getEdgePrice(aiEdgeOutcome);
+    double totalSquareMeters = getSquareMeters(walls);
+    double manualMaterial = getManualMaterial(totalSquareMeters);
+    double manualEdgeLength = getManualEdges(totalSquareMeters);
+
+    officalOutcome.material = aiOutcome + manualMaterial;
+    officalOutcome.edges = aiEdgeOutcome + manualEdgeLength;
+
+    //  getManualPrice(content.material, totalSquareMeters);
+    getAiPrice(content.material);
+    getEdgePrice();
     if (officalOutcome.exception) {
       officalOutcome.exceptionText = createExceptionText();
     }
@@ -49,8 +57,7 @@ class ValueCalculator {
   /// Wenn zu einem Bild ein ungültiger KI Wert ermittelt wurde (< 0) wird das Bild aus der Berechnung
   /// herausgenommen und der Nutzer wird aufgfordert, dieses nochmal nachzufotografieren. Der Rechenprozess
   /// kann aber trotzdem weiter fortgesetzt werden
-  static Future<List<double>> getAIOutcome(
-      int id, List<CustomCameraImage> images) async {
+  static List<double> getAIOutcome(int id, List<CustomCameraImage> images) {
     double aiOutcome = 0.0;
     double aiEdgeOutcome = 0.0;
 
@@ -67,22 +74,27 @@ class ValueCalculator {
       }
     }
 
-    officalOutcome.material = aiOutcome / 1000;
-    officalOutcome.edges = aiEdgeOutcome / 1000;
     return [aiOutcome / 1000, aiEdgeOutcome / 1000];
   }
 
-  static Future<double> getSquareMeter(int id) async {
+  static double getSquareMeters(List<Wall> walls) {
     double totalSquareMeters = 0.0;
-    List<Wall> walls = await DataBase.getWalls(id);
 
-    walls.forEach((element) {
+    for (Wall element in walls) {
       double actualSquareMeters = element.width * element.height;
 
       totalSquareMeters = totalSquareMeters + actualSquareMeters;
-    });
+    }
 
     return totalSquareMeters;
+  }
+
+  static double getManualMaterial(double totalSquareMeters) {
+    return totalSquareMeters * 0.5223880597;
+  }
+
+  static double getManualEdges(double totalSquareMeters) {
+    return totalSquareMeters * 2.26;
   }
 
   static getManualPrice(String material, double totalSquareMeters) {
@@ -93,16 +105,16 @@ class ValueCalculator {
     officalOutcome.priceMaterial += totalPrice;
   }
 
-  static getAiPrice(String material, double aiOutcome) {
+  static getAiPrice(String material) {
     double totalPrice = 0.0;
     Map<String, double> quality = {"Q2": 1, "Q3": 2.85, "Q4": 5};
-    totalPrice = (aiOutcome * 1.34 * quality[material]!);
+    totalPrice = (officalOutcome.material * 1.34 * quality[material]!);
 
     officalOutcome.priceMaterial += totalPrice;
   }
 
-  static getEdgePrice(double aiOutcome) {
-    officalOutcome.priceEdges += (aiOutcome * 0.26);
+  static getEdgePrice() {
+    officalOutcome.priceEdges += (officalOutcome.edges * 0.26);
   }
 }
 

@@ -396,8 +396,8 @@ class _NewProjectState extends State<NewProject> {
                     //  creationMode: true,
                   ),
                   InputWalls(
-                    editWalls: walls,
-                    outcomeWalls: (outputWalls) {
+                    input: walls,
+                    updateValues: (outputWalls) {
                       setState(() {
                         NewProject.cache.walls = outputWalls;
                         walls = outputWalls;
