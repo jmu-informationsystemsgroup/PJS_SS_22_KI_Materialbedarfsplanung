@@ -82,32 +82,30 @@ class _ProjectViewState extends State<ProjectView> {
       DeviceOrientation.portraitDown,
     ]);
     content = widget.content;
-    setUpWalls();
-    loadGalleryPictures();
+    setUpAssets();
   }
 
-  setUpWalls() {
-    DataBase.getWalls(widget.content.id).then((List<Wall> inputWalls) {
-      setState(() {
-        walls = inputWalls;
-      });
-    });
-  }
-
-  loadGalleryPictures() async {
+  /// Lädt Fotos und manuell eingegebene Flächen in das Projekt und löst die Kalkulationsmethode aus
+  setUpAssets() async {
     galleryImagesNotYetCalculated =
         await DataBase.getImages(projectId: content.id, onlyNewImages: true);
     galleryImagesToDelete = await DataBase.getImages(
         projectId: content.id, deletetableImages: true);
     List<CustomCameraImage> saveState =
         await DataBase.getImages(projectId: content.id);
-    CalculatorOutcome val = ValueCalculator.getOutcomeObject(
-        content: content, images: saveState, walls: walls);
+    List<Wall> saveWalls = await DataBase.getWalls(content.id);
+
+    CalculatorOutcome val = ValueCalculator.calculate(
+        content: content, images: saveState, walls: saveWalls);
     if (saveState.isNotEmpty) {
       originalLastValue = saveState.last.id;
     }
 
+    /// der Umweg mit der Deklaration einer neuen Liste (wie saveWalls) muss gemacht werden, da
+    /// flutter sonst nicht in der Lage ist zu erkennen, dass sich die Liste geändert hat
+    /// setState((){List.add(object)}) würde also keine Veränderung hervorrufen
     setState(() {
+      walls = saveWalls;
       galleryImages = saveState;
       calculatedOutcome = val;
     });
@@ -332,7 +330,7 @@ class _ProjectViewState extends State<ProjectView> {
     var sh = await DataBase.deleteSingleImageFromTable(content.id, element.id);
     var sh2 =
         await DataBase.deleteSingleImageFromDirectory(content.id, element.id);
-    loadGalleryPictures();
+    setUpAssets();
   }
 
   addPhoto() async {
@@ -363,7 +361,7 @@ class _ProjectViewState extends State<ProjectView> {
               );
               state = 0;
               safingImages = false;
-              loadGalleryPictures();
+              setUpAssets();
             },
           ),
         ),
@@ -507,7 +505,7 @@ class _ProjectViewState extends State<ProjectView> {
                           content = data;
                           editorVisablity = false;
                         });
-                        loadGalleryPictures();
+                        setUpAssets();
                       }),
                     ),
                   ),
@@ -549,7 +547,7 @@ class _ProjectViewState extends State<ProjectView> {
                               recalculate = false;
                             });
                           }
-                          loadGalleryPictures();
+                          setUpAssets();
                         },
                       ),
                       Webshop(

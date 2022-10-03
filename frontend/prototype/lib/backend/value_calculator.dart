@@ -4,16 +4,18 @@ import 'helper_objects.dart';
 class ValueCalculator {
   static CalculatorOutcome officalOutcome = CalculatorOutcome();
   static List<int> wrongImages = [];
+  static bool imagesNeedToBeSynced = false;
 
   /// erzeugt ein Antwort-Objekt das alle Ergebnisse beinhaltet
   /// die Methode "getPrice" hängt von den totalSquareMeters ab und kann daher nicht eigenständig
   /// aufgerufen werden, daher diese Umgehung mit dem "Ergebnis-Objekt"
   /// außerdem kann das Objekt genutzt werden um Exceptions, sowie Exceptionnachrichten nachzuliefern
-  static CalculatorOutcome getOutcomeObject(
+  static CalculatorOutcome calculate(
       {required Content content,
       required List<CustomCameraImage> images,
       required List<Wall> walls}) {
     resetOfficialOutcome();
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$walls");
     List<double> outcomes = getAIOutcome(content.id, images);
     double aiOutcome = outcomes[0];
     double aiEdgeOutcome = outcomes[1];
@@ -21,7 +23,7 @@ class ValueCalculator {
     double manualMaterial = getManualMaterial(totalSquareMeters);
     double manualEdgeLength = getManualEdges(totalSquareMeters);
 
-    if (aiOutcome != 0.0 && aiEdgeOutcome != 0.0) {
+    if (!imagesNeedToBeSynced) {
       officalOutcome.material = aiOutcome + manualMaterial;
       officalOutcome.edges = aiEdgeOutcome + manualEdgeLength;
     }
@@ -65,6 +67,7 @@ class ValueCalculator {
 
     for (CustomCameraImage element in images) {
       if (element.aiValue == 0.0 || element.aiValueEdges == 0.0) {
+        imagesNeedToBeSynced = true;
         return [0.0, 0.0];
       } else if (element.aiValue < 0.0 || element.aiValueEdges < 0.0) {
         wrongImages.add(element.id);

@@ -62,11 +62,13 @@ class DataBase {
   /// FÜR MVP: erstellt ein Tablle aus manuell eingegebenen Wänden
   static Future<void> createWallTable(sql.Database database) async {
     await database.execute("""CREATE TABLE walls(
-        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         projectId INTEGER,
+        id INTEGER,
         width REAL,
         height REAL,
-        name TEXT
+        name TEXT,
+        PRIMARY KEY (id, projectId),
+        FOREIGN KEY (projectId) REFERENCES projects (id)
       )
       """);
   }
@@ -493,16 +495,20 @@ class DataBase {
       List<Wall> walls, int projectId) async {
     final db = await DataBase.getDataBase();
 
-    walls.forEach((element) async {
+    int id = 1;
+    for (Wall element in walls) {
       final dbData = {
         'projectId': projectId,
+        'id': id,
         'width': element.width,
         'height': element.height,
         'name': element.name,
       };
-      final id = await db.insert('walls', dbData,
+      final id2 = await db.insert('walls', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
-    });
+      id = id + 1;
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$id ${dbData}");
+    }
 
     return true;
   }
