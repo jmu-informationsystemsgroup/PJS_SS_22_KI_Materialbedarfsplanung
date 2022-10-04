@@ -156,6 +156,8 @@ class _InputWalls extends State<InputWalls> {
             Expanded(
               flex: 3,
               child: InputField(
+                  mandatory: true,
+                  formComplete: (bool) {},
                   value: setUpValue(wall.width),
                   inputType: TextInputType.number,
                   disableMargin: true,
@@ -172,6 +174,8 @@ class _InputWalls extends State<InputWalls> {
             Expanded(
               flex: 3,
               child: InputField(
+                  mandatory: true,
+                  formComplete: (bool) {},
                   value: setUpValue(wall.height),
                   inputType: TextInputType.number,
                   disableMargin: true,

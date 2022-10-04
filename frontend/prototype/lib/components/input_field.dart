@@ -102,7 +102,7 @@ class _InputFieldState extends State<InputField> {
       children: [
         Visibility(
           child: Text(
-            widget.labelText + " ist verpflichtend!",
+            "Pflicht!",
             style: TextStyle(color: Colors.red),
           ),
           visible: visibleWarning,
