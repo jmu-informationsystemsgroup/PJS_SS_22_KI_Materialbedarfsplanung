@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:prototype/components/button_row_multiple_icons.dart';
 import 'package:prototype/components/custom_container_body.dart';
+import 'package:prototype/components/custom_container_border.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
 import 'package:prototype/components/input_field_date.dart';
@@ -24,7 +25,7 @@ import '../load_project/_main_view.dart';
 import '../../components/input_field.dart';
 import '../../components/input_field_address.dart';
 import '../../components/checklist_quality.dart';
-import 'mvp_walls.dart';
+import '../../components/input_walls.dart';
 
 class NewProject extends StatefulWidget {
   String title = "Neues Projekt";
@@ -54,6 +55,7 @@ class _NewProjectState extends State<NewProject> {
   var showState = false;
   int projectId = 0;
   List<CustomCameraImage> galleryPictures = [];
+  List<Wall> walls = [];
   int state = 0;
   Content content = NewProject.cache;
 
@@ -65,6 +67,7 @@ class _NewProjectState extends State<NewProject> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    walls = NewProject.cache.walls;
     galleryPictures = NewProject.cache.pictures;
   }
 
@@ -320,7 +323,7 @@ class _NewProjectState extends State<NewProject> {
                   ),
                   Center(
                     child: Text(
-                      "Erinnerung: Ein Foto pro Wand",
+                      "Erinnerung: Nur ein Foto pro Wand",
                       style: TextStyle(
                         color: GeneralStyle.getLightGray(),
                       ),
@@ -392,6 +395,16 @@ class _NewProjectState extends State<NewProject> {
                     },
                     //  creationMode: true,
                   ),
+                  InputWalls(
+                    input: walls,
+                    updateValues: (outputWalls) {
+                      setState(() {
+                        NewProject.cache.walls = outputWalls;
+                        walls = outputWalls;
+                      });
+                    },
+                  ),
+
                   InputField(
                     saveTo: (text) => {
                       setState(() {
@@ -439,7 +452,7 @@ class _NewProjectState extends State<NewProject> {
                     labelText: "Kommentar",
                     maxLines: 6,
                   ),
-                  // MVPWalls(),
+
                   QualityChecklist(
                     changeQuality: (qualitString) => {
                       NewProject.cache.material = qualitString,
@@ -487,7 +500,8 @@ class _NewProjectState extends State<NewProject> {
                             if (Content.contentToMap(content).toString() ==
                                     Content.contentToMap(emptyContent)
                                         .toString() &&
-                                galleryPictures.toString() == [].toString()) {
+                                galleryPictures.toString() == [].toString() &&
+                                walls.toString() == [].toString()) {
                               _askForSaveEmptyProject();
                             } else {
                               var save = await savingProcess();
@@ -519,6 +533,9 @@ class _NewProjectState extends State<NewProject> {
         .removeWhere((element) => element.display == false);
 
     projectId = await DataBase.createNewProject(NewProject.cache);
+
+    bool wallsComplete =
+        await DataBase.createWallsForProject(NewProject.cache.walls, projectId);
 
     bool imagesComplete = await DataBase.saveImages(
         pictures: NewProject.cache.pictures,

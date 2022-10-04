@@ -106,7 +106,7 @@ class _ProfileState extends State<Profile> {
             child: Column(children: [
               ButtonEdit(
                 textVisiblity: textVisiblity,
-                changeState: () {
+                onClick: () {
                   setState(() {
                     getUser();
                     textVisiblity = changeBool(textVisiblity);

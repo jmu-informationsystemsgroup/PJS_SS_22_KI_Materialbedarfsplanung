@@ -117,7 +117,7 @@ class _WebshopState extends State<Webshop> {
                     children: [
                       ButtonEdit(
                         textVisiblity: textVisiblity,
-                        changeState: () {
+                        onClick: () {
                           if (userComplete) {
                             setState(() {
                               textVisiblity = changeBool(textVisiblity);

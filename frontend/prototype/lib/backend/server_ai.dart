@@ -60,8 +60,10 @@ class ServerAI {
         // double aiOutcomeDouble = double.parse(aiOutcome);
 
         double aiValue = double.parse(result[0]);
-        await DataBase.updateImagesAiValue(aiValue, id, projectId);
+        double aiValueEdges = double.parse(result[1]);
         element.aiValue = aiValue;
+        element.aiValueEdges = aiValueEdges;
+        await DataBase.updateImagesAiValue(element);
         currentState = currentState + step;
         stateUpdate(currentState.toInt());
       } catch (e) {
