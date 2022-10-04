@@ -13,8 +13,12 @@ import '../styles/container.dart';
 
 class InputWalls extends StatefulWidget {
   Function(List<Wall>) updateValues;
+  Function(Color) setUpEnvironment;
   List<Wall> input;
-  InputWalls({required this.updateValues, this.input = const []});
+  InputWalls(
+      {required this.updateValues,
+      this.input = const [],
+      required this.setUpEnvironment});
 
   @override
   _InputWalls createState() {
@@ -79,6 +83,8 @@ class _InputWalls extends State<InputWalls> {
       }
     });
     if (walls.length == invisibleWalls) {
+      widget.setUpEnvironment(Colors.white);
+
       setState(() {
         addVisabilty = false;
       });
@@ -226,7 +232,7 @@ class _InputWalls extends State<InputWalls> {
                     child: Wrap(
                       children: [
                         Icon(Icons.sync_alt_outlined),
-                        Text("Breite"),
+                        Text(" Breite"),
                       ],
                     ),
                     flex: 3),
@@ -234,7 +240,7 @@ class _InputWalls extends State<InputWalls> {
                     child: Wrap(
                       children: [
                         Icon(Icons.swap_vert_outlined),
-                        Text("Höhe"),
+                        Text(" Höhe"),
                       ],
                     ),
                     flex: 3),
@@ -261,9 +267,12 @@ class _InputWalls extends State<InputWalls> {
         Visibility(
           visible: switchVisablity(),
           child: ElevatedButton(
+            child: const Text("Fläche manuell eingeben"),
             onPressed: () {
               Wall newWall = Wall();
               newWall.id = startId;
+
+              widget.setUpEnvironment(GeneralStyle.getLightGray());
 
               setState(
                 () {
@@ -275,7 +284,6 @@ class _InputWalls extends State<InputWalls> {
 
               updateWidgetMap();
             },
-            child: const Text("Fläche manuell eingeben"),
           ),
         ),
       ],

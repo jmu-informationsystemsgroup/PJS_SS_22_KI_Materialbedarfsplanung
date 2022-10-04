@@ -27,6 +27,7 @@ class Walls extends StatefulWidget {
 class _WallState extends State<Walls> {
   List<Widget> wallStrings = [];
   bool textVisiblity = false;
+  bool saveVisibility = false;
 
   /// Zwei Wall-Listen, falls der Nutzer den Bearbeitungsvorgang abbricht,
   /// die wall-Liste beinhaltet sowohl die ursprünglichen, als auch die hinzugefügten Wände
@@ -76,8 +77,39 @@ class _WallState extends State<Walls> {
       } else {
         name = element.name;
       }
-      Widget widget =
-          Text("$name: ${element.width}m Breite, ${element.height}m Höhe");
+
+      Widget widget = Wrap(
+        children: [
+          Text(
+            "$name: ",
+            style: TextStyle(color: Colors.black),
+          ),
+          Icon(Icons.sync_alt_outlined),
+          Text(
+            " ${element.width}m ",
+            style: TextStyle(color: Colors.black),
+          ),
+          Text(
+            "Breite, ",
+            style: TextStyle(
+              color: GeneralStyle.getDarkGray(),
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          Icon(Icons.swap_vert_outlined),
+          Text(
+            " ${element.height}m ",
+            style: TextStyle(color: Colors.black),
+          ),
+          Text(
+            "Höhe",
+            style: TextStyle(
+              color: GeneralStyle.getDarkGray(),
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      );
 
       strings.add(widget);
     }
@@ -85,13 +117,17 @@ class _WallState extends State<Walls> {
   }
 
   changeBool(bool value) {
+    print("-----------------------------------------------> $originalWalls");
     /*
     if (textVisiblity == false) {
       walls = [];
     }
     */
     if (textVisiblity == false) {
-      walls = originalWalls;
+      for (Wall element in originalWalls) {
+        element.display = true;
+      }
+      setUpWalls();
     }
     setState(() {
       textVisiblity = !value;
@@ -114,6 +150,16 @@ class _WallState extends State<Walls> {
     return column;
   }
 
+  bool getSaveVisability() {
+    if (walls.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Color borderColor = Colors.white;
+
   Widget addContent() {
     if (!textVisiblity) {
       return Column(
@@ -126,8 +172,13 @@ class _WallState extends State<Walls> {
               // TODO: Database
             },
             input: walls,
+            setUpEnvironment: (Color color) {
+              borderColor = color;
+            },
           ),
-          ElevatedButton(
+          Visibility(
+            visible: getSaveVisability(),
+            child: ElevatedButton(
               onPressed: () async {
                 bool isFinished =
                     await DataBase.updateWalls(walls, widget.content.id);
@@ -138,25 +189,29 @@ class _WallState extends State<Walls> {
                 });
                 widget.updateWalls(walls);
               },
-              child: Icon(Icons.save))
+              child: Icon(Icons.save),
+            ),
+          ),
         ],
       );
     } else {
-      return displayText();
+      return Container(
+        child: displayText(),
+        margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (originalWalls.isEmpty) {
-      return addContent();
-    } else {
-      return CustomContainerBorder(
-        color: GeneralStyle.getLightGray(),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
+    return CustomContainerBorder(
+      color: borderColor,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: Visibility(
+              visible: getSaveVisability(),
               child: ButtonEdit(
                 textVisiblity: textVisiblity,
                 onClick: () {
@@ -164,10 +219,12 @@ class _WallState extends State<Walls> {
                 },
               ),
             ),
-            addContent(),
-          ],
-        ),
-      );
-    }
+          ),
+          Center(
+            child: addContent(),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -242,6 +242,8 @@ class _NewProjectState extends State<NewProject> {
     );
   }
 
+  Color borderColor = Colors.white;
+
   Future<void> _askForSaveEmptyProject() async {
     showDialog<void>(
       context: context,
@@ -395,14 +397,20 @@ class _NewProjectState extends State<NewProject> {
                     },
                     //  creationMode: true,
                   ),
-                  InputWalls(
-                    input: walls,
-                    updateValues: (outputWalls) {
-                      setState(() {
-                        NewProject.cache.walls = outputWalls;
-                        walls = outputWalls;
-                      });
-                    },
+                  CustomContainerBorder(
+                    color: borderColor,
+                    child: InputWalls(
+                      input: walls,
+                      updateValues: (outputWalls) {
+                        setState(() {
+                          NewProject.cache.walls = outputWalls;
+                          walls = outputWalls;
+                        });
+                      },
+                      setUpEnvironment: (Color color) {
+                        borderColor = color;
+                      },
+                    ),
                   ),
 
                   InputField(
