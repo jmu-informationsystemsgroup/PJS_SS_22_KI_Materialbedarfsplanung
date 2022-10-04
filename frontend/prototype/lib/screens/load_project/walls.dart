@@ -117,12 +117,6 @@ class _WallState extends State<Walls> {
   }
 
   changeBool(bool value) {
-    print("-----------------------------------------------> $originalWalls");
-    /*
-    if (textVisiblity == false) {
-      walls = [];
-    }
-    */
     if (textVisiblity == false) {
       for (Wall element in originalWalls) {
         element.display = true;
@@ -132,6 +126,14 @@ class _WallState extends State<Walls> {
     setState(() {
       textVisiblity = !value;
     });
+  }
+
+  bool changeBool2(List<Wall> originalWalls) {
+    if (originalWalls.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   Widget displayText() {
@@ -151,14 +153,12 @@ class _WallState extends State<Walls> {
   }
 
   bool getSaveVisability() {
-    if (walls.isNotEmpty) {
+    if (originalWalls.isNotEmpty || walls.isNotEmpty) {
       return true;
     } else {
       return false;
     }
   }
-
-  Color borderColor = Colors.white;
 
   Widget addContent() {
     if (!textVisiblity) {
@@ -172,9 +172,6 @@ class _WallState extends State<Walls> {
               // TODO: Database
             },
             input: walls,
-            setUpEnvironment: (Color color) {
-              borderColor = color;
-            },
           ),
           Visibility(
             visible: getSaveVisability(),
@@ -184,8 +181,8 @@ class _WallState extends State<Walls> {
                     await DataBase.updateWalls(walls, widget.content.id);
                 setState(() {
                   wallStrings = setUpStrings(walls);
-                  textVisiblity = true;
                   originalWalls = walls;
+                  textVisiblity = changeBool2(originalWalls);
                 });
                 widget.updateWalls(walls);
               },
@@ -205,7 +202,7 @@ class _WallState extends State<Walls> {
   @override
   Widget build(BuildContext context) {
     return CustomContainerBorder(
-      color: borderColor,
+      color: GeneralStyle.getLightGray(),
       child: Stack(
         children: [
           Align(

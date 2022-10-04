@@ -13,12 +13,11 @@ import '../styles/container.dart';
 
 class InputWalls extends StatefulWidget {
   Function(List<Wall>) updateValues;
-  Function(Color) setUpEnvironment;
   List<Wall> input;
-  InputWalls(
-      {required this.updateValues,
-      this.input = const [],
-      required this.setUpEnvironment});
+  InputWalls({
+    required this.updateValues,
+    this.input = const [],
+  });
 
   @override
   _InputWalls createState() {
@@ -83,8 +82,6 @@ class _InputWalls extends State<InputWalls> {
       }
     });
     if (walls.length == invisibleWalls) {
-      widget.setUpEnvironment(Colors.white);
-
       setState(() {
         addVisabilty = false;
       });
@@ -271,8 +268,6 @@ class _InputWalls extends State<InputWalls> {
             onPressed: () {
               Wall newWall = Wall();
               newWall.id = startId;
-
-              widget.setUpEnvironment(GeneralStyle.getLightGray());
 
               setState(
                 () {
