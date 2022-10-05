@@ -1,6 +1,5 @@
 import cv2
 
-
 class HomogeneousBgDetector():
     def __init__(self):
         pass
@@ -20,7 +19,7 @@ class HomogeneousBgDetector():
 
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area > 200000: #vorher 20000
+            if area > 2000: #vorher 20000
                 #cnt = cv2.approxPolyDP(cnt, 0.03*cv2.arcLength(cnt, True), True)
                 objects_contours.append(cnt)
 

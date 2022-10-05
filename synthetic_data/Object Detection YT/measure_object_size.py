@@ -11,7 +11,7 @@ aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
 detector = HomogeneousBgDetector()
 
 # Load Image
-img = cv2.imread("F:\\Projektseminar\\Edge Detection\\Kanten3.jpg")
+img = cv2.imread("F:\\Projektseminar\\Edge Detection\\Abschlussbericht\\Canny_Resultat.jpg")
 
 # Get Aruco marker
 corners, _, _ = cv2.aruco.detectMarkers(img, aruco_dict, parameters=parameters)
@@ -48,6 +48,6 @@ for cnt in contours:
     cv2.putText(img, "Height {} cm".format(round(object_height, 1)), (int(x - 100), int(y + 15)), cv2.FONT_HERSHEY_PLAIN, 2, (100, 200, 0), 2)
 
 
-cv2.imwrite("F:\\Projektseminar\\Edge Detection\\Aruco_Test_Resultat2.jpg", img)
-cv2.imshow("Image", img)
+cv2.imwrite("F:\\Projektseminar\\Edge Detection\\Abschlussbericht\\Test_Canny_Resultat.jpg", img)
+#cv2.imshow("Image", img)
 cv2.waitKey(0)
