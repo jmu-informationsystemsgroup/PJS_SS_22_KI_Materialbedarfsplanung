@@ -221,71 +221,74 @@ class _InputWalls extends State<InputWalls> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Visibility(
-          visible: addVisabilty,
-          child: Column(
-            children: [
-              Flex(direction: Axis.horizontal, children: [
-                Expanded(child: Text("Typ"), flex: 3),
-                Expanded(
-                    child: Wrap(
-                      children: [
-                        Icon(Icons.sync_alt_outlined),
-                        Text(" Breite"),
-                      ],
-                    ),
-                    flex: 3),
-                Expanded(
-                    child: Wrap(
-                      children: [
-                        Icon(Icons.swap_vert_outlined),
-                        Text(" Höhe"),
-                      ],
-                    ),
-                    flex: 3),
-                Expanded(child: Container(), flex: 1),
-              ]),
-              Column(
-                children: wallWidgets.values.toList(),
-              ),
-              CustomButtonRow(
-                  children: [Icon(Icons.add)],
-                  onPressed: () {
-                    Wall newWall = Wall();
-                    newWall.id = startId;
-                    setState(() {
-                      walls[startId] = newWall;
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Visibility(
+            visible: addVisabilty,
+            child: Column(
+              children: [
+                Flex(direction: Axis.horizontal, children: [
+                  Expanded(child: Text("Typ"), flex: 3),
+                  Expanded(
+                      child: Wrap(
+                        children: [
+                          Icon(Icons.sync_alt_outlined),
+                          Text(" Breite"),
+                        ],
+                      ),
+                      flex: 3),
+                  Expanded(
+                      child: Wrap(
+                        children: [
+                          Icon(Icons.swap_vert_outlined),
+                          Text(" Höhe"),
+                        ],
+                      ),
+                      flex: 3),
+                  Expanded(child: Container(), flex: 1),
+                ]),
+                Column(
+                  children: wallWidgets.values.toList(),
+                ),
+                CustomButtonRow(
+                    children: [Icon(Icons.add)],
+                    onPressed: () {
+                      Wall newWall = Wall();
+                      newWall.id = startId;
+                      setState(() {
+                        walls[startId] = newWall;
 
-                      startId += 1;
-                    });
-                    updateWidgetMap();
-                  }),
-            ],
+                        startId += 1;
+                      });
+                      updateWidgetMap();
+                    }),
+              ],
+            ),
           ),
-        ),
-        Visibility(
-          visible: switchVisablity(),
-          child: ElevatedButton(
-            child: const Text("Fläche manuell eingeben"),
-            onPressed: () {
-              Wall newWall = Wall();
-              newWall.id = startId;
+          Visibility(
+            visible: switchVisablity(),
+            child: ElevatedButton(
+              child: const Text("Fläche manuell eingeben"),
+              onPressed: () {
+                Wall newWall = Wall();
+                newWall.id = startId;
 
-              setState(
-                () {
-                  walls[startId] = newWall;
-                  startId += 1;
-                  getWallsVisability();
-                },
-              );
+                setState(
+                  () {
+                    walls[startId] = newWall;
+                    startId += 1;
+                    getWallsVisability();
+                  },
+                );
 
-              updateWidgetMap();
-            },
+                updateWidgetMap();
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+      margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
     );
   }
 }

@@ -80,7 +80,7 @@ class ValueCalculator {
     }
     imagesNeedToBeSynced = false;
 
-    return [aiOutcome / 1000, aiEdgeOutcome / 1000];
+    return [aiOutcome / 1000, aiEdgeOutcome / 100];
   }
 
   static double getSquareMeters(List<Wall> walls) {
@@ -96,7 +96,7 @@ class ValueCalculator {
   }
 
   static double getManualMaterial(double totalSquareMeters) {
-    return totalSquareMeters * 0.5223880597;
+    return totalSquareMeters * 0.525;
   }
 
   static double getManualEdges(double totalSquareMeters) {
