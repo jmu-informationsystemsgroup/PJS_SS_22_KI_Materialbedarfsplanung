@@ -16,7 +16,6 @@ class EditorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Content data = input;
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${data.comment}");
     return Column(
       children: [
         InputField(
@@ -37,10 +36,10 @@ class EditorWidget extends StatelessWidget {
         ),
         AddressInput(
           adress: Adress(
-              street: data.street,
-              houseNumber: data.houseNumber,
-              zip: data.zip,
-              city: data.city),
+              street: input.street,
+              houseNumber: input.houseNumber,
+              zip: input.zip,
+              city: input.city),
           updateAddress: (value) {
             data.street = value.street;
             data.houseNumber = value.houseNumber;
@@ -55,7 +54,7 @@ class EditorWidget extends StatelessWidget {
           maxLines: 6,
         ),
         QualityChecklist(
-          value: data.material,
+          value: input.material,
           changeQuality: (material) {
             data.material = material;
           },

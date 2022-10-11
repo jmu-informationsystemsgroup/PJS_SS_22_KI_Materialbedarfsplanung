@@ -11,7 +11,7 @@ class Content {
   String client = "";
   String date = "";
   String comment = "";
-  Map<int, Wall> squareMeters = {};
+  List<Wall> walls = [];
   List<CustomCameraImage> pictures = [];
   String material = "Q2";
   int statusActive = 1;
@@ -164,6 +164,9 @@ class User {
 class Wall {
   double width = 0.0;
   double height = 0.0;
+  int id = 0;
+  String name = "";
+  bool display = true;
 }
 
 class CustomCameraImage {
@@ -171,11 +174,14 @@ class CustomCameraImage {
   int projectId;
   XFile image;
   double aiValue;
+  double aiValueEdges;
   bool display;
-  CustomCameraImage(
-      {required this.id,
-      this.projectId = 0,
-      this.display = true,
-      required this.image,
-      this.aiValue = 0.0});
+  CustomCameraImage({
+    required this.id,
+    this.projectId = 0,
+    this.display = true,
+    required this.image,
+    this.aiValue = 0.0,
+    this.aiValueEdges = 0.0,
+  });
 }

@@ -5,8 +5,8 @@ import '../styles/general.dart';
 
 class ButtonEdit extends StatelessWidget {
   bool textVisiblity;
-  Function() changeState;
-  ButtonEdit({required this.textVisiblity, required this.changeState});
+  Function() onClick;
+  ButtonEdit({required this.textVisiblity, required this.onClick});
 
   IconData getIcon() {
     if (textVisiblity) {
@@ -36,7 +36,7 @@ class ButtonEdit extends StatelessWidget {
           ),
         ),
         onTap: () {
-          changeState();
+          onClick();
         },
       ),
     );

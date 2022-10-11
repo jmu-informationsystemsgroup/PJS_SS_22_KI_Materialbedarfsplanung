@@ -27,7 +27,7 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
   String createEmailContent(User user) {
     String body =
         "Guten Tag Herr Schäfer von\n Sprachtelprofi, \n \n die Ermittlung innerhalb der App " +
-            "hat ergeben, dass der optimale Bedarf an Spachtelbar Classic einen Wert von ${widget.outcome.totalAiPrice.toStringAsFixed(2)} € " +
+            "hat ergeben, dass der optimale Bedarf an Spachtelbar Classic einen Wert von ${widget.outcome.priceMaterial.toStringAsFixed(2)} € " +
             "für mein anstehendes Bauprojekt betragen wird. \n \n" +
             "Gerne würde ich mit Ihnen genaueres darüber aushandeln. \n" +
             "Anbei meine Kundendaten: \n" +

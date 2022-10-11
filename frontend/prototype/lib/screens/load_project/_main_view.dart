@@ -15,6 +15,7 @@ import 'package:prototype/screens/load_project/dashboard.dart';
 import 'package:prototype/screens/load_project/editor.dart';
 import 'package:prototype/components/gallery.dart';
 import 'package:prototype/components/navBar.dart';
+import 'package:prototype/screens/load_project/walls.dart';
 import 'package:prototype/screens/load_project/webshop_api.dart';
 import 'package:camera/camera.dart';
 import 'package:prototype/styles/container.dart';
@@ -71,6 +72,8 @@ class _ProjectViewState extends State<ProjectView> {
   /// neuhinzugefügt Bild gespeichert werden kann und zählt dann hoch
   int originalLastValue = 0;
 
+  List<Wall> walls = [];
+
   @override
   void initState() {
     super.initState();
@@ -79,23 +82,30 @@ class _ProjectViewState extends State<ProjectView> {
       DeviceOrientation.portraitDown,
     ]);
     content = widget.content;
-    loadGalleryPictures();
+    setUpAssets();
   }
 
-  loadGalleryPictures() async {
+  /// Lädt Fotos und manuell eingegebene Flächen in das Projekt und löst die Kalkulationsmethode aus
+  setUpAssets() async {
     galleryImagesNotYetCalculated =
         await DataBase.getImages(projectId: content.id, onlyNewImages: true);
     galleryImagesToDelete = await DataBase.getImages(
         projectId: content.id, deletetableImages: true);
     List<CustomCameraImage> saveState =
         await DataBase.getImages(projectId: content.id);
-    CalculatorOutcome val =
-        await ValueCalculator.getOutcomeObject(content, saveState);
+    List<Wall> saveWalls = await DataBase.getWalls(content.id);
+
+    CalculatorOutcome val = ValueCalculator.calculate(
+        content: content, images: saveState, walls: saveWalls);
     if (saveState.isNotEmpty) {
       originalLastValue = saveState.last.id;
     }
 
+    /// der Umweg mit der Deklaration einer neuen Liste (wie saveWalls) muss gemacht werden, da
+    /// flutter sonst nicht in der Lage ist zu erkennen, dass sich die Liste geändert hat
+    /// setState((){List.add(object)}) würde also keine Veränderung hervorrufen
     setState(() {
+      walls = saveWalls;
       galleryImages = saveState;
       calculatedOutcome = val;
     });
@@ -136,12 +146,9 @@ class _ProjectViewState extends State<ProjectView> {
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('Approve'),
+                child: const Text('Verstanden'),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  setState(() {
-                    ProjectView.askAgain = false;
-                  });
                 },
               ),
             ],
@@ -323,7 +330,7 @@ class _ProjectViewState extends State<ProjectView> {
     var sh = await DataBase.deleteSingleImageFromTable(content.id, element.id);
     var sh2 =
         await DataBase.deleteSingleImageFromDirectory(content.id, element.id);
-    loadGalleryPictures();
+    setUpAssets();
   }
 
   addPhoto() async {
@@ -338,7 +345,7 @@ class _ProjectViewState extends State<ProjectView> {
               setState(
                 () {
                   galleryImages.addAll(images);
-                  calculatedOutcome.aiOutcome = 0.0;
+                  calculatedOutcome.material = 0.0;
                 },
               );
               bool sth = await DataBase.saveImages(
@@ -354,7 +361,7 @@ class _ProjectViewState extends State<ProjectView> {
               );
               state = 0;
               safingImages = false;
-              loadGalleryPictures();
+              setUpAssets();
             },
           ),
         ),
@@ -482,7 +489,7 @@ class _ProjectViewState extends State<ProjectView> {
               */
                 ButtonEdit(
                   textVisiblity: !editorVisablity,
-                  changeState: () {
+                  onClick: () {
                     setState(() {
                       editorVisablity = changeBool(editorVisablity);
                     });
@@ -498,7 +505,7 @@ class _ProjectViewState extends State<ProjectView> {
                           content = data;
                           editorVisablity = false;
                         });
-                        loadGalleryPictures();
+                        setUpAssets();
                       }),
                     ),
                   ),
@@ -508,6 +515,7 @@ class _ProjectViewState extends State<ProjectView> {
                   child: Column(
                     children: [
                       Dashboard(
+                        walls: walls,
                         content: content,
                         imagesToDelete: galleryImagesToDelete,
                         addPhoto: () {
@@ -539,7 +547,7 @@ class _ProjectViewState extends State<ProjectView> {
                               recalculate = false;
                             });
                           }
-                          loadGalleryPictures();
+                          setUpAssets();
                         },
                       ),
                       Webshop(
@@ -616,6 +624,16 @@ class _ProjectViewState extends State<ProjectView> {
                         child: Text("Speichere Bilder $state %"),
                       ),
                       AllData(content: content),
+                      Walls(
+                        content: content,
+                        walls: walls,
+                        updateWalls: (newWalls) {
+                          setState(() {
+                            walls = newWalls;
+                          });
+                          setUpAssets();
+                        },
+                      ),
                     ],
                   ),
                 ),

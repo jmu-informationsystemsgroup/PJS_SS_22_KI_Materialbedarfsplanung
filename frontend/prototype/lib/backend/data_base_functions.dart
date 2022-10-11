@@ -26,13 +26,12 @@ class DataBase {
     if (!status.isGranted) {
       await Permission.storage.request();
     }
-
-/*
-    Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
-    String? tempPath = tempDir?.path;
-    */
     Directory? tempDir = await getApplicationDocumentsDirectory();
     String? tempPath = tempDir.path;
+/*
+     Directory? tempDir = await DownloadsPathProvider.downloadsDirectory;
+    String? tempPath = tempDir?.path;
+    */
     return tempPath;
   }
 
@@ -63,10 +62,13 @@ class DataBase {
   /// FÜR MVP: erstellt ein Tablle aus manuell eingegebenen Wänden
   static Future<void> createWallTable(sql.Database database) async {
     await database.execute("""CREATE TABLE walls(
-        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         projectId INTEGER,
+        id INTEGER,
         width REAL,
-        height REAL
+        height REAL,
+        name TEXT,
+        PRIMARY KEY (id, projectId),
+        FOREIGN KEY (projectId) REFERENCES projects (id)
       )
       """);
   }
@@ -79,6 +81,7 @@ class DataBase {
         projectId INTEGER,
         id INTEGER NOT NULL,
         aiValue REAL,
+        aiValueEdges REAL,
         PRIMARY KEY (id, projectId),
         FOREIGN KEY (projectId) REFERENCES projects (id)
       )
@@ -107,7 +110,7 @@ class DataBase {
 
 //  '$tempPath/spachtlerData.db',
     return sql.openDatabase(
-      'spachtlerData.db',
+      '$tempPath/spachtlerData.db',
       version: 1,
       onCreate: (sql.Database database, int version) async {
         await createProjectTable(database);
@@ -171,11 +174,24 @@ class DataBase {
   }
 
   /// gibt alle Wände eines bestimmten Projekts anhand der Projekt Id zurück
-  static getWalls(int id) async {
+  static Future<List<Wall>> getWalls(int id) async {
     final db = await DataBase.getDataBase();
 
-    return db
+    List<Map<String, dynamic>> loadedWalls = await db
         .query('walls', orderBy: "id", where: "projectId = ?", whereArgs: [id]);
+
+    List<Wall> finishedWalls = [];
+
+    loadedWalls.forEach((element) {
+      Wall wall = Wall();
+      wall.width = element["width"];
+      wall.height = element["height"];
+      wall.id = element["id"];
+      wall.name = element["name"];
+      finishedWalls.add(wall);
+    });
+
+    return finishedWalls;
   }
 
   static Future<Content> getSpecificProject(int id) async {
@@ -249,13 +265,18 @@ class DataBase {
       String imageId = element["id"].toString();
       String aiValue = element["aiValue"].toString();
       String projectId = element["projectId"].toString();
+      String aiValueEdges = element["aiValueEdges"].toString();
 
       CustomCameraImage imageObject = CustomCameraImage(
         id: int.parse(imageId),
         image: XFile('$path/material_images/${projectId}_$imageId.jpg'),
         aiValue: double.parse(aiValue),
+        aiValueEdges: double.parse(aiValueEdges),
         projectId: int.parse(projectId),
       );
+
+      print(
+          "||>>>>>>>>>>>>>>>>>>>>>>>>>>${imageObject.id}    ${imageObject.projectId}     ${imageObject.aiValueEdges}");
 
       list.add(imageObject);
     }
@@ -405,15 +426,26 @@ class DataBase {
     return result;
   }
 
-  static updateImagesAiValue(double aiValue, int id, int projectId) async {
+  static updateImagesAiValue(CustomCameraImage image) async {
     final db = await DataBase.getDataBase();
 
     final dbData = {
-      'aiValue': aiValue,
+      'aiValue': image.aiValue,
+      'aiValueEdges': image.aiValueEdges,
     };
     final result = await db.update('images', dbData,
-        where: "id = ${id} AND projectId = ${projectId}");
+        where: "id = ${image.id} AND projectId = ${image.projectId}");
     return result;
+  }
+
+  static Future<bool> updateWalls(List<Wall> walls, int projectId) async {
+    List<Wall> previousWalls = [];
+    previousWalls = await DataBase.getWalls(projectId);
+    if (previousWalls.isNotEmpty) {
+      await DataBase.deleteWalls(projectId);
+    }
+    await DataBase.createWallsForProject(walls, projectId);
+    return true;
   }
 
   /// ####################################################################################################################################
@@ -448,7 +480,6 @@ class DataBase {
 
     final id = await db.insert('projects', dbData,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
-    createWallsForProject(data, id);
 
     if (data.projectName == "") {
       data.projectName = "Projekt Nr. $id";
@@ -460,20 +491,26 @@ class DataBase {
   }
 
   /// FÜR MVP: Wenn es eine Wall Liste gibt, werden die Elemente dieser in den MVP Wand Tabelle eingetragen
-  static createWallsForProject(Content data, int projectId) async {
+  static Future<bool> createWallsForProject(
+      List<Wall> walls, int projectId) async {
     final db = await DataBase.getDataBase();
 
-    Iterable<Wall> squareMeters = data.squareMeters.values;
-
-    squareMeters.forEach((element) async {
+    int id = 1;
+    for (Wall element in walls) {
       final dbData = {
         'projectId': projectId,
+        'id': id,
         'width': element.width,
-        'height': element.height
+        'height': element.height,
+        'name': element.name,
       };
-      final id = await db.insert('walls', dbData,
+      final id2 = await db.insert('walls', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
-    });
+      id = id + 1;
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$id ${dbData}");
+    }
+
+    return true;
   }
 
   static createUserData(User data) async {
@@ -526,7 +563,12 @@ class DataBase {
     double step = 100.0 / finishedState;
 
     for (var picture in pictures) {
-      final dbData = {'projectId': projectId, 'id': id, 'aiValue': 0.0};
+      final dbData = {
+        'projectId': projectId,
+        'id': id,
+        'aiValue': 0.0,
+        'aiValueEdges': 0.0
+      };
 
       final id2 = await db.insert('images', dbData,
           conflictAlgorithm: sql.ConflictAlgorithm.replace);
