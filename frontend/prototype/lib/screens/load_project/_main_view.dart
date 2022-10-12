@@ -111,6 +111,7 @@ class _ProjectViewState extends State<ProjectView> {
     });
   }
 
+  /// Dialog der ausgelöst wird, wenn die Verbindung zum Server fehlschlägt
   Future<void> _ServerMessage() async {
     if (ProjectView.askAgain) {
       return showDialog<void>(
@@ -158,45 +159,6 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
-  Future<void> _showMyDialog() async {
-    if (ProjectView.askAgain) {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Kamera eisntellen'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Row(
-                    children: [
-                      Icon(Icons.stay_current_portrait),
-                      Icon(Icons.screen_rotation),
-                      Icon(Icons.stay_current_landscape),
-                    ],
-                  ),
-                  Text('Kameraeinstellung auf 4:3'),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Approve'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    ProjectView.askAgain = false;
-                  });
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
   bool changeBool(bool input) {
     if (input == false) {
       return true;
@@ -205,6 +167,8 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  /// Button fpr Projekt abschließen, wechselt zu "Projekt reaktivieren"-Button wenn Projekt abgeschlossen
+  /// ist
   Widget renderArchiveButton(int id) {
     if (content.statusActive == 0) {
       return CustomButtonRow(
@@ -235,6 +199,7 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  /// baut einen GoogleMaps-Link aus der eingegebenen Adresse zusammen
   Future<void> _launchMapsLink() async {
     String urlString =
         "https://www.google.com/maps/place/${content.street}+${content.houseNumber},+${content.zip}+${content.city}";
@@ -244,6 +209,7 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  /// Widget für hellgraue Kommentar-Anzeige
   Widget comment() {
     return CustomContainerBorder(
       color: GeneralStyle.getLightGray(),
@@ -265,6 +231,7 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  /// Dialog, der erscheint, wenn Foto gelöscht wird
   Future<void> _askForImageDelete(CustomCameraImage element) async {
     showDialog<void>(
       context: context,

@@ -6,6 +6,7 @@ import 'package:prototype/styles/general.dart';
 import '../../../styles/container.dart';
 import '../../backend/helper_objects.dart';
 
+/// liefert die Buttons zurück die für die Sortierfunktionen zuständig sind
 class ButtonsOrderBy extends StatefulWidget {
   static int selectedIndex = 1000;
   final Function(List<Content>) orderChanged;
@@ -18,6 +19,7 @@ class ButtonsOrderBy extends StatefulWidget {
   }
 }
 
+/// ändert die Farbe der Buttons die gerade für die Sortierfunktion ausgewählt wurden
 class _ButtonsOrderByState extends State<ButtonsOrderBy> {
   currentOrderColor(int bottenrowPosition) {
     if (ButtonsOrderBy.selectedIndex == bottenrowPosition) {

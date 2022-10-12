@@ -20,15 +20,18 @@ class Home extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _HomeState();
   }
 }
 
 class _HomeState extends State<Home> {
+  /// Liste von Projekten, diese Wird je nach Einstellung (Suchbegriff, Sortieroptionen, aktive vs abgeschlossene Projekte)
+  /// befüllt
   static List<Content> allProjects = [];
   User user = User();
   String searchTerm = "";
+
+  /// statusActive = 1: nur die aktiven Projekte werden angezeigt, bei 0: nur die Abgeschlossenen
   int statusActive = 1;
 
   activateList() async {
@@ -63,6 +66,8 @@ class _HomeState extends State<Home> {
     );
   }
 
+  /// gibt die Userdaten im Untertitel in der App-Bar an, Link zum User-Profil, falls noch keine User-
+  /// Daten vorhanden
   List<Widget> addUserData() {
     if (user.firstName != "" && user.lastName != "") {
       return [
@@ -87,6 +92,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  /// ändert ob aktive Projekte oder abgeschlossene Projekte geladen werden sollen
   changeStatus() {
     if (statusActive == 0) {
       setState(() {
@@ -97,6 +103,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  /// bearbeitet den Text auf dem Button für das Aktivieren bzw. Deaktivieren der Projekte
   String getArchievedText() {
     if (statusActive == 0) {
       return "Zurück";
@@ -105,6 +112,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  /// bearbeitet das Icon auf dem Button für das Aktivieren bzw. Deaktivieren der Projekte
   IconData getIcon() {
     if (statusActive == 0) {
       return Icons.arrow_circle_left_outlined;
@@ -113,6 +121,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  /// Button für abgeschlossene Projekte
   Widget archieveButton() {
     return CustomButtonRow(
       children: [
@@ -185,6 +194,7 @@ class _HomeState extends State<Home> {
   }
 }
 
+/// Wenn noch kein Projekt angelegt wurde verweist ein Pfeil auf den "Projekt anlegen" Button
 class projectMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

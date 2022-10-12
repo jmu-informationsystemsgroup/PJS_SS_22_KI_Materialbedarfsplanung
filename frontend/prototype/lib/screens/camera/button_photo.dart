@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../styles/general.dart';
 import '../../components/button_row_multiple_icons.dart';
 
+/// gibt den Button zurück, über den in die Kameraansicht gewechselt wird
 class ButtonPhoto extends StatelessWidget {
   Function() addPhoto;
   ButtonPhoto({required this.addPhoto});
@@ -24,7 +25,7 @@ class ButtonPhoto extends StatelessWidget {
               ],
               onPressed: () {
                 /// die folgende If condition ist frei nach https://flutterigniter.com/dismiss-keyboard-form-lose-focus/ und verhindert,
-                /// dass die Tastatur rumbuggt, wenn man die Kamera öffnet
+                /// dass von der Tastatur ein Bug entsteht, wenn man die Kamera öffnet
                 FocusScopeNode currentFocus = FocusScope.of(context);
                 if (!currentFocus.hasPrimaryFocus) {
                   currentFocus.unfocus();
