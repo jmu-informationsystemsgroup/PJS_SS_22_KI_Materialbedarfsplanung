@@ -73,7 +73,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
           onPressed: () async {
             List<Content> newOrderList = await DataBase.getProjects(
               searchTerm: widget.searchTerm,
-              orderByParamter: "city",
+              orderByParamter: "zip",
             );
             widget.orderChanged(newOrderList);
             setState(() {

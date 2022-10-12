@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class GeneralStyle {
-  static Color getUglyGreen() {
+  static Color getGreen() {
     return const Color.fromARGB(255, 8, 173, 11);
   }
 

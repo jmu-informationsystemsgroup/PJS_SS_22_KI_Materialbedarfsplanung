@@ -94,12 +94,12 @@ class Contact extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.public,
-                    color: GeneralStyle.getUglyGreen(),
+                    color: GeneralStyle.getGreen(),
                   ),
                   Text(
                     "Webseite besuchen",
                     style: TextStyle(
-                      color: GeneralStyle.getUglyGreen(),
+                      color: GeneralStyle.getGreen(),
                     ),
                   ),
                 ],

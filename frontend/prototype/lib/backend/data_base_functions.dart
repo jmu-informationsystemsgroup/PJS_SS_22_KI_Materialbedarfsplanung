@@ -390,6 +390,7 @@ class DataBase {
     String date = getActualDate();
 
     final db = await DataBase.getDataBase();
+
     final data = {
       'projectName': content.projectName,
       'client': content.client,

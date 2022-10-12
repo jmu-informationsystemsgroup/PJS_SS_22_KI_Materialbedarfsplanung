@@ -8,6 +8,7 @@ import 'package:prototype/components/input_field_address.dart';
 
 import '../create_new_project/_main_view.dart';
 
+/// Formular um die Eingabedaten des Projekts zu überarbeiten
 class EditorWidget extends StatelessWidget {
   Content input;
   Function(Content) route;
@@ -61,6 +62,10 @@ class EditorWidget extends StatelessWidget {
         ),
         ElevatedButton(
             onPressed: () {
+              // verhindert dass ein Projektname entfernt werden kann, ohne dass ein neuer hinkommt
+              if (data.projectName == "") {
+                data.projectName = "Projekt Nr. ${input.id}";
+              }
               route(data);
               DataBase.updateContent(input.id, data);
             },

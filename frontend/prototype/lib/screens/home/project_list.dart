@@ -142,7 +142,7 @@ class _StateProjectList extends State<ProjectList> {
                               AspectRatio(
                                 aspectRatio: 1 / 1,
                                 child: CustomContainerBorder(
-                                  color: GeneralStyle.getUglyGreen(),
+                                  color: GeneralStyle.getGreen(),
                                   //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
                                   child: getProfile(element),
                                 ),

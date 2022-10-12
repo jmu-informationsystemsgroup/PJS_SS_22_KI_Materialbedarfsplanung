@@ -25,16 +25,16 @@ class _ButtonSendMailState extends State<ButtonSendMail> {
   }
 
   String createEmailContent(User user) {
-    String body =
-        "Guten Tag Herr Schäfer von\n Sprachtelprofi, \n \n die Ermittlung innerhalb der App " +
-            "hat ergeben, dass der optimale Bedarf an Spachtelbar Classic einen Wert von ${widget.outcome.priceMaterial.toStringAsFixed(2)} € " +
-            "für mein anstehendes Bauprojekt betragen wird. \n \n" +
-            "Gerne würde ich mit Ihnen genaueres darüber aushandeln. \n" +
-            "Anbei meine Kundendaten: \n" +
-            "- ${user.firstName} ${user.lastName} \n" +
-            "- Kundennummer ${user.customerId} \n" +
-            "- Adresse ${user.street} ${user.houseNumber}, ${user.zip} ${user.city} \n \n" +
-            "Mit freundlichen Grüßen \n \n ${user.firstName} ${user.lastName}";
+    String body = "Guten Tag Herr Schäfer von\n Sprachtelprofi, \n \n die Ermittlung innerhalb der App " +
+        "hat ergeben, dass der optimale Bedarf  für mein anstehendes Bauprojekt ${widget.outcome.material.toStringAsFixed(2)} kg" +
+        " SpachtelBar® classic, sowie ${widget.outcome.edges.toStringAsFixed(2)} m Fugendeckstreifen " +
+        "betragen wird. \n \n" +
+        "Gerne würde ich mit Ihnen genaueres darüber aushandeln. \n" +
+        "Anbei meine Kundendaten: \n" +
+        "- ${user.firstName} ${user.lastName} \n" +
+        "- Kundennummer ${user.customerId} \n" +
+        "- Adresse ${user.street} ${user.houseNumber}, ${user.zip} ${user.city} \n \n" +
+        "Mit freundlichen Grüßen \n \n ${user.firstName} ${user.lastName}";
 
     return body;
   }

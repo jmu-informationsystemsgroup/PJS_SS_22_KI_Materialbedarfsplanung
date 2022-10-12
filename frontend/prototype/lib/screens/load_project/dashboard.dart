@@ -56,7 +56,7 @@ class _DashboardState extends State<Dashboard> {
               child: Text(
                 'Verstanden!',
                 style: TextStyle(
-                  color: GeneralStyle.getUglyGreen(),
+                  color: GeneralStyle.getGreen(),
                 ),
               ),
               onPressed: () {
@@ -73,7 +73,7 @@ class _DashboardState extends State<Dashboard> {
     return AspectRatio(
       aspectRatio: 1 / 1,
       child: CustomContainerBorder(
-        color: GeneralStyle.getUglyGreen(),
+        color: GeneralStyle.getGreen(),
         child: Column(
           //  crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -96,7 +96,7 @@ class _DashboardState extends State<Dashboard> {
     return AspectRatio(
       aspectRatio: 1 / 1,
       child: CustomContainerBorder(
-        color: GeneralStyle.getUglyGreen(),
+        color: GeneralStyle.getGreen(),
         child: Stack(
           children: [
             Align(

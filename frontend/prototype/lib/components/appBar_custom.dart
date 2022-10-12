@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/styles/container.dart';
 
+/// UI-Element für den oberen (hellgrauen) Bereich der App
 class CustomAppBar extends StatelessWidget {
   String title;
   List<Widget> subTitle;
   CustomAppBar({required this.title, required this.subTitle});
 
-  Widget getSubTitle() {
+  Widget getTitles() {
     Flex col = Flex(
       direction: Axis.vertical,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -42,7 +43,7 @@ class CustomAppBar extends StatelessWidget {
             alignment: Alignment.bottomLeft,
             child: Container(
               margin: ContainerStyles.getMargin(),
-              child: getSubTitle(),
+              child: getTitles(),
             )),
         Positioned(
           top: 20,

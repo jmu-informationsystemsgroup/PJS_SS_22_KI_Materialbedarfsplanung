@@ -108,14 +108,6 @@ class _InputWalls extends State<InputWalls> {
         element.display == false));
 
     widget.updateValues(safeList.values.toList());
-
-    //test
-    print(
-        "-------------------------> current wall: ${wall.id} safeListLength ${safeList.length}");
-    safeList.values.toList().forEach((element) {
-      print(
-          "------------------------->id: ${element.id} width:  ${wall.width} sf ${element.width} height:  ${wall.height} sf ${element.height}");
-    });
   }
 
   /// sorgt dafür, dass das Feld anstatt mit "0.0" vorausgefüllt wird, einfach nichts im Feld drinsteht
@@ -165,7 +157,7 @@ class _InputWalls extends State<InputWalls> {
                     if (text == "") {
                       wall.width = 0.0;
                     } else {
-                      wall.width = double.parse(text);
+                      wall.width = double.parse(text.replaceAll(',', '.'));
                     }
                     safeWall(wall);
                   },
@@ -183,7 +175,7 @@ class _InputWalls extends State<InputWalls> {
                     if (text == "") {
                       wall.height = 0.0;
                     } else {
-                      wall.height = double.parse(text);
+                      wall.height = double.parse(text.replaceAll(',', '.'));
                     }
                     safeWall(wall);
                   },
@@ -234,7 +226,7 @@ class _InputWalls extends State<InputWalls> {
                       child: Wrap(
                         children: [
                           Icon(Icons.sync_alt_outlined),
-                          Text(" Breite"),
+                          Text(" Breite (m)"),
                         ],
                       ),
                       flex: 3),
@@ -242,7 +234,7 @@ class _InputWalls extends State<InputWalls> {
                       child: Wrap(
                         children: [
                           Icon(Icons.swap_vert_outlined),
-                          Text(" Höhe"),
+                          Text(" Höhe (m)"),
                         ],
                       ),
                       flex: 3),

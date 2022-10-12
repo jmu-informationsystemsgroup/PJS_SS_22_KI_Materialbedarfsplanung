@@ -6,6 +6,7 @@ import 'package:prototype/styles/general.dart';
 
 import '../styles/container.dart';
 
+/// erstellt die Qaulity Checklist
 class QualityChecklist extends StatefulWidget {
   Function(String) changeQuality;
   String value;
@@ -26,7 +27,7 @@ class _QualityChecklist extends State<QualityChecklist> {
     if (states.any(interactiveStates.contains)) {
       return Colors.blue;
     }
-    return GeneralStyle.getUglyGreen();
+    return GeneralStyle.getGreen();
   }
 
   isChecked(String quality) {

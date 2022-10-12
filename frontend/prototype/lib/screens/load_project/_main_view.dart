@@ -301,7 +301,7 @@ class _ProjectViewState extends State<ProjectView> {
               child: IconAndText(
                   icon: Icons.cancel,
                   text: "Abbrechen",
-                  color: GeneralStyle.getUglyGreen()),
+                  color: GeneralStyle.getGreen()),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -407,7 +407,7 @@ class _ProjectViewState extends State<ProjectView> {
               child: IconAndText(
                   icon: Icons.cancel,
                   text: "Abbrechen",
-                  color: GeneralStyle.getUglyGreen()),
+                  color: GeneralStyle.getGreen()),
               onPressed: () {
                 Navigator.of(context).pop();
               },

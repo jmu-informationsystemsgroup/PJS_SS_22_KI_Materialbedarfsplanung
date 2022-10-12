@@ -118,12 +118,12 @@ class _HomeState extends State<Home> {
       children: [
         Icon(
           getIcon(),
-          color: GeneralStyle.getUglyGreen(),
+          color: GeneralStyle.getGreen(),
         ),
         Text(
           getArchievedText(),
           style: TextStyle(
-            color: GeneralStyle.getUglyGreen(),
+            color: GeneralStyle.getGreen(),
           ),
         )
       ],

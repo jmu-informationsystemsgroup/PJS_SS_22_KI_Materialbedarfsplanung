@@ -174,7 +174,7 @@ class _NewProjectState extends State<NewProject> {
               child: IconAndText(
                   icon: Icons.cancel,
                   text: "Abbrechen",
-                  color: GeneralStyle.getUglyGreen()),
+                  color: GeneralStyle.getGreen()),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -231,7 +231,7 @@ class _NewProjectState extends State<NewProject> {
               child: IconAndText(
                   icon: Icons.check,
                   text: "Weitermachen",
-                  color: GeneralStyle.getUglyGreen()),
+                  color: GeneralStyle.getGreen()),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -269,7 +269,7 @@ class _NewProjectState extends State<NewProject> {
               child: IconAndText(
                   icon: Icons.check,
                   text: "Speichern",
-                  color: GeneralStyle.getUglyGreen()),
+                  color: GeneralStyle.getGreen()),
               onPressed: () async {
                 var save = await savingProcess();
                 Navigator.of(context).pop();
@@ -487,11 +487,11 @@ class _NewProjectState extends State<NewProject> {
                           colorOutlined: Colors.black,
                           children: [
                             Icon(Icons.save_outlined,
-                                color: GeneralStyle.getUglyGreen()),
+                                color: GeneralStyle.getGreen()),
                             Text(
                               'Speichern',
                               style: TextStyle(
-                                color: GeneralStyle.getUglyGreen(),
+                                color: GeneralStyle.getGreen(),
                               ),
                             ),
                           ],
