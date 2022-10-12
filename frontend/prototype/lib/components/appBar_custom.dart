@@ -7,6 +7,7 @@ class CustomAppBar extends StatelessWidget {
   List<Widget> subTitle;
   CustomAppBar({required this.title, required this.subTitle});
 
+  /// gibt die Überschriften der App-Bar zurück
   Widget getTitles() {
     Flex col = Flex(
       direction: Axis.vertical,
@@ -36,14 +37,13 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Stack(
       children: [
         Align(
             alignment: Alignment.bottomLeft,
             child: Container(
               margin: ContainerStyles.getMargin(),
-              child: getTitles(),
+              child: SingleChildScrollView(child: getTitles()),
             )),
         Positioned(
           top: 20,

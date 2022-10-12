@@ -29,6 +29,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
   @override
   Widget build(BuildContext context) {
     Row buttonrow = Row(
+      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         CustomButtonColumn(
@@ -122,7 +123,10 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
               ),
             ),
           ),
-          buttonrow,
+          SingleChildScrollView(
+            child: buttonrow,
+            scrollDirection: Axis.horizontal,
+          ),
         ],
       ),
       decoration: ContainerStyles.borderBottom(),

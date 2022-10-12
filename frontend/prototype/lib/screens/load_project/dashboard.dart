@@ -74,16 +74,18 @@ class _DashboardState extends State<Dashboard> {
       aspectRatio: 1 / 1,
       child: CustomContainerBorder(
         color: GeneralStyle.getGreen(),
-        child: Column(
-          //  crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon),
-            Text(
-              underLine,
-              textAlign: TextAlign.center,
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            //  crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon),
+              Text(
+                underLine,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -111,20 +113,22 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon),
-                Text(
-                  underLineProduct,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  underLinePrice,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            )
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon),
+                  Text(
+                    underLineProduct,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    underLinePrice,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
