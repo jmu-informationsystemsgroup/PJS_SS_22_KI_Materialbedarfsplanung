@@ -6,14 +6,14 @@ import cv2
 import numpy as np
 import warnings
 
-
-
 warnings.simplefilter("ignore")
 
+
+#############################################################
+# Hilfsfunktion um die Modelle beim Start von Flask zu laden
+#############################################################
 def model_load():
-    """
-    Hilfsfunktion um das Modell beim Start von FLask zu laden
-    """
+
     global model_putty
     global model_tape
     # Lädt das Modell aus dem Dateipfad
@@ -23,10 +23,11 @@ def model_load():
     print('material_model_tape geladen')
 
 
+#############################################################
+# Hilfsfunktion um die Bilder für die Spachtelmasse vorzubearbeiten
+#############################################################
 def preprocess_image_putty(img):
-    """
-    Hilfsfunktion um die Bilder vorzubearbeiten
-    """
+
     # Prüft auf die richtige Bildgröße
     img_height = img.shape[0]
     img_width = img.shape[1]
@@ -48,11 +49,11 @@ def preprocess_image_putty(img):
     return img
 
 
-
+#############################################################
+# Hilfsfunktion um die Bilder für die Fugendeckstreifen vorzubearbeiten
+#############################################################
 def preprocess_image_tape(img):
-    """
-    Hilfsfunktion um die Bilder vorzubearbeiten
-    """
+
     # Prüft auf die richtige Bildgröße
     img_height = img.shape[0]
     img_width = img.shape[1]
@@ -73,19 +74,20 @@ def preprocess_image_tape(img):
 
 
 
-
+#############################################################
 # Methode die den Materialbedarf berechnet
+#############################################################
 def material_predict(img):
 
     pred_material = []
-
+    # Bearbeitet die Bilder vor
     img_putty = preprocess_image_putty(img)
     img_tape = preprocess_image_tape(img)
-
+    # Schätzt den Materialbedarf über predict
     print("Berechne Materialbedarf:")
     pred_putty = model_putty.predict(img_putty)
     pred_tape = model_tape.predict(img_tape)
-
+    # Fügt die Werte dem Array an
     pred_material.append(pred_putty[0][0])
     pred_material.append(pred_tape[0][0])  
     return pred_material
@@ -94,7 +96,9 @@ def material_predict(img):
 
 app = Flask(__name__)
 
-# Resource 
+#############################################################
+# Ressource /predict 
+#############################################################
 @app.route('/predict', methods=['POST'] )
 def predict():
     if request.method == 'POST':
@@ -122,7 +126,7 @@ def predict():
         response = str(pred_material[0]) + "_" + str(pred_material[1])
         # Die übermittelte Datei wird wieder vom Dateisystem gelöscht
         os.remove(filename)
-        # Die response wird im Format Bedarf1_Bedarf2 als String an das Frontend übermittelt
+        # Die response wird im Format [Bedarf1]_[Bedarf2] als String an das Frontend übermittelt
         return (response), 200
 
 
