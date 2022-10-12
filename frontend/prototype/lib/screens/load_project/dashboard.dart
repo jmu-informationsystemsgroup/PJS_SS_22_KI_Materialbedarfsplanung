@@ -8,6 +8,7 @@ import 'package:prototype/styles/general.dart';
 import '../../backend/helper_objects.dart';
 import '../../backend/value_calculator.dart';
 
+/// erzeugt die vier Informationskacheln im oberen Bereich des Dashboards
 class Dashboard extends StatefulWidget {
   List<CustomCameraImage> galleryImages;
   List<CustomCameraImage> imagesToDelete;
@@ -15,7 +16,13 @@ class Dashboard extends StatefulWidget {
   CalculatorOutcome outcome;
   int state;
   List<Wall> walls;
+
+  /// ändert die Liste der Fotos, wenn von der KI als fehlerhaft aufgedeckte Fotos
+  /// gelöscht werden
   Function() updateImages;
+
+  /// ruft die Kamera auf, sollte sich der Nutzer entscheiden das fehlerhafte Foto durch
+  /// ein neues zu ersetzen
   Function() addPhoto;
   Function(CustomCameraImage) deleteFunction;
   bool recalculate;
@@ -37,6 +44,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  /// gibt den Dialog über die Spachteprofiprodukte zurück
   Future<void> _showInformationDialog() async {
     showDialog<void>(
       context: context,
@@ -69,6 +77,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// genereirt eine Kachel, Übergabewerte sind Icon und der dazugehörige Text
   Widget square({required IconData icon, required String underLine}) {
     return AspectRatio(
       aspectRatio: 1 / 1,
@@ -93,6 +102,8 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// generiert eine Kachel mit den Ki ermittelten Werten. Der Unterschied besteht darin, dass die KI-Kacheln mehr als
+  /// einen Text-Wert enthalten und zusätzlich noch ein Informationsicon über das ein Dialog geöffnet werden kann
   Widget squareAiValue(
       {required IconData icon,
       required String underLineProduct,
@@ -139,7 +150,14 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// entscheidet, was im unteren Bereich des Dashboards angezeigt wird (5 Zustände):
+  /// 1. es sind keine Fotos vorhanden,
+  /// 2. Fotos vorhanden aber nicht synchronisiert,
+  /// 3. Fotos werden synchrnisert
+  /// 4. Fotos vorhanden und synchronisiert aber fehlerhaft
+  /// 5. Fotos vorhanden und synchronisiert und fehlerfrei
   Widget displayData() {
+    // 1. es sind keine Fotos vorhanden
     if (widget.galleryImages.isEmpty && widget.walls.isEmpty) {
       return CustomContainerBorder(
         child: Column(
@@ -152,11 +170,15 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
       );
-    } else if (widget.recalculate) {
+    }
+    // 3. Fotos werden synchronisert
+    else if (widget.recalculate) {
       return CustomContainerBorder(
         child: Center(child: Text("Status: ${widget.state}%")),
       );
-    } else if (widget.outcome.material == 0.0 &&
+    }
+    // 2. Fotos vorhanden aber nicht synchronisiert
+    else if (widget.outcome.material == 0.0 &&
         widget.galleryImages.length != widget.imagesToDelete.length) {
       return CustomContainerBorder(
         child: Column(
@@ -185,11 +207,15 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
       );
-    } else {
+    }
+    // 4. Fotos vorhanden und synchronisiert aber fehlerhaft und 5. Fotos vorhanden und synchronisiert und fehlerfrei
+    else {
       return displayRowTwo();
     }
   }
 
+  /// entscheided ob nur die beiden Kacheln angezeigt werden oder ob die beiden Kacheln zusammen mit dem Dialog
+  /// für fehlerhafte Bilder angezeigt werden
   Widget displayRowTwo() {
     if (widget.outcome.exception) {
       return Column(
@@ -246,6 +272,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  /// gibt die oberen beiden Kacheln des Dashboards zurück
   Widget rowOne() {
     return Flex(
       direction: Axis.horizontal,
@@ -265,6 +292,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// gibt die beiden unteren Kacheln mit den KI ermittelten Werten zurück
   Widget rowTwo() {
     return Flex(
       direction: Axis.horizontal,
@@ -291,7 +319,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    print("---------------------------------->dashboard wurde aufgerufen");
     return Column(
       children: [
         rowOne(),

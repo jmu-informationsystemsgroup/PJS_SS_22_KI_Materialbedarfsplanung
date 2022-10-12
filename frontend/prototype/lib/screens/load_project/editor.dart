@@ -62,7 +62,8 @@ class EditorWidget extends StatelessWidget {
         ),
         ElevatedButton(
             onPressed: () {
-              // verhindert dass ein Projektname entfernt werden kann, ohne dass ein neuer hinkommt
+              // hat der Nutzer den Projektnamen entfernt, wird stattdessen eine Platzhalterüberschrift
+              // erzeugt
               if (data.projectName == "") {
                 data.projectName = "Projekt Nr. ${input.id}";
               }

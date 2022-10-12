@@ -73,7 +73,7 @@ class _InputWalls extends State<InputWalls> {
   }
 
   /// sorgt dafür, dass wenn alle Wände aus der Liste gelöscht werden, stattdessen wieder der
-  /// "Wand hunzufügen"-Button erscheint
+  /// "Wand hinzufügen"-Button erscheint
   getWallsVisability() {
     int invisibleWalls = 0;
     walls.forEach((key, value) {
@@ -100,6 +100,8 @@ class _InputWalls extends State<InputWalls> {
     }
   }
 
+  /// wird jedesmal aufgerufen, wenn ein Wert eingegeben wird. Ist eine Wand vollständig (enthält beide Werte)
+  /// wird sie der Liste der zu speichernden Wände beigefügt
   safeWall(Wall wall) {
     safeList[wall.id] = wall;
 
@@ -110,7 +112,7 @@ class _InputWalls extends State<InputWalls> {
     widget.updateValues(safeList.values.toList());
   }
 
-  /// sorgt dafür, dass das Feld anstatt mit "0.0" vorausgefüllt wird, einfach nichts im Feld drinsteht
+  /// sorgt dafür, dass das Feld, anstatt mit "0.0" vorausgefüllt zu werden, einfach keinen Wert einthält
   /// die 0.0 entsteht dadurch, dass 0.0 das Defaultmaß einer neuen Wand ist
   String setUpValue(double value) {
     if (value == 0.0) {
@@ -120,6 +122,7 @@ class _InputWalls extends State<InputWalls> {
     }
   }
 
+  /// erzeugt eine Zeile aus Textfeldern, mit denen eine neue Wand erstellt werden kann
   Widget newWall({
     required int widgetId,
     required Wall wall,
@@ -134,6 +137,7 @@ class _InputWalls extends State<InputWalls> {
         child: Flex(
           direction: Axis.horizontal,
           children: <Widget>[
+            // Feld "Typ"
             Expanded(
               flex: 3,
               child: InputField(
@@ -145,6 +149,7 @@ class _InputWalls extends State<InputWalls> {
                   },
                   labelText: ""),
             ),
+            // Feld "Breite"
             Expanded(
               flex: 3,
               child: InputField(
@@ -163,6 +168,7 @@ class _InputWalls extends State<InputWalls> {
                   },
                   labelText: ""),
             ),
+            // Feld "Höhe"
             Expanded(
               flex: 3,
               child: InputField(
@@ -181,6 +187,7 @@ class _InputWalls extends State<InputWalls> {
                   },
                   labelText: ""),
             ),
+            // Feld Delete-Button
             Expanded(
               child: GestureDetector(
                 onTap: () {
@@ -220,6 +227,8 @@ class _InputWalls extends State<InputWalls> {
             visible: addVisabilty,
             child: Column(
               children: [
+                // zeigt die Überschriften zu den drei Textboxen, das letzte Element ist ein leerer
+                // Container, unter ihm werden die Lösch-Symbole aufgereiht
                 Flex(direction: Axis.horizontal, children: [
                   Expanded(child: Text("Typ"), flex: 3),
                   Expanded(
@@ -243,6 +252,7 @@ class _InputWalls extends State<InputWalls> {
                 Column(
                   children: wallWidgets.values.toList(),
                 ),
+                // Hinzufügen-Button, erzeugt ein neues Wand-Element
                 CustomButtonRow(
                     children: [Icon(Icons.add)],
                     onPressed: () {
@@ -258,6 +268,7 @@ class _InputWalls extends State<InputWalls> {
               ],
             ),
           ),
+          // By Default wird dieser Button angezeigt, geniert die este Wand, wird er betätigt
           Visibility(
             visible: switchVisablity(),
             child: ElevatedButton(

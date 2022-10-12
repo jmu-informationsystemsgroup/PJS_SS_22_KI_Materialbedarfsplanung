@@ -17,6 +17,7 @@ class Contact extends StatelessWidget {
     }
   }
 
+  /// erzeugt den Anruf bzw E-Mail-Button
   Widget contactRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
