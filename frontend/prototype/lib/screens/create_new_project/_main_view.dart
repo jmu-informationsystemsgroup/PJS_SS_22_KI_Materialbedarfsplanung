@@ -29,11 +29,11 @@ import '../../components/input_walls.dart';
 
 class NewProject extends StatefulWidget {
   String title = "Neues Projekt";
-  // instanzieeren eines Contentobjekts, in dem sämtliche EIngabeinformationen zwischengespeichert werden
+  // instanzieeren eines Contentobjekts, in dem sämtliche Eingabeinformationen zwischengespeichert werden
   static var cache = Content();
   static List<XFile?> images = [];
-  static bool askAgain = true;
 
+  /// verbindet zur Projektansicht, wenn das neu erstellte Projekt gespeichert wird
   static goToProjectView(int id, context) async {
     await Future.delayed(Duration(seconds: 1));
     Content link = await DataBase.getSpecificProject(id);
@@ -71,6 +71,8 @@ class _NewProjectState extends State<NewProject> {
     galleryPictures = NewProject.cache.pictures;
   }
 
+// Überbleibsel-Dialog vom Image-Picker
+/*
   Future<void> _showMyDialog() async {
     if (NewProject.askAgain) {
       return showDialog<void>(
@@ -107,6 +109,7 @@ class _NewProjectState extends State<NewProject> {
       );
     }
   }
+  */
 
 /*
   Widget preview() {
@@ -128,15 +131,6 @@ class _NewProjectState extends State<NewProject> {
   }
   
   */
-
-  goBack() async {
-    await Future.delayed(Duration(seconds: 1));
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => Home()),
-      (Route<dynamic> route) => false,
-    );
-  }
 
   Future<void> _askForImageDelete(CustomCameraImage element) async {
     showDialog<void>(
@@ -283,8 +277,6 @@ class _NewProjectState extends State<NewProject> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><${NewProject.askAgain}");
     // TODO: implement build
     return SafeArea(
       child: Scaffold(
@@ -329,6 +321,7 @@ class _NewProjectState extends State<NewProject> {
                       ),
                     ),
                   ),
+                  // Fotobutton um Kameraansicht zu öffnen
                   Center(
                     child: ButtonPhoto(
                       addPhoto: () async {
@@ -497,6 +490,7 @@ class _NewProjectState extends State<NewProject> {
                           ],
                           onPressed: () async {
                             Content emptyContent = Content();
+                            // testet ob der Nutzer ein leeres Projekt speichern will
                             if (Content.contentToMap(content).toString() ==
                                     Content.contentToMap(emptyContent)
                                         .toString() &&
@@ -506,8 +500,6 @@ class _NewProjectState extends State<NewProject> {
                             } else {
                               var save = await savingProcess();
                             }
-
-                            // goBack();
                           },
                         ),
                       ),
