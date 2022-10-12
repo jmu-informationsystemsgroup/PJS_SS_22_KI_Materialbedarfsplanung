@@ -47,7 +47,7 @@ class _ProjectViewState extends State<ProjectView> {
 
   Content content = Content();
 
-  /// eine Liste sämtlicher Bildobjekte zu dem Projekt
+  /// eine Liste sämtlicher Bildobjekte des Projekts
   List<CustomCameraImage> galleryImages = [];
 
   /// eine Liste aller Bilder zu denen noch kein KI Ergebnis vorliegt
@@ -290,6 +290,7 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  /// macht das zu löschende Bild in der
   deleteImageAction(CustomCameraImage element) async {
     setState(() {
       element.display = false;
@@ -309,12 +310,15 @@ class _ProjectViewState extends State<ProjectView> {
             cameras: value,
             originalGallery: galleryImages,
             updateGallery: (images) async {
+              // fügt die neuen Fotos der Gallerie hinzu, setzt das Ergebnis auf 0.0 um so den KI-Status
+              // auf Neu-Synchronisieren zu setzen
               setState(
                 () {
                   galleryImages.addAll(images);
                   calculatedOutcome.material = 0.0;
                 },
               );
+              // speichert die neuen Fotos in der Datenbank
               bool sth = await DataBase.saveImages(
                 pictures: images,
                 startId: originalLastValue + 1,
@@ -358,6 +362,7 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  /// Dialog bei "Projekt löschen"
   Future<void> _askForProjectDelete() async {
     showDialog<void>(
       context: context,
@@ -400,6 +405,7 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  /// gibt den Kunden für die App-Bar zurück
   Widget getClientForHeader() {
     if (content.client != "") {
       return IconAndText(
@@ -412,6 +418,7 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  /// gibt die Adresse, aber nur wenn vollständig für die App-Bar zurück
   Widget getAdressForHeader() {
     if (content.street != "" && content.zip != "" && content.city != "") {
       return GestureDetector(

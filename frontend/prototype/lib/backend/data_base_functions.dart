@@ -541,10 +541,12 @@ class DataBase {
     await picture.saveTo('${dir.path}/$projectId.jpg');
   }
 
-  /// die Fotos werden im Ordner "material images hinterlegt"
+  /// die Fotos werden im Ordner "material images" hinterlegt
   static Future<bool> saveImages(
       {required List<CustomCameraImage> pictures,
       required int projectId,
+
+      /// Callback Function, gibt den Speicherstatus in Prozent zurück
       required Function(int) updateState,
       int startId = 1}) async {
     final db = await DataBase.getDataBase();

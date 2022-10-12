@@ -13,8 +13,13 @@ import '../create_new_project/_main_view.dart';
 
 /// ruft die Kameraansicht auf
 class CameraPage extends StatefulWidget {
+  /// Liste der Kameras über die das Gerät verfügt
   final List<CameraDescription>? cameras;
+
+  /// Callback-Function: gibt die neuen Bilder zurück
   final Function(List<CustomCameraImage>)? updateGallery;
+
+  /// Liste der Fotos die bereits im Projekt vorhanden sind
   List<CustomCameraImage> originalGallery;
   CameraPage(
       {this.cameras,
