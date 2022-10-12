@@ -126,7 +126,7 @@ def predict():
         response = str(pred_material[0]) + "_" + str(pred_material[1])
         # Die übermittelte Datei wird wieder vom Dateisystem gelöscht
         os.remove(filename)
-        # Die response wird im Format Bedarf1_Bedarf2 als String an das Frontend übermittelt
+        # Die response wird im Format [Bedarf1]_[Bedarf2] als String an das Frontend übermittelt
         return (response), 200
 
 
