@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:prototype/screens/contact/_main_view.dart';
 import 'package:prototype/screens/create_new_project/_main_view.dart';
 import 'package:prototype/screens/profile/_main_view.dart';
-import 'package:prototype/styles/buttons.dart';
 import 'package:prototype/styles/container.dart';
 import 'package:prototype/styles/general.dart';
 import '../screens/home/_main_view.dart';
 
+/// erzeugt die Navigationsleiste
 class NavBar extends StatefulWidget {
   late int currentIndex;
   NavBar(int currentIndex) {
@@ -27,6 +27,8 @@ class _NavBarState extends State<NavBar> {
     Contact().title
   ];
 
+  /// wählt den Screen aus, zu dem gewechselt werden soll, anhand des Indexwerts, den die
+  /// Methode erhält
   _onItemTapped(int index) {
     Navigator.pushAndRemoveUntil(
       context,
@@ -35,6 +37,7 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
+  /// ändert die Farbe des Elements der aktuellen Seite in der Navigationsleiste
   Color getCurrentIndexColor(int buttonPosition) {
     if (widget.currentIndex == buttonPosition) {
       return GeneralStyle.getDarkGray();
@@ -42,6 +45,7 @@ class _NavBarState extends State<NavBar> {
       return GeneralStyle.getLightGray();
   }
 
+  /// ändert die Größe des Elements der aktuellen Seite in der Navigationsleiste
   double getCurrentIndexSize(int buttonPosition) {
     if (widget.currentIndex == buttonPosition) {
       return 50;

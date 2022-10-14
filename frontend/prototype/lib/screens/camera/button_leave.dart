@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../styles/general.dart';
 
+/// der button um die Kamera-Ansicht wieder zu verlassen
 class ButtonLeave extends StatelessWidget {
   Function() leave;
   ButtonLeave({required this.leave});

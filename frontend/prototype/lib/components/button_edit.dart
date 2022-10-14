@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../styles/container.dart';
 import '../styles/general.dart';
 
+/// runder Bearbeiten-Button, der an mehreren Stellen in der App vorkommt
+/// Besonderheiten: wechselt das Icon, wenn angklickt, Form und Farbe
 class ButtonEdit extends StatelessWidget {
   bool textVisiblity;
   Function() onClick;

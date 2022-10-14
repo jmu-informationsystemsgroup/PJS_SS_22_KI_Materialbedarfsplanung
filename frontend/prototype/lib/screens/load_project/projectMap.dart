@@ -1,21 +1,19 @@
 
+
+/// Prototyp für Kartenwidget, dieses sollte ohne GoogleMaps auskommen, leider war
+/// der Prototyp nur Android-fähig und auch da sehr verbuggt
+/// 
+/// 
+/// 
+/// 
+/// 
 /*
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:prototype/components/input_field_address.dart';
 
-/// das KartenWidget erhält als Eingabe die Adresswerte die du auf dem Handy in "Projekt erstellen" bzw in "Projekt bearbeiten"
-/// einfügst. Anschauen kannst du dir die Karte bei der Ansicht "Projekt laden".
-/// Google bietet sehr gute Map APIs an, über nur für ein kostenpflichtiges Abo-Modell, deshalb müssen
-/// wir einen umständlichen Workarround schaffen
-/// Für den Protoyp bin ich ziemlich genau diesem Tutorial gefolgt: https://www.youtube.com/watch?v=otWy4QhMJMo
-/// bitte committe nicht auf den main branch, sondern erstelle einen neuen, gerade bei diesem Widget kann
-/// recht viel schief gehen, da es viele verschiedene packages braucht. Einige Packages habe ich allerdings schon installiert
-/// im pubspec.yaml file unter "# adding georgraphic map component".
-/// Eine Kartenkomponente würde die App bei der Präsentation denke ich deutlich aufwerten (Franzi hat ja auch in ihrem Dashboard
-/// so Kartenkurzansichten geplant) ist aber ziemliches Neuland für mich.
-/// Ich wünsch dir auf jeden Fall viel Erfolg und bin gespannt ob das was rausfindest :) !
+
 class ProjectMap extends StatelessWidget {
   // Konstruktor (die Adresse wird vom Ladebildschirm aus übergeben)
   Adress adress;

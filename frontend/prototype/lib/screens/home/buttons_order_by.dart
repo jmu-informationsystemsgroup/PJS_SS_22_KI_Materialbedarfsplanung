@@ -6,6 +6,7 @@ import 'package:prototype/styles/general.dart';
 import '../../../styles/container.dart';
 import '../../backend/helper_objects.dart';
 
+/// liefert die Buttons zurück die für die Sortierfunktionen zuständig sind
 class ButtonsOrderBy extends StatefulWidget {
   static int selectedIndex = 1000;
   final Function(List<Content>) orderChanged;
@@ -18,6 +19,7 @@ class ButtonsOrderBy extends StatefulWidget {
   }
 }
 
+/// ändert die Farbe der Buttons die gerade für die Sortierfunktion ausgewählt wurden
 class _ButtonsOrderByState extends State<ButtonsOrderBy> {
   currentOrderColor(int bottenrowPosition) {
     if (ButtonsOrderBy.selectedIndex == bottenrowPosition) {
@@ -29,6 +31,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
   @override
   Widget build(BuildContext context) {
     Row buttonrow = Row(
+      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         CustomButtonColumn(
@@ -73,7 +76,7 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
           onPressed: () async {
             List<Content> newOrderList = await DataBase.getProjects(
               searchTerm: widget.searchTerm,
-              orderByParamter: "city",
+              orderByParamter: "zip",
             );
             widget.orderChanged(newOrderList);
             setState(() {
@@ -122,7 +125,10 @@ class _ButtonsOrderByState extends State<ButtonsOrderBy> {
               ),
             ),
           ),
-          buttonrow,
+          SingleChildScrollView(
+            child: buttonrow,
+            scrollDirection: Axis.horizontal,
+          ),
         ],
       ),
       decoration: ContainerStyles.borderBottom(),

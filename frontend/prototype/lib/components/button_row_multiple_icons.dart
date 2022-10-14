@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../styles/container.dart';
 import '../styles/general.dart';
 
+/// erstellt einen Button in den beliebig viele Elemente eingesetzt werden können
 class CustomButtonRow extends StatelessWidget {
   List<Widget> children;
   Function() onPressed;

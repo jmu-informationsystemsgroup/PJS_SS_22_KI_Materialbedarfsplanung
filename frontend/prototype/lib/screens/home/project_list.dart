@@ -79,7 +79,7 @@ class _StateProjectList extends State<ProjectList> {
     });
   }
 
-  getProfile(Content element) {
+  getProfileImage(Content element) {
     if (element.profileImage == null) {
       return Icon(
         Icons.cottage_outlined,
@@ -117,6 +117,7 @@ class _StateProjectList extends State<ProjectList> {
 
     return Column(
       children: widget.projects
+          // der map Befehl erzeugt eine Schleife aus sämtlichen Projekten und generiert pro Projekt das folgende Widget
           .map(
             (element) => Card(
               child: InkWell(
@@ -129,10 +130,13 @@ class _StateProjectList extends State<ProjectList> {
                 },
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  // ab hier: Projektkarte
                   child: Row(
                     children: <Widget>[
+                      // aber hier: Profilbildbereich
                       Expanded(
                         flex: 3,
+                        // ruft den ImagePicker auf
                         child: GestureDetector(
                           onTap: () {
                             openImagePicker(element);
@@ -142,9 +146,8 @@ class _StateProjectList extends State<ProjectList> {
                               AspectRatio(
                                 aspectRatio: 1 / 1,
                                 child: CustomContainerBorder(
-                                  color: GeneralStyle.getUglyGreen(),
-                                  //  padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
-                                  child: getProfile(element),
+                                  color: GeneralStyle.getGreen(),
+                                  child: getProfileImage(element),
                                 ),
                               ),
                               Align(
@@ -159,6 +162,7 @@ class _StateProjectList extends State<ProjectList> {
                           ),
                         ),
                       ),
+                      // ab hier Textbereich
                       Expanded(
                         flex: 5,
                         child: Container(
@@ -171,12 +175,6 @@ class _StateProjectList extends State<ProjectList> {
                                 child: Text(
                                   element.projectName,
                                   style: TextStyle(
-                                      /*
-                                      decoration: TextDecoration.underline,
-                                      decorationThickness: 5,
-                                      decorationColor:
-                                          GeneralStyle.getUglyGreen(),
-                                          */
                                       color: Colors.black,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w800),

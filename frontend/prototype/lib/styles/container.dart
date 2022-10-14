@@ -147,7 +147,7 @@ class ContainerStyles {
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: GeneralStyle.getLightGray())),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+        borderSide: BorderSide(color: GeneralStyle.getGreen()),
       ),
       labelText: labelTextInput,
     );
@@ -162,7 +162,7 @@ class ContainerStyles {
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: GeneralStyle.getLightGray())),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+        borderSide: BorderSide(color: GeneralStyle.getGreen()),
       ),
       labelText: labelTextInput,
     );
@@ -174,7 +174,7 @@ class ContainerStyles {
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: GeneralStyle.getLightGray())),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: GeneralStyle.getUglyGreen()),
+        borderSide: BorderSide(color: GeneralStyle.getGreen()),
       ),
       prefixIcon: Icon(Icons.search),
       labelText: labelTextInput,

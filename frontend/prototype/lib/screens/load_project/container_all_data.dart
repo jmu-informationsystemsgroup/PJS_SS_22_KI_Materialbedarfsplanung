@@ -5,6 +5,8 @@ import 'package:prototype/components/icon_and_text.dart';
 import '../../components/custom_container_border.dart';
 import '../../styles/general.dart';
 
+/// Kontrollsicht für Kundenangaben, lediglich eine Textbox, erscheint, wenn keine Kundendaten
+/// mehr angegeben werden müssen
 class AllData extends StatelessWidget {
   Content content;
   AllData({required this.content});
@@ -15,11 +17,13 @@ class AllData extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Überschrift
           Text("Alle Daten",
               style: TextStyle(
                 color: GeneralStyle.getLightGray(),
                 fontStyle: FontStyle.italic,
               )),
+          // ab hier: Inhalt der Kontrollsicht
           IconAndText(
             icon: Icons.person_pin_circle_outlined,
             text: "Kunde: " + content.client,

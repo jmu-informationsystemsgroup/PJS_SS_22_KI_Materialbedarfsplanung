@@ -17,6 +17,7 @@ class Contact extends StatelessWidget {
     }
   }
 
+  /// erzeugt den Anruf bzw E-Mail-Button
   Widget contactRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -94,12 +95,12 @@ class Contact extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.public,
-                    color: GeneralStyle.getUglyGreen(),
+                    color: GeneralStyle.getGreen(),
                   ),
                   Text(
                     "Webseite besuchen",
                     style: TextStyle(
-                      color: GeneralStyle.getUglyGreen(),
+                      color: GeneralStyle.getGreen(),
                     ),
                   ),
                 ],

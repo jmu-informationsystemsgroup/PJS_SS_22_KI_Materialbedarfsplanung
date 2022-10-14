@@ -47,7 +47,7 @@ class _ProjectViewState extends State<ProjectView> {
 
   Content content = Content();
 
-  /// eine Liste sämtlicher Bildobjekte zu dem Projekt
+  /// eine Liste sämtlicher Bildobjekte des Projekts
   List<CustomCameraImage> galleryImages = [];
 
   /// eine Liste aller Bilder zu denen noch kein KI Ergebnis vorliegt
@@ -111,6 +111,7 @@ class _ProjectViewState extends State<ProjectView> {
     });
   }
 
+  /// Dialog der ausgelöst wird, wenn die Verbindung zum Server fehlschlägt
   Future<void> _ServerMessage() async {
     if (ProjectView.askAgain) {
       return showDialog<void>(
@@ -158,45 +159,6 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
-  Future<void> _showMyDialog() async {
-    if (ProjectView.askAgain) {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Kamera eisntellen'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Row(
-                    children: [
-                      Icon(Icons.stay_current_portrait),
-                      Icon(Icons.screen_rotation),
-                      Icon(Icons.stay_current_landscape),
-                    ],
-                  ),
-                  Text('Kameraeinstellung auf 4:3'),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Approve'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    ProjectView.askAgain = false;
-                  });
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
   bool changeBool(bool input) {
     if (input == false) {
       return true;
@@ -205,6 +167,8 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  /// Button fpr Projekt abschließen, wechselt zu "Projekt reaktivieren"-Button wenn Projekt abgeschlossen
+  /// ist
   Widget renderArchiveButton(int id) {
     if (content.statusActive == 0) {
       return CustomButtonRow(
@@ -235,6 +199,7 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  /// baut einen GoogleMaps-Link aus der eingegebenen Adresse zusammen
   Future<void> _launchMapsLink() async {
     String urlString =
         "https://www.google.com/maps/place/${content.street}+${content.houseNumber},+${content.zip}+${content.city}";
@@ -244,6 +209,7 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  /// Widget für hellgraue Kommentar-Anzeige
   Widget comment() {
     return CustomContainerBorder(
       color: GeneralStyle.getLightGray(),
@@ -265,6 +231,7 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  /// Dialog, der erscheint, wenn Foto gelöscht wird
   Future<void> _askForImageDelete(CustomCameraImage element) async {
     showDialog<void>(
       context: context,
@@ -301,7 +268,7 @@ class _ProjectViewState extends State<ProjectView> {
               child: IconAndText(
                   icon: Icons.cancel,
                   text: "Abbrechen",
-                  color: GeneralStyle.getUglyGreen()),
+                  color: GeneralStyle.getGreen()),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -323,6 +290,7 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  /// macht das zu löschende Bild in der
   deleteImageAction(CustomCameraImage element) async {
     setState(() {
       element.display = false;
@@ -342,12 +310,15 @@ class _ProjectViewState extends State<ProjectView> {
             cameras: value,
             originalGallery: galleryImages,
             updateGallery: (images) async {
+              // fügt die neuen Fotos der Gallerie hinzu, setzt das Ergebnis auf 0.0 um so den KI-Status
+              // auf Neu-Synchronisieren zu setzen
               setState(
                 () {
                   galleryImages.addAll(images);
                   calculatedOutcome.material = 0.0;
                 },
               );
+              // speichert die neuen Fotos in der Datenbank
               bool sth = await DataBase.saveImages(
                 pictures: images,
                 startId: originalLastValue + 1,
@@ -391,6 +362,7 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  /// Dialog bei "Projekt löschen"
   Future<void> _askForProjectDelete() async {
     showDialog<void>(
       context: context,
@@ -407,7 +379,7 @@ class _ProjectViewState extends State<ProjectView> {
               child: IconAndText(
                   icon: Icons.cancel,
                   text: "Abbrechen",
-                  color: GeneralStyle.getUglyGreen()),
+                  color: GeneralStyle.getGreen()),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -433,6 +405,7 @@ class _ProjectViewState extends State<ProjectView> {
     );
   }
 
+  /// gibt den Kunden für die App-Bar zurück
   Widget getClientForHeader() {
     if (content.client != "") {
       return IconAndText(
@@ -445,6 +418,7 @@ class _ProjectViewState extends State<ProjectView> {
     }
   }
 
+  /// gibt die Adresse, aber nur wenn vollständig für die App-Bar zurück
   Widget getAdressForHeader() {
     if (content.street != "" && content.zip != "" && content.city != "") {
       return GestureDetector(

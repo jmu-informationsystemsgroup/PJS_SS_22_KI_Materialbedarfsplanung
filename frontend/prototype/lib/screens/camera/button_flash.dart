@@ -7,6 +7,7 @@ class ButtonFLash extends StatelessWidget {
   Function() changeFlashMode;
   ButtonFLash({required this.flashOn, required this.changeFlashMode});
 
+  /// bestimmt welches Symbol an der Stelle des Blitze-Buttons angezeigt wird
   IconData getIcon() {
     if (!flashOn) {
       return Icons.flash_off;

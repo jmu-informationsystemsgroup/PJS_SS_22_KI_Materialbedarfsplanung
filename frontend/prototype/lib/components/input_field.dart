@@ -38,21 +38,7 @@ class InputField extends StatefulWidget {
 
 class _InputFieldState extends State<InputField> {
   final TextEditingController textController = TextEditingController();
-//  ScrollController _scrollController = ScrollController();
   bool visibleWarning = false;
-
-  /*
-  String text = '';
-
-  scrollToCursor(String textFieldValue) {
-    final isLonger = textFieldValue.length > text.length;
-    text = textFieldValue;
-    if (isLonger)
-      _scrollController.animateTo(_scrollController.position.viewportDimension,
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
-  }
-// use _scrollController.position.viewportDimension if text field is one line
-*/
 
   @override
   void initState() {

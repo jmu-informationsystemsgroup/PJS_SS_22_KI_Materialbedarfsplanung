@@ -101,7 +101,9 @@ class _UserFormState extends State<UserForm> {
           mandatory: widget.allValuesMandatory,
         ),
         InputField(
-          saveTo: (text) => {cache.customerId = int.parse(text)},
+          saveTo: (text) => {
+            cache.customerId = int.tryParse(text) ?? 0,
+          },
           labelText: "Kundennummer",
           icon: Icons.numbers,
           inputType: TextInputType.number,

@@ -13,14 +13,11 @@ import '../../components/custom_container_border.dart';
 import '../../styles/general.dart';
 
 class Webshop extends StatefulWidget {
-  /// dies sollte ein double value sein, allerdings kann es zu ladeverzögerungen und damit
-  /// zusammenhängenden Fehlermeldungen kommen
   CalculatorOutcome outcome;
   Webshop({required this.outcome});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _WebshopState();
   }
 }
@@ -167,11 +164,11 @@ class _WebshopState extends State<Webshop> {
                 children: [
                   Icon(
                     Icons.shopping_cart_outlined,
-                    color: GeneralStyle.getUglyGreen(),
+                    color: GeneralStyle.getGreen(),
                   ),
                   Text(
-                    "zum Webshop",
-                    style: TextStyle(color: GeneralStyle.getUglyGreen()),
+                    "Zum Webshop",
+                    style: TextStyle(color: GeneralStyle.getGreen()),
                   ),
                 ],
                 onPressed: () {
@@ -202,12 +199,12 @@ class _WebshopState extends State<Webshop> {
       return [
         Icon(
           Icons.email_outlined,
-          color: GeneralStyle.getUglyGreen(),
+          color: GeneralStyle.getGreen(),
         ),
         Text(
           "Direkt bestellen",
           style: TextStyle(
-            color: GeneralStyle.getUglyGreen(),
+            color: GeneralStyle.getGreen(),
           ),
         ),
       ];
@@ -215,12 +212,12 @@ class _WebshopState extends State<Webshop> {
       return [
         Icon(
           Icons.cancel_outlined,
-          color: GeneralStyle.getUglyGreen(),
+          color: GeneralStyle.getGreen(),
         ),
         Text(
           "Abbrechen",
           style: TextStyle(
-            color: GeneralStyle.getUglyGreen(),
+            color: GeneralStyle.getGreen(),
           ),
         ),
       ];
