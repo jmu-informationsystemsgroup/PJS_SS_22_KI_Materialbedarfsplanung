@@ -1,0 +1,19 @@
+{
+  "python.formatting.provider": "yapf",
+  "cSpell.words": [
+    "absl",
+    "colab",
+    "conda",
+    "cuda",
+    "dtype",
+    "imshow",
+    "ipynb",
+    "libprotoc",
+    "pbtxt",
+    "protobuf",
+    "protoc",
+    "protos",
+    "pyplot",
+    "tolist"
+  ]
+}
